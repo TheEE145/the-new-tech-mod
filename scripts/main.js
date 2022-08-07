@@ -1,4 +1,4 @@
-require('modules/updater');
+require('updater');
 
 print('loading modules...');
-//require('modules/elon_planer');
+require('elon_planer');
