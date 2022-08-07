@@ -1,6 +1,6 @@
 {
     "type": "CoreBlock",
-    "itemCapacity": 50000,
+    "itemCapacity": 30000,
     "unitType": "gamma",
     "isFirstTier": true,
     "health": 100000,

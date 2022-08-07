@@ -1,6 +1,5 @@
 {
     "type": "StorageBlock",
-    "name": "heavy storage",
     "itemCapacity": 10000,
     "health": 16000,
     "hasItems": true,
@@ -8,9 +7,13 @@
     "size": 3,
 
     "research": {
-        "root": true,
-        "name": "elon"
+        "parent": "exiopolis"
     },
+
+    "requirements": [
+        "extrologium/1000",
+        "lawium/500"
+    ],
 
     "category": "effect"
 }
