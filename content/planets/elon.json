@@ -1,0 +1,12 @@
+{
+    "radius": "0.16",
+    "minZoom": "0",
+    "camRadius": "1.36",
+    "parent": "sun",
+    "alwaysUnlocked": true,
+    "hasAtmosphere": true,
+    "updateLighting": false,
+    "generator": {
+
+    }
+}

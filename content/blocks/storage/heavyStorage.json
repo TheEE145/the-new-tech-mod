@@ -1,0 +1,16 @@
+{
+    "type": "StorageBlock",
+    "name": "heavy storage",
+    "itemCapacity": 10000,
+    "health": 16000,
+    "hasItems": true,
+    "coreMerge": true,
+    "size": 3,
+
+    "research": {
+        "root": true,
+        "name": "elon"
+    },
+
+    "category": "effect"
+}

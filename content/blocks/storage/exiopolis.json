@@ -1,0 +1,15 @@
+{
+    "type": "CoreBlock",
+    "itemCapacity": 50000,
+    "unitType": "gamma",
+    "isFirstTier": true,
+    "health": 100000,
+    "coreMerge": true,
+    "hasItems": true,
+    "size": 5,
+
+    "research": {
+        "root": true,
+        "name": "elon"
+    }
+}
