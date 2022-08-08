@@ -389,7 +389,7 @@ Events.on(ClientLoadEvent, () => {
         };
     };
 
-    elon.mesh = new HexMesh();
+    elon.mesh = new HexMesh(elon, 4.1);
     elon.orbitRadius = 50;
     elon.orbitTime = 1.5 * 600;
     elon.rotateTime = 3200;
