@@ -21,9 +21,23 @@ let _elonGenerator$basesConstant = [
 
 const elonGenerator = extend(PlanetGenerator, {
     seed: 98765,
-    arr: [[]],
+    arr: [
+        [0, 1, 2, 3, 4, 3, 3, 5, 6, 6, 6, 6, 7],
+        [0, 1, 2, 3, 3, 3, 8, 9, 6, 6, 7, 6, 7],
+        [0, 2, 3, 3, 8, 8, 6, 5, 5, 5, 7, 6, 7]
+    ],
 
     arrmesh: [
+        null, //like Blocks.deepwater,
+        null, //like Blocks.darksandWater,
+        null, //like Blocks.sandWater,
+        null, //like Blocks.sand,
+        null, //like Blocks.craters,
+        null, //like Blocks.basalt,
+        null, //like Blocks.dirt,
+        null, //like Blocks.mud,
+        null, //like Blocks.metalFloorDamaged,
+        null //like Blocks.dacite
     ],
 
     scl: 15,
@@ -32,7 +46,7 @@ const elonGenerator = extend(PlanetGenerator, {
         return Mathf.clamp(Math.floor(val * (isfirst ? this.arr[0].length : this.arr.length)), 0, this.arr[0].length - 1);
     },
 
-    oceansOffset: 0.05,
+    oceansOffset: 0.04,
     basegen: new BaseGenerator(),
 
     rawHeight(position) {
@@ -40,19 +54,30 @@ const elonGenerator = extend(PlanetGenerator, {
 
         return (
             Mathf.pow(
-                this.noise.octaveNoise3D(
-                    9, 0.5, 1/3, 
+                Simplex.noise3d(
+                    this.seed,
+                    8, 0.5, 1 / 3, 
 
                     position.x, 
                     position.y, 
                     position.z
                 ), 
                 
-                2.3
+                1.8
             )
 
-            + this.waterOffset
-        ) / (1 + this.waterOffset);
+            + this.oceansOffset
+        ) / (1.4 + this.oceansOffset);
+    },
+
+    state$get(x, y) {
+        let t = this.tiles.get(x, y);
+
+        if(t == null) {
+            return new Tile(x, y);
+        };
+
+        return t;
     },
 
     getHeight(position) {
@@ -80,42 +105,51 @@ const elonGenerator = extend(PlanetGenerator, {
         sector.generateEnemyBase = false;
     },
 
-    getColor(pos) {
-        pos = this.getBlock(pos);
-        
-        return Tmp.c4.set(pos.mapColor).a(-pos.albedo + 1);
-    },
-
-    genTile(pos, tile) {
-        tile.floor = this.getBlock(pos);
-        tile.block = tile.floor.asFloor().wall;
-
-        if(this.rid.getValue(pos.x, pos.y, pos.z, 17) > 0.42){
-            tile.block = Blocks.air;
-        };
-    },
-
     getBlock(pos) {
-        _elonGenerator$height = Mathf.clamp(this.rawHeight(pos) * 1.2);
+        _elonGenerator$height = this.rawHeight(pos);
+
         Tmp.v31.set(pos);
 
         pos = Tmp.v33.set(pos).scl(this.scl);
 
-        _elonGenerator$temp = Mathf.clamp(Math.abs(pos.y * 1.9) / this.scl);
-        _elonGenerator$perlinNoise = this.noise.octaveNoise3D(
+        _elonGenerator$temp = Mathf.clamp(Math.abs(pos.y * 2) / this.scl);
+        _elonGenerator$perlinNoise = Simplex.noise3d(this.seed,
             8, 0.60, 1 / 3, pos.x, pos.y + 1000, pos.z
         );
 
-        _elonGenerator$temp = Mathf.lerp(_elonGenerator$temp, _elonGenerator$perlinNoise, 0.6);
+        _elonGenerator$temp = Mathf.lerp(_elonGenerator$temp, _elonGenerator$perlinNoise, 0.5);
 
-        return this.arr[this.chump(_elonGenerator$temp, false)][this.chump(_elonGenerator$height, true)];
+        _elonGenerator$height *= 1.2;
+        _elonGenerator$height = Mathf.clamp(_elonGenerator$height);
+
+        return this.arrmesh[this.arr[this.chump(_elonGenerator$temp, false)][this.chump(_elonGenerator$height, true)]];
+    },
+
+    getColor(pos) {
+        pos = this.getBlock(pos);
+
+        if(pos == null) {
+            return Blocks.darksand.mapColor;
+        };
+
+        return Tmp.c4.set(pos.mapColor).a = -pos.albedo + 1;
+    },
+
+    genTile(pos, tile) {
+        tile.setFloor(this.getBlock(pos));
+        tile.setBlock(tile.floor.asFloor().wall);
+
+        if(this.rid.getValue(pos.x, pos.y, pos.z, 17) > 0.42){
+            tile.setBlock(Blocks.air);
+        };
     },
 
     noiseOct(x, y, octaves, falloff, scl){
         _elonGenerator$vec = this.sector.rect.project(x, y).scl(4.5);
 
-        return this.noise.octaveNoise3D(
-            octaves, falloff, 0.9 / scl, 
+        return Simplex.noise3d(
+            this.seed,
+            octaves, falloff, 1 / scl, 
 
             _elonGenerator$vec.x,
             _elonGenerator$vec.y, 
@@ -151,24 +185,17 @@ const elonGenerator = extend(PlanetGenerator, {
                 
                 _elonGenerator$stroke2
             );
-        },
-
-        setPos(vec2) {
-            this.x = vec2.x;
-            this.y = vec2.y;
-
-            return this;
-        },
-
-        setRadius(r) {
-            this.r = r;
-
-            return this;
         }
     },
 
     room$set(x, y, r) {
-        return Object.create(this.Room).setPos(Vec2(x, y)).setRadius(r);
+        let room = Object.create(this.room$init);
+
+        room.x = x;
+        room.y = y;
+        room.r = r;
+
+        return room;
     },
 
     short$1(val) {
@@ -178,9 +205,13 @@ const elonGenerator = extend(PlanetGenerator, {
         ));
     },
 
-    generate(tiles, sec){
+    generate(tiles, sec) {
         this.tiles = tiles;
         this.sector = sec;
+
+        const rand = this.rand;
+
+        this.tiles.fill();
 
         this.rand.setSeed(sec.id);
 
@@ -248,7 +279,7 @@ const elonGenerator = extend(PlanetGenerator, {
 
             for(let tx = -6; tx < 6; tx++) {
                 for(let ty = -6; ty < 6; ty++) {
-                    _elonGenerator$center.stack.tile = tiles.get(
+                    _elonGenerator$center.stack.tile = this.state$get(
                         _elonGenerator$center.stack.x1 + tx,
                         _elonGenerator$center.stack.y1 + ty
                     );
@@ -257,10 +288,11 @@ const elonGenerator = extend(PlanetGenerator, {
                         ++_elonGenerator$center.stack.oct;
                     };
 
-                    if(_elonGenerator$spawn.stack.tile.floor().liquidDrop != null) {
-                        ++_elonGenerator$spawn.stack.oct;
+                    if(_elonGenerator$center.stack.tile.floor().liquidDrop != null) {
+                        ++_elonGenerator$center.stack.oct;
                     };
                 };
+
             };
 
             if(_elonGenerator$center.stack.oct <= 5 || (i + 6 >= 360)) {
@@ -332,10 +364,14 @@ const elonGenerator = extend(PlanetGenerator, {
     }
 });
 
+elonGenerator.water = 2 / (
+    elonGenerator.arr[0].length
+);
+
 Events.on(ClientLoadEvent, () => {
     elon = new Planet("elon", Planets.sun, 1, 2);
     
-    elon.generator = new SerpuloPlanetGenerator();
+    elon.generator = new SerpuloPlanetGenerator(); //elonGenerator
 
     for(let i in elon) {
         print(i);
@@ -353,7 +389,7 @@ Events.on(ClientLoadEvent, () => {
         };
     };
 
-    elon.mesh = new HexMesh(elon, 4.1);
+    elon.mesh = new HexMesh();
     elon.orbitRadius = 50;
     elon.orbitTime = 1.5 * 600;
     elon.rotateTime = 3200;
@@ -372,6 +408,5 @@ Events.on(ClientLoadEvent, () => {
     elon.hiddenItems.addAll(Items.serpuloItems);
     elon.hiddenItems.addAll(Items.erekirItems);
 });
-
 
 //it was hard

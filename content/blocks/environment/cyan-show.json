@@ -1,3 +1,4 @@
 {
-    "type": "Floor"
+    "type": "Floor",
+    "wall": "cyan-show-wall"
 }
