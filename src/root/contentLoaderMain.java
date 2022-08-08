@@ -15,7 +15,6 @@ public class contentLoaderMain extends Mod {
     };
 
     @Override
-    public void loadContent(){
-        Log.info("Behold. the haiver");
+    public void loadContent() {
     };
 };
