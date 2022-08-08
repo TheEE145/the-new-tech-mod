@@ -1,0 +1,3 @@
+MOVE ./build/libs/the-new-tech-modDesktop.jar ../mods/
+rd ./build
+./gradlew jar

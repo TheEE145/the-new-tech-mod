@@ -1,0 +1,9 @@
+name: the-new-tech-mod,
+displayName: The new tech mod,
+author: TheEE145,
+main: root.contentLoaderMain,
+description: mod that add more technologies,
+version: 1.0,
+minGameVersion: 136,
+hidden: false,
+java: true
