@@ -373,15 +373,6 @@ Events.on(ClientLoadEvent, () => {
     
     elon.generator = new SerpuloPlanetGenerator(); //elonGenerator
 
-    for(let i in elon) {
-        print(i);
-    };
-
-    print('---------------- xd -------------');
-
-    for(let i in elon.generator) {
-        print(i);
-    };
 
     for(let i of TechTree.roots.toArray()) {
         if(i.name === "elon") {
