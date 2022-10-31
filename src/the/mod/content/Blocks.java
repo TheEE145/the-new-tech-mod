@@ -30,6 +30,9 @@ public class Blocks {
     //unloaders, why not
     public static LiquidUnloader liquidUnloader;
 
+    //crafters
+    public static MultiCrafter sander;
+
     //cores
     public static ModCore terra;
 
@@ -163,6 +166,8 @@ public class Blocks {
             health = 25000;
             unitType = UnitTypes.alpha;
             size = 4;
+
+            itemCapacity = 10000;
         }};
 
         //drills
@@ -174,6 +179,7 @@ public class Blocks {
             size = 2;
 
             consumeLiquid(Liquids.water, 0.05f).boost();
+            researchCost = with();
         }};
 
         updatedDrill = new ModDrill("updated-drill") {{
@@ -207,6 +213,24 @@ public class Blocks {
             ));
 
             size = 1;
+        }};
+
+        //crafters
+        sander = new MultiCrafter("sander") {{
+            size = 2;
+            health = 300;
+
+            requirements(Category.crafting, with(
+                    Itemsx.silica, 75,
+                    Itemsx.virusM, 25
+            ));
+
+            addCraft(with(Itemsx.silicaSand, 1), with(Itemsx.silica,     2),  Itemsx.silicaSand);
+            addCraft(with(Itemsx.virusM,     1), with(Itemsx.virusMSand, 2),  Itemsx.virusMSand);
+            addCraft(with(Items.coal,        1), with(Itemsx.coalSand,   2),  Itemsx.coalSand);
+
+            hasItems = true;
+            itemCapacity = 10;
         }};
     }
 }

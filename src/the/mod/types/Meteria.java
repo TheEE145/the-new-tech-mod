@@ -4,10 +4,7 @@ import arc.graphics.*;
 import arc.graphics.g2d.*;
 import arc.math.geom.*;
 import arc.struct.*;
-import arc.util.Interval;
-import arc.util.Log;
-import arc.util.io.Reads;
-import arc.util.io.Writes;
+import arc.util.io.*;
 import mindustry.gen.Building;
 import mindustry.graphics.*;
 import mindustry.ui.*;
@@ -406,7 +403,6 @@ public class Meteria {
             public void draw() {
                 super.draw();
 
-                Log.info("works");
                 if(meteria > maxMeteria) {
                     meteria = maxMeteria;
                 }

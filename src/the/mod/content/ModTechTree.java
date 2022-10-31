@@ -35,7 +35,15 @@ public class ModTechTree {
 
             //items
             node(Itemsx.silica, () -> {
-                node(Items.coal);
+                node(Items.coal, () -> {
+                    node(Itemsx.coalSand);
+                });
+
+                node(Itemsx.virusM, () -> {
+                    node(Itemsx.virusMSand);
+                });
+
+                node(Itemsx.silicaSand);
             });
         });
     }
