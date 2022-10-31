@@ -203,7 +203,7 @@ public class Blocks {
         liquidUnloader = new LiquidUnloader("liquid-unloader") {{
             requirements(Category.liquid, with(
                     Items.titanium, 25,
-                    Items.plastanium, 10
+                    Items.metaglass, 10
             ));
 
             size = 1;
