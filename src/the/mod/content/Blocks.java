@@ -9,6 +9,7 @@ import mindustry.type.*;
 import mindustry.world.draw.*;
 import mindustry.world.meta.BuildVisibility;
 import the.mod.types.*;
+import the.mod.utils.Types.*;
 
 import static the.mod.types.Meteria.*;
 import static mindustry.type.ItemStack.with;
@@ -16,10 +17,21 @@ import static mindustry.type.ItemStack.with;
 public class Blocks {
     public static Minigun ares;
 
+    //energy
     public static MeteriaNode meteriaNode, largeMeteriaNode, sandboxMeteriaNode;
     public static MeteriaNodeBooster meteriaBooster;
     public static MeteriaSource meteriaSource;
     public static MeteriaCrafter coalMeteriaGenerator;
+
+    //drills
+    public static MeteriaDrill meteriaDrill, largeDrill, nuclearDrill;
+    public static ModDrill silicaDrill, updatedDrill;
+
+    //unloaders, why not
+    public static LiquidUnloader liquidUnloader;
+
+    //cores
+    public static ModCore terra;
 
     public static void load() {
         //miniguns
@@ -89,7 +101,7 @@ public class Blocks {
             size = 2;
 
             requirements(Category.power, with(
-                    Items.copper, 100
+                    Itemsx.silica, 25
             ));
         }};
 
@@ -100,7 +112,7 @@ public class Blocks {
             size = 3;
 
             requirements(Category.power, with(
-                    Items.copper, 100
+                    Itemsx.silica, 125
             ));
         }};
 
@@ -119,7 +131,7 @@ public class Blocks {
             size = 2;
 
             requirements(Category.power, with(
-                    Items.copper, 100
+                    Itemsx.silica, 75
             ));
         }};
 
@@ -142,8 +154,59 @@ public class Blocks {
             ));
 
             requirements(Category.power, with(
-                    Items.copper, 100
+                    Itemsx.silica, 25
             ));
+        }};
+
+        //cores
+        terra = new ModCore("core-terra") {{
+            health = 25000;
+            unitType = UnitTypes.alpha;
+            size = 4;
+        }};
+
+        //drills
+        silicaDrill = new ModDrill("silica-drill") {{
+            requirements(Category.production, with(Itemsx.silica, 12));
+
+            tier = 2;
+            drillTime = 600f;
+            size = 2;
+
+            consumeLiquid(Liquids.water, 0.05f).boost();
+        }};
+
+        updatedDrill = new ModDrill("updated-drill") {{
+            requirements(Category.production, with(Itemsx.silica, 24));
+
+            tier = 3;
+            drillTime = 400f;
+            size = 3;
+
+            consumeLiquid(Liquids.water, 0.06f).boost();
+        }};
+
+        meteriaDrill = new MeteriaDrill("meteria-drill") {{
+            requirements(Category.production, with(Itemsx.silica, 72));
+
+            meteriaConsume = 2;
+            maxMeteria = 500;
+            size = 4;
+
+            drillTime = 280f;
+            tier = 4;
+
+            consumeLiquid(Liquids.water, 0.08f).boost();
+        }};
+
+        //unloaders
+        liquidUnloader = new LiquidUnloader("liquid-unloader") {{
+            requirements(Category.liquid, with(
+                    Items.titanium, 25,
+                    Items.plastanium, 10
+            ));
+
+            size = 1;
         }};
     }
 }

@@ -8,8 +8,8 @@ import arc.graphics.g2d.TextureRegion;
 import mindustry.mod.*;
 import mindustry.game.EventType;
 import mindustry.ui.dialogs.BaseDialog;
-import the.mod.content.Blocks;
-import the.mod.content.Effects;
+import mindustry.world.Block;
+import the.mod.content.*;
 
 import static arc.Core.*;
 
@@ -24,10 +24,10 @@ public class TheTech extends Mod {
                 d.cont.pane(t -> {
                     t.margin(60f);
 
-                    t.image(modR("icon")).size(60f).row();
+                    t.image(mod("liquid-unloader-center")).size(60f).row();
                     t.add("@beta.cont.title").row();
                     t.image().color(Color.darkGray).height(4f).row();
-                    t.add("@bata.cont.text");
+                    t.add("@beta.cont.text");
                 }).grow();
             });
         });
@@ -36,18 +36,21 @@ public class TheTech extends Mod {
     @Override
     public void loadContent() {
         Effects.load();
+        Itemsx.load();
         Blocks.load();
+
+        ModTechTree.load();
     }
 
     public static String prefix(String text) {
         return prefix + " " + text;
     }
 
-    public static Texture get(String id) {
-        return atlas.find(id).texture;
+    public static TextureRegion get(String id) {
+        return atlas.find(id);
     }
 
-    public static Texture mod(String id) {
+    public static TextureRegion mod(String id) {
         return get(modId + "-" + id);
     }
 
@@ -63,7 +66,7 @@ public class TheTech extends Mod {
         });
     }
 
-    public static TextureRegion modR(String id) {
-        return new TextureRegion(mod(id));
+    public static TextureRegion loadRegion(Block block, String prefix) {
+        return TheTech.mod(block.getContentType().name() + "." + block.name + "-" + prefix);
     }
 }

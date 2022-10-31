@@ -4,27 +4,27 @@ import arc.graphics.*;
 import arc.graphics.g2d.*;
 import arc.math.geom.*;
 import arc.struct.*;
+import arc.util.Interval;
+import arc.util.Log;
+import arc.util.io.Reads;
+import arc.util.io.Writes;
 import mindustry.gen.Building;
 import mindustry.graphics.*;
 import mindustry.ui.*;
 import mindustry.world.*;
-import mindustry.world.blocks.defense.*;
-import mindustry.world.blocks.production.*;
-import the.mod.*;
 import the.mod.content.*;
+import the.mod.utils.Types;
 
 import static arc.Core.*;
 import static mindustry.Vars.*;
 
 public class Meteria {
-    public static class MeteriaNode extends Wall {
+    public static class MeteriaNode extends Types.ModBlock {
         public float maxMeteria;
         public int range;
 
         public MeteriaNode(String name) {
             super(name);
-
-            localizedName = TheTech.prefix + " " + localizedName;
         }
 
         @Override
@@ -52,7 +52,7 @@ public class Meteria {
             ));
         }
 
-        public class MeteriaNodeBuild extends WallBuild {
+        public class MeteriaNodeBuild extends ModBlockBuild {
             public Seq<Building> buildsInRange;
             public Seq<Block> blocksInRange;
             public Seq<Vec2> blocksInRangeP;
@@ -72,6 +72,7 @@ public class Meteria {
             public void drawField() {
                 Draw.draw(Layer.max, () -> {
                     Draw.color(Color.purple);
+                    Draw.alpha(0.25f);
                     Lines.stroke(2.5f);
                     Lines.rect(x - range(), y - range(), range()*2, range()*2);
                     Draw.flush();
@@ -85,6 +86,7 @@ public class Meteria {
             public void drawLinks() {
                 Draw.draw(Layer.max, () -> {
                     Draw.color(Color.purple);
+                    Draw.alpha(0.25f);
                     Lines.stroke(1.5f);
 
                     Vec2 vec;
@@ -98,6 +100,21 @@ public class Meteria {
 
                     Draw.flush();
                 });
+            }
+
+            @Override
+            public void write(Writes write) {
+                super.write(write);
+                write.f(meteria);
+                write.f(local$maxMeteria);
+            }
+
+            @Override
+            public void read(Reads read, byte revision) {
+                super.read(read, revision);
+
+                meteria = read.f();
+                local$maxMeteria = read.f();
             }
 
             public void addLink(Tile tile) {
@@ -148,6 +165,10 @@ public class Meteria {
                         if(block instanceof MeteriaCrafter) {
                             addLink(tile);
                         }
+
+                        if(tile.build instanceof MeteriaReceiverBuild) {
+                            addLink(tile);
+                        }
                     }
                 }
             }
@@ -194,12 +215,48 @@ public class Meteria {
                     if(b instanceof MeteriaCrafter.MeteriaCrafterBuild) {
                         ((MeteriaCrafter.MeteriaCrafterBuild) b).meteria = sub(((MeteriaCrafter.MeteriaCrafterBuild) b).meteria);
                     }
+
+                    if(b instanceof MeteriaReceiverBuild b2) {
+                        ((MeteriaReceiverBuild) b).meteria(add(b2.meteria(), b2.meteriaCapacity()));
+                    }
+
+                    if(b instanceof MeteriaNodeBuild) {
+                        float bothMeteria = ((MeteriaNodeBuild) b).meteria + this.meteria;
+                        bothMeteria = bothMeteria / 2;
+
+                        this.meteria = bothMeteria;
+                        ((MeteriaNodeBuild) b).meteria = bothMeteria;
+                    }
                 }
             }
 
             @Override
             public void updateTile() {
                 super.updateTile();
+            }
+
+            public float add(float bMeteria, float cap) {
+                if(bMeteria > meteria) {
+                    bMeteria += meteria;
+                    meteria = 0;
+
+                    if(bMeteria > cap) {
+                        meteria = bMeteria - cap;
+                        bMeteria = cap;
+                    }
+                } else {
+                    float left = cap - bMeteria;
+
+                    if(meteria < left) {
+                        bMeteria += meteria;
+                        meteria = 0;
+                    } else {
+                        meteria -= left;
+                        bMeteria += left;
+                    }
+                }
+
+                return bMeteria;
             }
 
             public float sub(float bMeteria) {
@@ -221,35 +278,29 @@ public class Meteria {
         }
     }
 
-    public static class MeteriaNodeBooster extends Wall {
+    public static class MeteriaNodeBooster extends Types.ModBlock {
         public float meteriaBoost;
 
         public MeteriaNodeBooster(String name) {
             super(name);
-
-            localizedName = TheTech.prefix + " " + localizedName;
         }
     }
 
-    public static class MeteriaSource extends Wall {
+    public static class MeteriaSource extends Types.ModBlock {
         public MeteriaSource(String name) {
             super(name);
-
-            localizedName = TheTech.prefix + " " + localizedName;
         }
 
-        public class MeteriaSourceBuild extends WallBuild {
+        public class MeteriaSourceBuild extends Types.ModBlock.ModBlockBuild {
         }
     }
 
-    public static class MeteriaCrafter extends GenericCrafter {
+    public static class MeteriaCrafter extends Types.ModCrafter {
         public float meteriaGet;
         public float maxMeteria;
 
         public MeteriaCrafter(String name) {
             super(name);
-
-            localizedName = TheTech.prefix + " " + localizedName;
         }
 
         @Override
@@ -263,15 +314,112 @@ public class Meteria {
             ));
         }
 
-        public class MeteriaCrafterBuild extends GenericCrafterBuild {
+        public class MeteriaCrafterBuild extends ModCrafterBuild {
             public float meteria = 0;
 
             @Override
             public void craft() {
                 super.craft();
+
                 meteria += meteriaGet;
                 if(meteria > maxMeteria) {
                     meteria = maxMeteria;
+                }
+            }
+
+            @Override
+            public void write(Writes write) {
+                super.write(write);
+                write.f(meteria);
+            }
+
+            @Override
+            public void read(Reads read, byte revision) {
+                super.read(read, revision);
+
+                meteria = read.f();
+            }
+        }
+    }
+
+    public interface MeteriaReceiverBuild {
+        float meteria();
+        float meteriaCapacity();
+
+        void meteria(float meteria);
+    }
+
+    public static class MeteriaDrill extends Types.ModDrill {
+        public float maxMeteria;
+        public float meteriaConsume;
+
+        public MeteriaDrill(String name) {
+            super(name);
+        }
+
+        @Override
+        public void setBars() {
+            super.setBars();
+
+            addBar("@meteria.name", (MeteriaDrillBuild build) -> new Bar(
+                    () -> bundle.get("meteria.name") + ": " + (int) Math.floor((build.meteria / maxMeteria) * 100) + "%",
+                    () -> Color.purple,
+                    () -> build.meteria / maxMeteria
+            ));
+        }
+
+        public class MeteriaDrillBuild extends ModDrillBuild implements MeteriaReceiverBuild {
+            public float meteria;
+
+            public MeteriaDrillBuild() {
+                meteria = 0;
+            }
+
+            @Override
+            public void write(Writes write) {
+                super.write(write);
+                write.f(meteria);
+            }
+
+            @Override
+            public void read(Reads read, byte revision) {
+                super.read(read, revision);
+                meteria = read.f();
+            }
+
+            @Override
+            public float meteria() {
+                return meteria;
+            }
+
+            @Override
+            public float meteriaCapacity() {
+                return maxMeteria;
+            }
+
+            @Override
+            public void meteria(float meteria) {
+                this.meteria = meteria;
+            }
+
+            @Override
+            public void draw() {
+                super.draw();
+
+                Log.info("works");
+                if(meteria > maxMeteria) {
+                    meteria = maxMeteria;
+                }
+
+                if(meteria >= meteriaConsume && items.total() < itemCapacity) {
+                    meteria -= meteriaConsume;
+                }
+            }
+
+            @Override
+            public void updateTile() {
+                if(meteria >= meteriaConsume) {
+                    super.updateTile();
                 }
             }
         }
