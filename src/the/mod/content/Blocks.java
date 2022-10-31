@@ -15,6 +15,8 @@ import static the.mod.types.Meteria.*;
 import static mindustry.type.ItemStack.with;
 
 public class Blocks {
+    //defence
+    public static ModBlock silicaWall, largeSilicaWall, virusMWall, virusMWallLarge;
     public static Minigun ares;
 
     //energy
@@ -231,6 +233,51 @@ public class Blocks {
 
             hasItems = true;
             itemCapacity = 10;
+        }};
+
+        //walls
+        silicaWall = new ModBlock("silica-wall") {{
+           health = 2235;
+           size = 1;
+
+           canBurn = false;
+           requirements(Category.defense, with(
+                   Itemsx.silica, 6
+           ));
+        }};
+
+        largeSilicaWall = new ModBlock("silica-wall-large") {{
+            health = 3549;
+            size = 2;
+
+            canBurn = false;
+            requirements(Category.defense, with(
+                    Itemsx.silica, 24
+            ));
+        }};
+
+        virusMWall = new ModBlock("m-virus-wall") {{
+            health = 2860;
+            size = 1;
+
+            dynamicEffectChange = 0.016f;
+            dynamicEffect = Effects.virusMEffect;
+
+            requirements(Category.defense, with(
+                    Itemsx.virusM, 6
+            ));
+        }};
+
+        virusMWallLarge = new ModBlock("m-virus-wall-large") {{
+            health = 4032;
+            size = 2;
+
+            dynamicEffectChange = 0.016f;
+            dynamicEffect = Effects.virusMEffect;
+
+            requirements(Category.defense, with(
+                    Itemsx.virusM, 24
+            ));
         }};
     }
 }

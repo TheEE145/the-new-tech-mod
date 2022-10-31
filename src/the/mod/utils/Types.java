@@ -4,14 +4,20 @@ import arc.func.Cons2;
 import arc.graphics.Color;
 import arc.graphics.g2d.Draw;
 import arc.graphics.g2d.TextureRegion;
+import arc.math.Mathf;
+import arc.math.geom.Geometry;
+import arc.math.geom.Point2;
 import arc.scene.ui.layout.Table;
 import arc.struct.Seq;
 import arc.util.Eachable;
 import arc.util.Log;
 import arc.util.io.Reads;
 import arc.util.io.Writes;
+import mindustry.content.Fx;
 import mindustry.content.Liquids;
 import mindustry.ctype.UnlockableContent;
+import mindustry.entities.Effect;
+import mindustry.entities.Fires;
 import mindustry.entities.units.BuildPlan;
 import mindustry.gen.Building;
 import mindustry.gen.Unit;
@@ -66,13 +72,48 @@ public class Types {
     }
 
     public static class ModBlock extends Wall {
+        public float dynamicEffectChange = 0f;
+        public Effect dynamicEffect = Fx.none;
+        public boolean canBurn = true;
+
         public ModBlock(String name) {
             super(name);
 
             localizedName = TheTech.prefix(localizedName);
+
+            flashHit = true;
+            flashColor = null;
+            update = true;
         }
 
         public class ModBlockBuild extends WallBuild {
+            public void extinguish(float x, float y) {
+                Fires.extinguish(world.tileWorld(this.x + x, this.y + y), 9000);
+            }
+
+            public float diner() {
+                return Mathf.range(size * 2.356f);
+            }
+
+            @Override
+            public void updateTile() {
+                super.updateTile();
+
+                if(!canBurn) {
+                    extinguish(2, 2);
+                    for(Point2 p : Geometry.d8) {
+                        extinguish(p.x * tilesize, p.y * tilesize);
+                    }
+                }
+            }
+
+            @Override
+            public void update() {
+                super.update();
+                if(Mathf.chanceDelta(dynamicEffectChange)) {
+                    dynamicEffect.at(x + diner(), y + diner());
+                }
+            }
         }
     }
 

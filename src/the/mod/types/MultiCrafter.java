@@ -100,6 +100,11 @@ public class MultiCrafter extends Types.ModCrafter {
         @Override
         public void draw() {
             super.draw();
+        }
+
+        @Override
+        public void configure(Object value) {
+            super.configure(value);
             clearConsumes();
 
             if(icc == null) {

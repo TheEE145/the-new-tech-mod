@@ -6,6 +6,7 @@ import mindustry.entities.effect.*;
 public class Effects {
     public static ExplosionEffect meteriaExplode;
     public static ParticleEffect craftMeteria;
+    public static WaveEffect virusMEffect;
 
     public static void load() {
         meteriaExplode = new ExplosionEffect() {{
@@ -29,6 +30,17 @@ public class Effects {
 
             particles = 1;
             lifetime = 10;
+        }};
+
+        virusMEffect = new WaveEffect() {{
+           strokeFrom = 1;
+           strokeTo = 1;
+
+           sizeFrom = 0;
+           sizeTo = 3;
+
+           colorFrom = colorTo = Color.blue;
+           lifetime = 20;
         }};
     }
 }

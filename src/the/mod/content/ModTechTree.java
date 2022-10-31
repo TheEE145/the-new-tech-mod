@@ -45,6 +45,18 @@ public class ModTechTree {
 
                 node(Itemsx.silicaSand);
             });
+
+            //crafters
+            node(Blocks.sander);
+
+            //defence
+            node(Blocks.silicaWall, () -> {
+                node(Blocks.largeSilicaWall);
+
+                node(Blocks.virusMWall, () -> {
+                    node(Blocks.virusMWallLarge);
+                });
+            });
         });
     }
 }
