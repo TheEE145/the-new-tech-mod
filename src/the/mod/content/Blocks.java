@@ -38,7 +38,8 @@ public class Blocks {
     public static LiquidUnloader liquidUnloader;
 
     //crafters
-    public static MultiCrafter sander;
+    public static ModCrafter silicaPress;
+    public static MeteriaPlant meteriaPress;
 
     //cores
     public static ModCore terra;
@@ -229,21 +230,42 @@ public class Blocks {
         }});
 
         //crafters
-        sander = add(new MultiCrafter("sander") {{
+        silicaPress = add(new ModCrafter("silica-press") {{
+            health = 420;
             size = 2;
-            health = 300;
+
+            hasItems = true;
+            itemCapacity = 15;
+            outputItem = with(Itemsx.silicaSand, 2)[0];
+
+            consumeItems(with(
+                    Itemsx.silica, 1
+            ));
+
+            requirements(Category.crafting, with(
+                    Itemsx.silica, 50
+            ));
+        }});
+
+        meteriaPress = add(new MeteriaPlant("meteria-press") {{
+            health = 560;
+            size = 3;
+
+            maxMeteria = 500;
+            meteriaConsume = 100;
+
+            hasItems = true;
+            itemCapacity = 15;
+            outputItem = with(Itemsx.virusMSand, 2)[0];
+
+            consumeItems(with(
+                    Itemsx.virusM, 1
+            ));
 
             requirements(Category.crafting, with(
                     Itemsx.silica, 75,
-                    Itemsx.virusM, 25
+                    Itemsx.silicaSand, 25
             ));
-
-            addCraft(with(Itemsx.silicaSand, 1), with(Itemsx.silica,     2),  Itemsx.silicaSand);
-            addCraft(with(Itemsx.virusM,     1), with(Itemsx.virusMSand, 2),  Itemsx.virusMSand);
-            addCraft(with(Items.coal,        1), with(Itemsx.coalSand,   2),  Itemsx.coalSand);
-
-            hasItems = true;
-            itemCapacity = 10;
         }});
 
         //walls

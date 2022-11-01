@@ -298,7 +298,6 @@ public class Meteria {
         public float meteriaGet;
         public float maxMeteria;
 
-
         public MeteriaCrafter(String name) {
             super(name);
         }
@@ -344,6 +343,62 @@ public class Meteria {
             public void read(Reads read, byte revision) {
                 super.read(read, revision);
                 meteria = read.f();
+            }
+        }
+    }
+
+    public static class MeteriaPlant extends Types.ModCrafter {
+        public float maxMeteria;
+        public float meteriaConsume;
+
+        public MeteriaPlant(String name) {
+            super(name);
+        }
+
+        @Override
+        public void setBars() {
+            super.setBars();
+
+            addBar("@meteria.name", (MeteriaPlantBuild build) -> new Bar(
+                    () -> bundle.get("meteria.name") + ": " + (int) Math.floor((build.meteria / maxMeteria) * 100) + "%",
+                    () -> ThePal.meteria,
+                    () -> build.meteria / maxMeteria
+            ));
+        }
+
+        public class MeteriaPlantBuild extends ModCrafterBuild implements MeteriaReceiverBuild {
+            public float meteria;
+
+            @Override
+            public void craft() {
+                if(meteria >= meteriaConsume) {
+                    super.craft();
+                    meteria -= meteriaConsume;
+                }
+            }
+
+            @Override
+            public BlockStatus status() {
+                return meteria >= meteriaConsume ? super.status() : BlockStatus.noInput;
+            }
+
+            public MeteriaPlantBuild() {
+                meteria = 0;
+            }
+
+            @Override
+            public float meteria() {
+                return meteria;
+            }
+
+            @Override
+            public float meteriaCapacity() {
+                return maxMeteria;
+            }
+
+            @Override
+            public void meteria(float meteria) {
+                this.meteria = meteria;
             }
         }
     }

@@ -47,7 +47,11 @@ public class ModTechTree {
             });
 
             //crafters
-            node(Blocks.sander);
+            node(Blocks.silicaPress, () -> {
+                node(Blocks.meteriaPress, Seq.with(new Objectives.Research(Blocks.meteriaNode)), () -> {
+
+                });
+            });
 
             //defence
             node(Blocks.silicaWall, () -> {

@@ -13,6 +13,7 @@ import mindustry.mod.*;
 import mindustry.game.EventType;
 import mindustry.ui.dialogs.BaseDialog;
 import mindustry.world.Block;
+import mindustry.world.Tile;
 import the.mod.content.*;
 
 import java.util.Random;
@@ -39,7 +40,7 @@ public class TheTech extends Mod {
                 d.cont.pane(t -> {
                     t.margin(60f);
 
-                    t.image(mod("liquid-unloader-center")).size(60f).row();
+                    t.image(mod("modlogog")).size(650, 120).row();
                     t.add("@beta.cont.title").row();
                     t.image().color(Color.darkGray).height(4f).row();
                     t.add("@beta.cont.text");
@@ -107,6 +108,11 @@ public class TheTech extends Mod {
         Blocks.load();
 
         ModTechTree.load();
+        Redcon.load();
+    }
+
+    public static Tile getTileByDraw(float x, float y) {
+        return world.tile((int) Math.floor(x / 8), (int) Math.floor(y / 8));
     }
 
     public static String prefix(String text) {
