@@ -1,11 +1,12 @@
 package the.mod.content;
 
+import mindustry.entities.Effect;
 import mindustry.entities.effect.*;
 import the.mod.utils.ThePal;
 
 public class Effects {
     public static ExplosionEffect meteriaExplode;
-    public static ParticleEffect craftMeteria;
+    public static MultiEffect craftMeteria;
     public static WaveEffect virusMEffect;
 
     public static void load() {
@@ -18,18 +19,37 @@ public class Effects {
            waveStroke = 5;
         }};
 
-        craftMeteria = new ParticleEffect() {{
-            colorFrom = colorTo = lightColor = ThePal.meteria;
-            strokeFrom = 1;
-            strokeTo = 0;
-            sizeFrom = 8;
-            sizeTo = 16;
+        craftMeteria = new MultiEffect() {{
+            effects = new Effect[] {
+                    new WaveEffect() {{
+                        strokeFrom = 1;
+                        strokeTo = 1;
 
-            lenFrom = 0.5f;
-            lenTo = 0.5f;
+                        sizeFrom = 0;
+                        sizeTo = 4;
 
-            particles = 1;
-            lifetime = 10;
+                        colorFrom = colorTo = ThePal.meteria;
+                        lifetime = 30;
+                    }},
+
+                    new ParticleEffect() {{
+                        lenFrom = 1;
+                        lenTo = 1;
+
+                        strokeFrom = 1;
+                        strokeTo = 1;
+
+                        sizeFrom = 1;
+                        sizeTo = 3;
+
+                        particles = 3;
+                        baseLength = 2;
+                        length = 4;
+
+                        lifetime = 10;
+                        colorFrom = colorTo = ThePal.meteria;
+                    }}
+            };
         }};
 
         virusMEffect = new WaveEffect() {{

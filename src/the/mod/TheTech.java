@@ -33,7 +33,6 @@ public class TheTech extends Mod {
 
     //Vars.mods.locateMod("the-new-tech-mod");
     public TheTech() {
-
         on(EventType.ClientLoadEvent.class, () -> {
             show("@beta.title", d -> {
                 d.addCloseButton();
@@ -52,16 +51,17 @@ public class TheTech extends Mod {
                 Log.info(all);
 
                 Random rand = new Random();
-                UnlockableContent contentx = all.get(rand.nextInt(all.size - 1));
+                UnlockableContent contents = all.get(rand.nextInt(all.size - 1));
 
-                mod.meta.displayName = dName = "[gray]< [cyan]TheNewTech[] >[] - [#66CDAA]v" + mod.meta.version + "[]";
-                mod.meta.subtitle = subtitle = "mod have this " + contentx.getContentType().name() + ": " + contentx.localizedName;
+                dName = "< TheNewTech > - v" + mod.meta.version;
+                mod.meta.displayName = "[gray]< [#66CDAA]TheNewTech[] >[] - [#66CDAA]v" + mod.meta.version + "[]";
+                mod.meta.subtitle = subtitle = "mod have this " + contents.getContentType().name() + ": " + contents.localizedName;
 
                 if(!mobile) {
                     if(mods.locateMod("ol") == null) {
                         Table t = new Table();
                         t.margin(4f);
-                        t.labelWrap("[white]" + dName + "[]\n[#66CDAA]" + subtitle);
+                        t.labelWrap("[red]" + dName + "\n" + Log.removeColors(subtitle));
                         t.pack();
                         t.visible(() -> state.isMenu());
                         scene.add(t);
@@ -70,19 +70,11 @@ public class TheTech extends Mod {
                     Table t = new Table();
                     t.margin(4f);
                     t.button(bundle("research.all"), () -> {
-                            show("@research.all.warn", bg -> {
-                                bg.cont.pane(h -> {
-                                    bg.margin(60f);
-                                });
-                            });
-                    });
-
-                    ui.database.button(bundle("research.all"), () -> {
                         show(bundle("research.all.warn"), bg -> {
                             bg.cont.pane(h -> {
                                 h.margin(60f);
-                                h.add(bundle("research.all.text"));
-                                h.add(bundle("bd.confirm"));
+                                h.add(bundle("research.all.text")).row();
+                                h.add(bundle("bd.confirm")).row();
 
                                 h.button(bundle("bd.confirm.y"), () -> {
                                     content.blocks().each(UnlockableContent::unlock);
@@ -91,13 +83,18 @@ public class TheTech extends Mod {
                                     content.units().each(UnlockableContent::unlock);
                                     content.statusEffects().each(UnlockableContent::unlock);
                                     content.sectors().each(UnlockableContent::unlock);
-                                    bg.hide();
-                                });
 
-                                h.button(bundle("bd.confirm.n"), bg::hide);
+                                    bg.hide();
+                                }).width(300f).row();
+
+                                h.button(bundle("bd.confirm.n"), bg::hide).width(300f).row();
                             });
                         });
-                    }).growX().row();
+                    }).size(300f, 50f);
+                    t.pack();
+                    t.visible(() -> state.isPaused() && state.isCampaign());
+                    t.top();
+                    scene.add(t);
                 }
             }
         });

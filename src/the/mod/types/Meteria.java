@@ -9,6 +9,7 @@ import mindustry.gen.Building;
 import mindustry.graphics.*;
 import mindustry.ui.*;
 import mindustry.world.*;
+import mindustry.world.meta.BlockStatus;
 import the.mod.content.*;
 import the.mod.utils.ThePal;
 import the.mod.utils.Types;
@@ -297,6 +298,7 @@ public class Meteria {
         public float meteriaGet;
         public float maxMeteria;
 
+
         public MeteriaCrafter(String name) {
             super(name);
         }
@@ -313,15 +315,22 @@ public class Meteria {
         }
 
         public class MeteriaCrafterBuild extends ModCrafterBuild {
+            @Override
+            public BlockStatus status() {
+                return meteria >= maxMeteria ? BlockStatus.noOutput : super.status();
+            }
+
             public float meteria = 0;
 
             @Override
             public void craft() {
-                super.craft();
+                if(meteria < maxMeteria) {
+                    super.craft();
 
-                meteria += meteriaGet;
-                if(meteria > maxMeteria) {
-                    meteria = maxMeteria;
+                    meteria += meteriaGet;
+                    if(meteria > maxMeteria) {
+                        meteria = maxMeteria;
+                    }
                 }
             }
 
@@ -334,7 +343,6 @@ public class Meteria {
             @Override
             public void read(Reads read, byte revision) {
                 super.read(read, revision);
-
                 meteria = read.f();
             }
         }
