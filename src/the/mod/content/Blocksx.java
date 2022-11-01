@@ -321,10 +321,12 @@ public class Blocksx {
         //redcon
         virusMStaticWall = add(new ModStaticWall("m-virus-wall-static") {{
             variants = 3;
+            mapColor = Color.gray;
         }});
 
         mantiumWall = add(new ModStaticWall("mantium-wall") {{
             variants = 2;
+            mapColor = Color.gray;
         }});
 
         mantium = add(new ModFloor("mantium", 3) {{
