@@ -1,5 +1,6 @@
 package the.mod.utils;
 
+import arc.func.Cons;
 import arc.func.Cons2;
 import arc.graphics.Color;
 import arc.graphics.g2d.Draw;
@@ -371,6 +372,30 @@ public class Types {
         }
 
         public class ModEnemyBuild extends RouterBuild {
+        }
+    }
+
+    public static class ModStatusEffect extends StatusEffect {
+        public Cons<Unit> onTimeEnd;
+        private boolean endCond = false;
+
+        public void damage(float damage) {
+            this.damage = damage/60;
+        }
+
+        public ModStatusEffect(String name) {
+            super(name);
+            localizedName = TheTech.prefix(localizedName);
+        }
+
+        @Override
+        public void update(Unit unit, float time) {
+            super.update(unit, time);
+
+            if((time <= 2f) && (onTimeEnd != null) && !endCond) {
+                onTimeEnd.get(unit);
+                endCond = true;
+            }
         }
     }
 }

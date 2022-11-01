@@ -1,5 +1,6 @@
 package the.mod.content;
 
+import arc.Core;
 import arc.func.*;
 import arc.struct.Seq;
 import mindustry.content.Items;
@@ -14,7 +15,7 @@ public class ModTechTree {
     public static TechNode tech;
 
     public static void load() {
-        tech = nodeRoot("the new tech mod", Blocksx.terra, () -> {
+        tech = nodeRoot(Core.bundle.get("planet.the-new-tech-mod-redcon.name"), Blocksx.terra, () -> {
             Cons2<UnlockableContent, Runnable> nodeI = (i, r) -> {
                 node(i, Seq.with(new Objectives.Produce(i)), r);
             };
@@ -72,11 +73,13 @@ public class ModTechTree {
             });
 
             //defence
-            node(Blocksx.silicaWall, () -> {
-                node(Blocksx.largeSilicaWall);
+            node(Blocksx.silicaTurret, () -> {
+                node(Blocksx.silicaWall, () -> {
+                    node(Blocksx.largeSilicaWall);
 
-                node(Blocksx.virusMWall, () -> {
-                    node(Blocksx.virusMWallLarge);
+                    node(Blocksx.virusMWall, () -> {
+                        node(Blocksx.virusMWallLarge);
+                    });
                 });
             });
         });

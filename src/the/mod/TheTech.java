@@ -8,6 +8,8 @@ import arc.graphics.g2d.TextureRegion;
 import arc.scene.ui.layout.Table;
 import arc.struct.Seq;
 import arc.util.Log;
+import mindustry.content.Blocks;
+import mindustry.content.SerpuloTechTree;
 import mindustry.ctype.UnlockableContent;
 import mindustry.mod.*;
 import mindustry.game.EventType;
@@ -103,6 +105,7 @@ public class TheTech extends Mod {
     @Override
     public void loadContent() {
         Effects.load();
+        Statuses.load();
         Itemsx.load();
         Liquids.load();
         Blocksx.load();

@@ -13,6 +13,7 @@ import mindustry.world.draw.*;
 import mindustry.world.meta.BuildVisibility;
 import the.mod.TheTech;
 import the.mod.types.*;
+import the.mod.utils.ThePal;
 import the.mod.utils.Types.*;
 
 import static the.mod.types.Meteria.*;
@@ -23,6 +24,7 @@ public class Blocksx {
 
     //defence
     public static ModBlock silicaWall, largeSilicaWall, virusMWall, virusMWallLarge;
+    public static ModItemTurret silicaTurret;
     public static Minigun ares;
 
     //environment
@@ -61,7 +63,7 @@ public class Blocksx {
     }
 
     public static void load() {
-        //miniguns
+        //turrets
         ares = add(new Minigun("ares") {{
             requirements(Category.turret, with(Items.copper, 1));
 
@@ -75,7 +77,7 @@ public class Blocksx {
             consumeAmmoOnce = true;
             shootSound = Sounds.shootBig;
 
-            drawer = new DrawTurret("reinforced-") {{
+            drawer = new DrawTurret("redcon-") {{
                 parts.add(
                         new RegionPart("-side") {{
                             mirror = true;
@@ -120,7 +122,113 @@ public class Blocksx {
             }});
         }});
 
-        //meteria nodes
+        silicaTurret = add(new ModItemTurret("silica-turret") {{
+            requirements(Category.turret, with(Itemsx.silica, 24));
+            size = 1;
+            health = 240;
+            range = 310f;
+
+            reload = 60;
+
+            shootY = 4f;
+            rotateSpeed = 5f;
+            consumeAmmoOnce = true;
+            shootSound = Sounds.shoot;
+
+            drawer = new DrawTurret("redcon-") {{
+               parts.add(
+                       new RegionPart("-front") {{
+                           moveY = -2f;
+                           under = true;
+                       }},
+
+                       new RegionPart("-mid") {{
+                           moveY = -0.10f;
+                           under = true;
+                       }},
+
+                       new RegionPart("-blade") {{
+                           moveY = 0.25f;
+                           under = true;
+                       }}
+               );
+            }};
+
+            ammo(
+                    Itemsx.silica, new BasicBulletType() {{
+                        damage = 12;
+                        speed = 8.5f;
+
+                        width = height = 8;
+                        shrinkY = 0.3f;
+
+                        collidesTiles = false;
+                        frontColor = Color.white;
+                        backColor = trailColor = hitColor = Color.white;
+                        trailChance = 0.44f;
+
+                        lifetime = 34f;
+                        rotationOffset = 90f;
+                    }},
+
+                    Itemsx.silicaSand, new BasicBulletType() {{
+                        damage = 9;
+                        speed = 8.5f;
+
+                        width = height = 12;
+                        shrinkY = 0.3f;
+
+                        collidesTiles = false;
+                        frontColor = Color.white;
+                        backColor = trailColor = hitColor = Color.white;
+                        trailChance = 0.44f;
+
+                        lifetime = 34f;
+                        rotationOffset = 90f;
+
+                        shootCone = 40f;
+                        fragBullets = 7;
+
+                        fragBullet = new BasicBulletType() {{
+                            damage = 5;
+                            speed = 6.5f;
+
+                            width = height = 6;
+                            shrinkY = 0.3f;
+
+                            collidesTiles = true;
+                            frontColor = Color.white;
+                            backColor = trailColor = hitColor = Color.white;
+                            trailChance = 0.44f;
+
+                            lifetime = 16f;
+                            rotationOffset = 90f;
+                        }};
+                    }},
+
+                    Itemsx.virusM, new BasicBulletType() {{
+                        damage = 6;
+                        speed = 8.5f;
+
+                        width = height = 7;
+                        shrinkY = 0.3f;
+
+                        collidesTiles = false;
+                        frontColor = ThePal.virusM;
+                        backColor = trailColor = hitColor = Color.blue;
+                        trailChance = 0.44f;
+
+                        lifetime = 34f;
+                        rotationOffset = 90f;
+                        status = Statuses.virus1stage;
+                    }}
+            );
+
+            itemCapacity = 10;
+            researchCost = with();
+        }});
+
+                //meteria nodes
         meteriaNode = add(new MeteriaNode("meteria-node") {{
             maxMeteria = 10000;
             range = 25;
@@ -187,11 +295,16 @@ public class Blocksx {
 
         //cores
         terra = add(new ModCore("core-terra") {{
-            health = 25000;
+            requirements(Category.effect, BuildVisibility.editorOnly, with(Itemsx.silica, 1000));
+            alwaysUnlocked = true;
+
+            isFirstTier = true;
             unitType = UnitTypes.alpha;
+            health = 3500;
+            itemCapacity = 4000;
             size = 4;
 
-            itemCapacity = 10000;
+            unitCapModifier = 8;
         }});
 
         //drills
