@@ -28,12 +28,17 @@ public class Blocksx {
     //environment
     public static ModFloor virusMFloor, mantium, orangeIce, emethen, crystals;
     public static ModStaticWall virusMStaticWall, orangeIceWall, mantiumWall;
+    public static ModOreBlock silicaOre;
 
     //energy
     public static MeteriaNode meteriaNode, largeMeteriaNode, sandboxMeteriaNode;
     public static MeteriaNodeBooster meteriaBooster;
     public static MeteriaSource meteriaSource;
     public static MeteriaCrafter coalMeteriaGenerator;
+
+    //distinction
+    public static ModConveyor silicaConveyor;
+    public static ModEnemy silicaRouter;
 
     //drills
     public static MeteriaDrill meteriaDrill, largeDrill, nuclearDrill;
@@ -360,6 +365,31 @@ public class Blocksx {
 
         crystals = add(new ModFloor("crystals", 3) {{
             wall = virusMStaticWall;
+        }});
+
+        silicaOre = add(new ModOreBlock("ore-silica-crystal", Itemsx.silica) {{
+            variants = 3;
+        }});
+
+        //distribution
+        silicaConveyor = add(new ModConveyor("silica-conveyor") {{
+            size = 1;
+
+            health = 45;
+            speed = 0.03f;
+            displayedSpeed = 4.2f;
+            buildCostMultiplier = 2f;
+
+            requirements(Category.distribution, with(
+                    Itemsx.silica, 1
+            ));
+
+            researchCost = with();
+        }});
+
+        silicaRouter = add(new ModEnemy("silica-router") {{
+            requirements(Category.distribution, with(Itemsx.silica, 3));
+            buildCostMultiplier = 4f;
         }});
     }
 }

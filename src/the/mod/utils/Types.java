@@ -27,7 +27,10 @@ import mindustry.world.*;
 import mindustry.world.blocks.ItemSelection;
 import mindustry.world.blocks.defense.Wall;
 import mindustry.world.blocks.defense.turrets.ItemTurret;
+import mindustry.world.blocks.distribution.Conveyor;
+import mindustry.world.blocks.distribution.Router;
 import mindustry.world.blocks.environment.Floor;
+import mindustry.world.blocks.environment.OreBlock;
 import mindustry.world.blocks.environment.StaticWall;
 import mindustry.world.blocks.liquid.Conduit;
 import mindustry.world.blocks.production.*;
@@ -341,6 +344,33 @@ public class Types {
         public ModLiquid(String name, Color color) {
             super(name, color);
             localizedName = TheTech.prefix(localizedName);
+        }
+    }
+
+    public static class ModOreBlock extends OreBlock {
+        public ModOreBlock(String name, Item ore) {
+            super(name, ore);
+            localizedName = TheTech.prefix(localizedName);
+        }
+    }
+
+    public static class ModConveyor extends Conveyor {
+        public ModConveyor(String name) {
+            super(name);
+            localizedName = TheTech.prefix(localizedName);
+        }
+
+        public class ModConveyorBuild extends ConveyorBuild {
+        }
+    }
+
+    public static class ModEnemy extends Router {
+        public ModEnemy(String name) {
+            super(name);
+            localizedName = TheTech.prefix(localizedName);
+        }
+
+        public class ModEnemyBuild extends RouterBuild {
         }
     }
 }

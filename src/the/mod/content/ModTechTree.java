@@ -1,9 +1,12 @@
 package the.mod.content;
 
+import arc.func.*;
 import arc.struct.Seq;
 import mindustry.content.Items;
 import mindustry.content.TechTree.TechNode;
+import mindustry.ctype.UnlockableContent;
 import mindustry.game.Objectives;
+import mindustry.type.Item;
 
 import static mindustry.content.TechTree.*;
 
@@ -12,6 +15,10 @@ public class ModTechTree {
 
     public static void load() {
         tech = nodeRoot("the new tech mod", Blocksx.terra, () -> {
+            Cons2<UnlockableContent, Runnable> nodeI = (i, r) -> {
+                node(i, Seq.with(new Objectives.Produce(i)), r);
+            };
+
             //energy
             node(Blocksx.meteriaNode, () -> {
                 node(Blocksx.largeMeteriaNode);
@@ -33,17 +40,28 @@ public class ModTechTree {
                 });
             });
 
+            //conveyors
+            node(Blocksx.silicaConveyor, () -> {
+               node(Blocksx.silicaRouter);
+            });
+
             //items
             node(Itemsx.silica, () -> {
-                node(Items.coal, () -> {
-                    node(Itemsx.coalSand);
+                nodeI.get(Items.coal, () -> {
+                    nodeI.get(Itemsx.coalSand, () -> {
+
+                    });
                 });
 
-                node(Itemsx.virusM, () -> {
-                    node(Itemsx.virusMSand);
+                nodeI.get(Itemsx.virusM, () -> {
+                    nodeI.get(Itemsx.virusMSand, () -> {
+
+                    });
                 });
 
-                node(Itemsx.silicaSand);
+                nodeI.get(Itemsx.silicaSand, () -> {
+
+                });
             });
 
             //crafters
