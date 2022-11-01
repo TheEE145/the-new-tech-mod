@@ -187,6 +187,12 @@ public class Types {
                     config = Liquids.water;
                 }
 
+                Draw.draw(Layer.turret, () -> {
+                    Draw.color(config.color);
+                    Draw.rect(config.uiIcon, x, y, size * 5, size * (config.gas ? 5 : 7));
+                    Draw.flush();
+                });
+
                 nearbyBlocks();
                 float total = 0;
                 for (Tile tile : requireNotConduit()) {
