@@ -27,6 +27,10 @@ public class TheTech extends Mod {
     public static Mods.LoadedMod mod;
     private String subtitle, dName;
 
+    public String bundle(String text) {
+        return bundle.get(text);
+    }
+
     //Vars.mods.locateMod("the-new-tech-mod");
     public TheTech() {
 
@@ -48,18 +52,52 @@ public class TheTech extends Mod {
                 Log.info(all);
 
                 Random rand = new Random();
-                UnlockableContent content = all.get(rand.nextInt(all.size - 1));
+                UnlockableContent contentx = all.get(rand.nextInt(all.size - 1));
 
                 mod.meta.displayName = dName = "[gray]< [cyan]TheNewTech[] >[] - [#66CDAA]v" + mod.meta.version + "[]";
-                mod.meta.subtitle = subtitle = "mod have this " + content.getContentType().name() + ": " + content.localizedName;
+                mod.meta.subtitle = subtitle = "mod have this " + contentx.getContentType().name() + ": " + contentx.localizedName;
 
-                if(!mobile && mods.locateMod("ol") == null) {
+                if(!mobile) {
+                    if(mods.locateMod("ol") == null) {
+                        Table t = new Table();
+                        t.margin(4f);
+                        t.labelWrap("[white]" + dName + "[]\n[#66CDAA]" + subtitle);
+                        t.pack();
+                        t.visible(() -> state.isMenu());
+                        scene.add(t);
+                    }
+
                     Table t = new Table();
                     t.margin(4f);
-                    t.labelWrap("[white]" + dName + "[]\n[#66CDAA]" + subtitle);
-                    t.pack();
-                    t.visible(() -> state.isMenu());
-                    scene.add(t);
+                    t.button(bundle("research.all"), () -> {
+                            show("@research.all.warn", bg -> {
+                                bg.cont.pane(h -> {
+                                    bg.margin(60f);
+                                });
+                            });
+                    });
+
+                    ui.database.button(bundle("research.all"), () -> {
+                        show(bundle("research.all.warn"), bg -> {
+                            bg.cont.pane(h -> {
+                                h.margin(60f);
+                                h.add(bundle("research.all.text"));
+                                h.add(bundle("bd.confirm"));
+
+                                h.button(bundle("bd.confirm.y"), () -> {
+                                    content.blocks().each(UnlockableContent::unlock);
+                                    content.items().each(UnlockableContent::unlock);
+                                    content.liquids().each(UnlockableContent::unlock);
+                                    content.units().each(UnlockableContent::unlock);
+                                    content.statusEffects().each(UnlockableContent::unlock);
+                                    content.sectors().each(UnlockableContent::unlock);
+                                    bg.hide();
+                                });
+
+                                h.button(bundle("bd.confirm.n"), bg::hide);
+                            });
+                        });
+                    }).growX().row();
                 }
             }
         });

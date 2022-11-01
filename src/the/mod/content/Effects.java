@@ -1,6 +1,5 @@
 package the.mod.content;
 
-import arc.graphics.Color;
 import mindustry.entities.effect.*;
 import the.mod.utils.ThePal;
 
