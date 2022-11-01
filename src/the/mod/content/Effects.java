@@ -2,6 +2,7 @@ package the.mod.content;
 
 import arc.graphics.Color;
 import mindustry.entities.effect.*;
+import the.mod.utils.ThePal;
 
 public class Effects {
     public static ExplosionEffect meteriaExplode;
@@ -10,7 +11,7 @@ public class Effects {
 
     public static void load() {
         meteriaExplode = new ExplosionEffect() {{
-           smokeColor = waveColor = sparkColor = Color.purple;
+           smokeColor = waveColor = sparkColor = ThePal.meteria;
            lifetime = 120;
            smokes = 20;
            smokeSize = 10;
@@ -19,7 +20,7 @@ public class Effects {
         }};
 
         craftMeteria = new ParticleEffect() {{
-            colorFrom = colorTo = lightColor = Color.purple;
+            colorFrom = colorTo = lightColor = ThePal.meteria;
             strokeFrom = 1;
             strokeTo = 0;
             sizeFrom = 8;
@@ -39,7 +40,7 @@ public class Effects {
            sizeFrom = 0;
            sizeTo = 3;
 
-           colorFrom = colorTo = Color.blue;
+           colorFrom = colorTo = ThePal.virusM;
            lifetime = 20;
         }};
     }

@@ -10,6 +10,7 @@ import mindustry.graphics.*;
 import mindustry.ui.*;
 import mindustry.world.*;
 import the.mod.content.*;
+import the.mod.utils.ThePal;
 import the.mod.utils.Types;
 
 import static arc.Core.*;
@@ -30,13 +31,13 @@ public class Meteria {
 
             addBar("@meteria.name", (MeteriaNodeBuild build) -> new Bar(
                     () -> bundle.get("meteria.name") + ": " + (int) Math.floor((build.meteria / build.local$maxMeteria) * 100) + "%",
-                    () -> Color.purple,
+                    () -> ThePal.meteria,
                     () -> build.meteria / build.local$maxMeteria
             ));
 
             addBar("@meteria.boost", (MeteriaNodeBuild build) -> new Bar(
                     () -> bundle.get("meteria.boost") + ": " + (int) Math.floor(build.local$maxMeteria - maxMeteria),
-                    () -> Color.purple,
+                    () -> ThePal.meteria,
                     () -> (int) Math.floor(build.local$maxMeteria - maxMeteria) == 0 ? 0 : 1
             ));
 
@@ -68,7 +69,7 @@ public class Meteria {
 
             public void drawField() {
                 Draw.draw(Layer.max, () -> {
-                    Draw.color(Color.purple);
+                    Draw.color(ThePal.meteria);
                     Draw.alpha(0.25f);
                     Lines.stroke(2.5f);
                     Lines.rect(x - range(), y - range(), range()*2, range()*2);
@@ -82,7 +83,7 @@ public class Meteria {
 
             public void drawLinks() {
                 Draw.draw(Layer.max, () -> {
-                    Draw.color(Color.purple);
+                    Draw.color(ThePal.meteria);
                     Draw.alpha(0.25f);
                     Lines.stroke(1.5f);
 
@@ -306,7 +307,7 @@ public class Meteria {
 
             addBar("@meteria.name", (MeteriaCrafterBuild build) -> new Bar(
                     () -> bundle.get("meteria.name") + ": " + (int) Math.floor((build.meteria / maxMeteria) * 100) + "%",
-                    () -> Color.purple,
+                    () -> ThePal.meteria,
                     () -> build.meteria / maxMeteria
             ));
         }
@@ -360,7 +361,7 @@ public class Meteria {
 
             addBar("@meteria.name", (MeteriaDrillBuild build) -> new Bar(
                     () -> bundle.get("meteria.name") + ": " + (int) Math.floor((build.meteria / maxMeteria) * 100) + "%",
-                    () -> Color.purple,
+                    () -> ThePal.meteria,
                     () -> build.meteria / maxMeteria
             ));
         }

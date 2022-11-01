@@ -1,13 +1,16 @@
 package the.mod.content;
 
 import arc.graphics.*;
+import arc.struct.Seq;
 import mindustry.content.*;
 import mindustry.entities.bullet.*;
 import mindustry.entities.part.*;
 import mindustry.gen.*;
 import mindustry.type.*;
+import mindustry.world.Block;
 import mindustry.world.draw.*;
 import mindustry.world.meta.BuildVisibility;
+import the.mod.TheTech;
 import the.mod.types.*;
 import the.mod.utils.Types.*;
 
@@ -15,6 +18,8 @@ import static the.mod.types.Meteria.*;
 import static mindustry.type.ItemStack.with;
 
 public class Blocks {
+    public static final Seq<Block> all = new Seq<>();
+
     //defence
     public static ModBlock silicaWall, largeSilicaWall, virusMWall, virusMWallLarge;
     public static Minigun ares;
@@ -38,9 +43,15 @@ public class Blocks {
     //cores
     public static ModCore terra;
 
+    public static <T extends Block> T add(T type) {
+        all.add(type);
+        TheTech.all.add(type);
+        return type;
+    }
+
     public static void load() {
         //miniguns
-        ares = new Minigun("ares") {{
+        ares = add(new Minigun("ares") {{
             requirements(Category.turret, with(Items.copper, 1));
 
             health = 240;
@@ -96,10 +107,10 @@ public class Blocks {
 
                 hitEffect = despawnEffect = Fx.hitBulletColor;
             }});
-        }};
+        }});
 
         //meteria nodes
-        meteriaNode = new MeteriaNode("meteria-node") {{
+        meteriaNode = add(new MeteriaNode("meteria-node") {{
             maxMeteria = 10000;
             range = 25;
 
@@ -108,9 +119,9 @@ public class Blocks {
             requirements(Category.power, with(
                     Itemsx.silica, 25
             ));
-        }};
+        }});
 
-        largeMeteriaNode = new MeteriaNode("large-meteria-node") {{
+        largeMeteriaNode = add(new MeteriaNode("large-meteria-node") {{
             maxMeteria = 50000;
             range = 50;
 
@@ -119,33 +130,33 @@ public class Blocks {
             requirements(Category.power, with(
                     Itemsx.silica, 125
             ));
-        }};
+        }});
 
-        sandboxMeteriaNode = new MeteriaNode("sandbox-meteria-node") {{
+        sandboxMeteriaNode = add(new MeteriaNode("sandbox-meteria-node") {{
             maxMeteria = 900000;
             range = 1000;
             size = 3;
 
             category = Category.power;
             buildVisibility = BuildVisibility.sandboxOnly;
-        }};
+        }});
 
         //meteria
-        meteriaBooster = new MeteriaNodeBooster("meteria-booster") {{
+        meteriaBooster = add(new MeteriaNodeBooster("meteria-booster") {{
             meteriaBoost = 2000;
             size = 2;
 
             requirements(Category.power, with(
                     Itemsx.silica, 75
             ));
-        }};
+        }});
 
-        meteriaSource = new MeteriaSource("meteria-source") {{
+        meteriaSource = add(new MeteriaSource("meteria-source") {{
             category = Category.power;
             buildVisibility = BuildVisibility.sandboxOnly;
-        }};
+        }});
 
-        coalMeteriaGenerator = new MeteriaCrafter("fuel-meteria-generator") {{
+        coalMeteriaGenerator = add(new MeteriaCrafter("fuel-meteria-generator") {{
             meteriaGet = 100;
             maxMeteria = 1000;
 
@@ -161,19 +172,19 @@ public class Blocks {
             requirements(Category.power, with(
                     Itemsx.silica, 25
             ));
-        }};
+        }});
 
         //cores
-        terra = new ModCore("core-terra") {{
+        terra = add(new ModCore("core-terra") {{
             health = 25000;
             unitType = UnitTypes.alpha;
             size = 4;
 
             itemCapacity = 10000;
-        }};
+        }});
 
         //drills
-        silicaDrill = new ModDrill("silica-drill") {{
+        silicaDrill = add(new ModDrill("silica-drill") {{
             requirements(Category.production, with(Itemsx.silica, 12));
 
             tier = 2;
@@ -182,9 +193,9 @@ public class Blocks {
 
             consumeLiquid(Liquids.water, 0.05f).boost();
             researchCost = with();
-        }};
+        }});
 
-        updatedDrill = new ModDrill("updated-drill") {{
+        updatedDrill = add(new ModDrill("updated-drill") {{
             requirements(Category.production, with(Itemsx.silica, 24));
 
             tier = 3;
@@ -192,9 +203,9 @@ public class Blocks {
             size = 3;
 
             consumeLiquid(Liquids.water, 0.06f).boost();
-        }};
+        }});
 
-        meteriaDrill = new MeteriaDrill("meteria-drill") {{
+        meteriaDrill = add(new MeteriaDrill("meteria-drill") {{
             requirements(Category.production, with(Itemsx.silica, 72));
 
             meteriaConsume = 2;
@@ -205,20 +216,20 @@ public class Blocks {
             tier = 4;
 
             consumeLiquid(Liquids.water, 0.08f).boost();
-        }};
+        }});
 
         //unloaders
-        liquidUnloader = new LiquidUnloader("liquid-unloader") {{
+        liquidUnloader = add(new LiquidUnloader("liquid-unloader") {{
             requirements(Category.liquid, with(
                     Items.titanium, 25,
                     Items.metaglass, 10
             ));
 
             size = 1;
-        }};
+        }});
 
         //crafters
-        sander = new MultiCrafter("sander") {{
+        sander = add(new MultiCrafter("sander") {{
             size = 2;
             health = 300;
 
@@ -233,10 +244,10 @@ public class Blocks {
 
             hasItems = true;
             itemCapacity = 10;
-        }};
+        }});
 
         //walls
-        silicaWall = new ModBlock("silica-wall") {{
+        silicaWall = add(new ModBlock("silica-wall") {{
            health = 2235;
            size = 1;
 
@@ -244,9 +255,9 @@ public class Blocks {
            requirements(Category.defense, with(
                    Itemsx.silica, 6
            ));
-        }};
+        }});
 
-        largeSilicaWall = new ModBlock("silica-wall-large") {{
+        largeSilicaWall = add(new ModBlock("silica-wall-large") {{
             health = 3549;
             size = 2;
 
@@ -254,9 +265,9 @@ public class Blocks {
             requirements(Category.defense, with(
                     Itemsx.silica, 24
             ));
-        }};
+        }});
 
-        virusMWall = new ModBlock("m-virus-wall") {{
+        virusMWall = add(new ModBlock("m-virus-wall") {{
             health = 2860;
             size = 1;
 
@@ -266,9 +277,9 @@ public class Blocks {
             requirements(Category.defense, with(
                     Itemsx.virusM, 6
             ));
-        }};
+        }});
 
-        virusMWallLarge = new ModBlock("m-virus-wall-large") {{
+        virusMWallLarge = add(new ModBlock("m-virus-wall-large") {{
             health = 4032;
             size = 2;
 
@@ -278,6 +289,6 @@ public class Blocks {
             requirements(Category.defense, with(
                     Itemsx.virusM, 24
             ));
-        }};
+        }});
     }
 }
