@@ -11,22 +11,22 @@ public class ModTechTree {
     public static TechNode tech;
 
     public static void load() {
-        tech = nodeRoot("the new tech mod", Blocks.terra, () -> {
+        tech = nodeRoot("the new tech mod", Blocksx.terra, () -> {
             //energy
-            node(Blocks.meteriaNode, () -> {
-                node(Blocks.largeMeteriaNode);
-                node(Blocks.meteriaBooster);
+            node(Blocksx.meteriaNode, () -> {
+                node(Blocksx.largeMeteriaNode);
+                node(Blocksx.meteriaBooster);
 
-                node(Blocks.coalMeteriaGenerator, Seq.with(new Objectives.Research(Items.coal)), () -> {
+                node(Blocksx.coalMeteriaGenerator, Seq.with(new Objectives.Research(Items.coal)), () -> {
                 });
             });
 
             //drills
-            node(Blocks.silicaDrill, () -> {
-                node(Blocks.updatedDrill, () -> {
-                    node(Blocks.meteriaDrill, Seq.with(
-                            new Objectives.Research(Blocks.meteriaNode),
-                            new Objectives.Research(Blocks.coalMeteriaGenerator)
+            node(Blocksx.silicaDrill, () -> {
+                node(Blocksx.updatedDrill, () -> {
+                    node(Blocksx.meteriaDrill, Seq.with(
+                            new Objectives.Research(Blocksx.meteriaNode),
+                            new Objectives.Research(Blocksx.coalMeteriaGenerator)
                     ), () -> {
                         //TODO tier 4 and 5 drills
                     });
@@ -47,18 +47,18 @@ public class ModTechTree {
             });
 
             //crafters
-            node(Blocks.silicaPress, () -> {
-                node(Blocks.meteriaPress, Seq.with(new Objectives.Research(Blocks.meteriaNode)), () -> {
+            node(Blocksx.silicaPress, () -> {
+                node(Blocksx.meteriaPress, Seq.with(new Objectives.Research(Blocksx.meteriaNode)), () -> {
 
                 });
             });
 
             //defence
-            node(Blocks.silicaWall, () -> {
-                node(Blocks.largeSilicaWall);
+            node(Blocksx.silicaWall, () -> {
+                node(Blocksx.largeSilicaWall);
 
-                node(Blocks.virusMWall, () -> {
-                    node(Blocks.virusMWallLarge);
+                node(Blocksx.virusMWall, () -> {
+                    node(Blocksx.virusMWallLarge);
                 });
             });
         });

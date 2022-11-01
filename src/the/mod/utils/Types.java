@@ -27,6 +27,8 @@ import mindustry.world.*;
 import mindustry.world.blocks.ItemSelection;
 import mindustry.world.blocks.defense.Wall;
 import mindustry.world.blocks.defense.turrets.ItemTurret;
+import mindustry.world.blocks.environment.Floor;
+import mindustry.world.blocks.environment.StaticWall;
 import mindustry.world.blocks.liquid.Conduit;
 import mindustry.world.blocks.production.*;
 import mindustry.world.blocks.storage.CoreBlock;
@@ -313,6 +315,32 @@ public class Types {
             public void buildConfiguration(Table table) {
                 ItemSelection.buildTable(LiquidUnloader.this, table, content.liquids(), () -> config, this::configureERR);
             }
+        }
+    }
+
+    public static class ModFloor extends Floor {
+        public ModFloor(String name) {
+            super(name);
+            localizedName = TheTech.prefix(localizedName);
+        }
+
+        public ModFloor(String name, int variants) {
+            super(name, variants);
+            localizedName = TheTech.prefix(localizedName);
+        }
+    }
+
+    public static class ModStaticWall extends StaticWall {
+        public ModStaticWall(String name) {
+            super(name);
+            localizedName = TheTech.prefix(localizedName);
+        }
+    }
+
+    public static class ModLiquid extends Liquid {
+        public ModLiquid(String name, Color color) {
+            super(name, color);
+            localizedName = TheTech.prefix(localizedName);
         }
     }
 }

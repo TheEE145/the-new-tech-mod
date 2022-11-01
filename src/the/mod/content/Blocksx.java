@@ -6,6 +6,7 @@ import mindustry.content.*;
 import mindustry.entities.bullet.*;
 import mindustry.entities.part.*;
 import mindustry.gen.*;
+import mindustry.graphics.Shaders;
 import mindustry.type.*;
 import mindustry.world.Block;
 import mindustry.world.draw.*;
@@ -17,12 +18,16 @@ import the.mod.utils.Types.*;
 import static the.mod.types.Meteria.*;
 import static mindustry.type.ItemStack.with;
 
-public class Blocks {
+public class Blocksx {
     public static final Seq<Block> all = new Seq<>();
 
     //defence
     public static ModBlock silicaWall, largeSilicaWall, virusMWall, virusMWallLarge;
     public static Minigun ares;
+
+    //environment
+    public static ModFloor virusMFloor, mantium, orangeIce, emethen, crystals;
+    public static ModStaticWall virusMStaticWall, orangeIceWall, mantiumWall;
 
     //energy
     public static MeteriaNode meteriaNode, largeMeteriaNode, sandboxMeteriaNode;
@@ -192,7 +197,7 @@ public class Blocks {
             drillTime = 600f;
             size = 2;
 
-            consumeLiquid(Liquids.water, 0.05f).boost();
+            consumeLiquid(Liquids.emethen, 0.05f).boost();
             researchCost = with();
         }});
 
@@ -203,7 +208,7 @@ public class Blocks {
             drillTime = 400f;
             size = 3;
 
-            consumeLiquid(Liquids.water, 0.06f).boost();
+            consumeLiquid(Liquids.emethen, 0.06f).boost();
         }});
 
         meteriaDrill = add(new MeteriaDrill("meteria-drill") {{
@@ -216,7 +221,7 @@ public class Blocks {
             drillTime = 280f;
             tier = 4;
 
-            consumeLiquid(Liquids.water, 0.08f).boost();
+            consumeLiquid(Liquids.emethen, 0.08f).boost();
         }});
 
         //unloaders
@@ -311,6 +316,48 @@ public class Blocks {
             requirements(Category.defense, with(
                     Itemsx.virusM, 24
             ));
+        }});
+
+        //redcon
+        virusMStaticWall = add(new ModStaticWall("m-virus-wall-static") {{
+            variants = 3;
+        }});
+
+        mantiumWall = add(new ModStaticWall("mantium-wall") {{
+            variants = 2;
+        }});
+
+        mantium = add(new ModFloor("mantium", 3) {{
+            wall = mantiumWall;
+        }});
+
+        orangeIceWall = add(new ModStaticWall("orange-ice-wall") {{
+            variants = 2;
+        }});
+
+        orangeIce = add(new ModFloor("orange-ice", 3) {{
+            wall = orangeIceWall;
+        }});
+
+        virusMFloor = add(new ModFloor("m-virus", 3) {{
+            itemDrop = Itemsx.virusM;
+            wall = virusMStaticWall;
+        }});
+
+        emethen = add(new ModFloor("emethen-floor") {{
+            speedMultiplier = 0.3f;
+            variants = 0;
+            statusDuration = 6f;
+            supportsOverlay = true;
+            drownTime = 210f;
+            albedo = 0.9f;
+            isLiquid = true;
+            liquidDrop = Liquids.emethen;
+            liquidMultiplier = 1.5f;
+        }});
+
+        crystals = add(new ModFloor("crystals", 3) {{
+            wall = virusMStaticWall;
         }});
     }
 }

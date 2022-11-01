@@ -49,7 +49,6 @@ public class TheTech extends Mod {
 
             if(!headless) {
                 mod = mods.locateMod(modId);
-                Log.info(all);
 
                 Random rand = new Random();
                 UnlockableContent contents = all.get(rand.nextInt(all.size - 1));
@@ -105,7 +104,8 @@ public class TheTech extends Mod {
     public void loadContent() {
         Effects.load();
         Itemsx.load();
-        Blocks.load();
+        Liquids.load();
+        Blocksx.load();
 
         ModTechTree.load();
         Redcon.load();
