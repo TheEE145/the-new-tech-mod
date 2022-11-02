@@ -102,6 +102,10 @@ public class TheTech extends Mod {
         });
     }
 
+    public static float pow(float n) {
+        return n*n;
+    }
+
     @Override
     public void loadContent() {
         Effects.load();

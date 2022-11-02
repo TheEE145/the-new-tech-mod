@@ -20,6 +20,7 @@ import mindustry.ctype.UnlockableContent;
 import mindustry.entities.Effect;
 import mindustry.entities.Fires;
 import mindustry.entities.units.BuildPlan;
+import mindustry.game.EventType;
 import mindustry.gen.Building;
 import mindustry.gen.Unit;
 import mindustry.graphics.Layer;
@@ -38,6 +39,7 @@ import mindustry.world.blocks.production.*;
 import mindustry.world.blocks.storage.CoreBlock;
 import mindustry.world.consumers.Consume;
 import mindustry.world.consumers.ConsumeLiquid;
+import org.w3c.dom.events.Event;
 import the.mod.TheTech;
 
 import static mindustry.Vars.*;
@@ -158,7 +160,9 @@ public class Types {
 
             config(Liquid.class, (LiquidUnloaderBuild tile, Liquid liquid) -> tile.config = liquid);
             configClear((LiquidUnloaderBuild build) -> build.config = Liquids.water);
-            //centerRegion = mod(name + "-center");
+            TheTech.on(EventType.ClientLoadEvent.class, () -> {
+                centerRegion = mod(name + "-center");
+            });
         }
 
         /*
@@ -181,21 +185,14 @@ public class Types {
             @Override
             public void draw() {
                 super.draw();
-                /**
-                 *                 Draw.draw(Layer.block, () -> {
-                 *                     Draw.color(Color.purple); //config.color
-                 *                     Draw.rect(centerRegion, x, y);
-                 *                     Draw.flush();
-                 *                 });
-                 */
 
                 if (config == null) {
                     config = Liquids.water;
                 }
 
-                Draw.draw(Layer.turret, () -> {
+                Draw.draw(Layer.block, () -> {
                     Draw.color(config.color);
-                    Draw.rect(config.uiIcon, x, y, size * 5, size * (config.gas ? 5 : 7));
+                    Draw.rect(centerRegion, x, y);
                     Draw.flush();
                 });
 
@@ -392,7 +389,7 @@ public class Types {
         public void update(Unit unit, float time) {
             super.update(unit, time);
 
-            if((time <= 2f) && (onTimeEnd != null) && !endCond) {
+            if((time <= 5f) && (onTimeEnd != null) && !endCond) {
                 onTimeEnd.get(unit);
                 endCond = true;
             }

@@ -15,6 +15,7 @@ import the.mod.TheTech;
 import the.mod.types.*;
 import the.mod.utils.ThePal;
 import the.mod.utils.Types.*;
+import the.mod.types.Lasers.*;
 
 import static the.mod.types.Meteria.*;
 import static mindustry.type.ItemStack.with;
@@ -55,6 +56,10 @@ public class Blocksx {
 
     //cores
     public static ModCore terra;
+
+    //lasers
+    public static Lasers.LaserMirror mirror;
+    public static Lasers.LaserBlock laser;
 
     public static <T extends Block> T add(T type) {
         all.add(type);
@@ -503,6 +508,29 @@ public class Blocksx {
         silicaRouter = add(new ModEnemy("silica-router") {{
             requirements(Category.distribution, with(Itemsx.silica, 3));
             buildCostMultiplier = 4f;
+        }});
+
+        //lasers
+        mirror = add(new LaserMirror("mirror") {{
+            health = 140;
+            offset = 90;
+            defaultAngle = 0;
+
+            requirements(Category.effect, with());
+        }});
+
+        laser = add(new LaserBlock("laser") {{
+            health = 200;
+
+            lasers = 7;
+            laserAlpha = 1f;
+            laserColor = Color.red;
+            laserStroke = 1f;
+            laserRadius = 80f;
+            drawTargetTile = false;
+            endEffect = Effects.laserEndEffect;
+
+            requirements(Category.effect, with());
         }});
     }
 }
