@@ -17,6 +17,7 @@ import mindustry.ui.dialogs.BaseDialog;
 import mindustry.world.Block;
 import mindustry.world.Tile;
 import the.mod.content.*;
+import the.mod.types.Lasers;
 
 import java.util.Random;
 
@@ -116,6 +117,8 @@ public class TheTech extends Mod {
 
         ModTechTree.load();
         Redcon.load();
+
+        Lasers.load();
     }
 
     public static Tile getTileByDraw(float x, float y) {

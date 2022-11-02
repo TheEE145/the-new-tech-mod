@@ -512,9 +512,9 @@ public class Blocksx {
 
         //lasers
         mirror = add(new LaserMirror("mirror") {{
+            defaultAngle = 0;
             health = 140;
             offset = 90;
-            defaultAngle = 0;
 
             requirements(Category.effect, with());
         }});

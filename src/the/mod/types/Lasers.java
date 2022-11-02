@@ -23,6 +23,19 @@ import the.mod.TheTech;
 import the.mod.utils.Types;
 
 public class Lasers {
+    public static void load() {
+        Events.on(EventType.TapEvent.class, event -> {
+            Building b = event.tile.build;
+            if(b == null) {
+                return;
+            }
+
+            if(b instanceof LaserBlock.LaserBlockBuild) {
+                //TODO change laser angle dialog
+            }
+        });
+    }
+
     public static class LaserModule {
         public float sx, sy, ex, ey, th, a;
         public Color color;
@@ -193,7 +206,7 @@ public class Lasers {
             addBar("links", (LaserBlockBuild b) -> new Bar(
                     () -> "links: " + b.len,
                     () -> Color.orange,
-                    () -> (float) (b.len / lasers)
+                    () -> (float) b.len / (float) lasers
             ));
         }
 
