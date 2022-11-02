@@ -477,6 +477,11 @@ public class Meteria {
             }
 
             @Override
+            public BlockStatus status() {
+                return meteria < meteriaConsume ? BlockStatus.noInput : super.status();
+            }
+
+            @Override
             public void updateTile() {
                 if(meteria >= meteriaConsume) {
                     super.updateTile();
