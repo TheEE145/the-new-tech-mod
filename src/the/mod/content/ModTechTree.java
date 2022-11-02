@@ -85,6 +85,8 @@ public class ModTechTree {
 
             //lasers
             node(Blocksx.laser, () -> {
+                node(Blocksx.longLaser);
+
                 node(Blocksx.mirror, () -> {
                     node(Blocksx.mirror135);
                     node(Blocksx.mirror0);

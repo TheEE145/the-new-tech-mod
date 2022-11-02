@@ -43,9 +43,9 @@ public class Lasers {
                     d.addCloseButton();
                     d.cont.pane(t -> {
                         t.add("set rotation").growX().row();
-                        t.slider(0f, 360f, 1f, (value) -> {
+                        t.slider(0f, 360f, 5f, (value) -> {
                             ((LaserBlock.LaserBlockBuild) b).angle = value;
-                        }).size(300f, 50f);
+                        }).size(300f, 50f).get().setValue(((LaserBlock.LaserBlockBuild) b).angle);
                     });
                 });
             }
@@ -194,9 +194,10 @@ public class Lasers {
 
     public static class LaserBlock extends Types.ModBlock {
         public static final float theta = (float) (Math.PI * 2);
+        public Effect endEffect, startEffect;
         public TextureRegion turretRegion;
-        public Effect endEffect;
 
+        public float startY = 4 * size;
         public boolean drawTargetTile;
         public Color laserColor;
         public float laserStroke;
@@ -259,7 +260,11 @@ public class Lasers {
                 }
 
                 link.lasers.add(m);
+                Tile tile = link.target();
                 len++;
+
+                m.ex = tile.worldx();
+                m.ey = tile.worldy();
 
                 if(canMirror() && len < lasers) {
                     float r = targetRotation();
@@ -311,6 +316,10 @@ public class Lasers {
 
                     if(endEffect != null) {
                         endEffect.at(target.worldx(), target.worldy());
+                    }
+
+                    if(startEffect != null) {
+                        startEffect.at(thx(angle, startY) + x, thy(angle, startY) + y);
                     }
 
                     if(drawTargetTile) {

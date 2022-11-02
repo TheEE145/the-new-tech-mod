@@ -1,5 +1,6 @@
 package the.mod.utils;
 
+import arc.Core;
 import arc.func.Cons;
 import arc.func.Cons2;
 import arc.graphics.Color;
@@ -21,10 +22,12 @@ import mindustry.entities.Effect;
 import mindustry.entities.Fires;
 import mindustry.entities.units.BuildPlan;
 import mindustry.game.EventType;
+import mindustry.game.Team;
 import mindustry.gen.Building;
 import mindustry.gen.Unit;
 import mindustry.graphics.Layer;
 import mindustry.type.*;
+import mindustry.ui.Bar;
 import mindustry.world.*;
 import mindustry.world.blocks.ItemSelection;
 import mindustry.world.blocks.defense.Wall;
@@ -40,7 +43,9 @@ import mindustry.world.blocks.storage.CoreBlock;
 import mindustry.world.consumers.Consume;
 import mindustry.world.consumers.ConsumeLiquid;
 import org.w3c.dom.events.Event;
-import the.mod.TheTech;
+
+import static arc.Core.bundle;
+import static the.mod.TheTech.*;
 
 import static mindustry.Vars.*;
 import static the.mod.TheTech.mod;
@@ -50,7 +55,7 @@ public class Types {
         public ModItemTurret(String name) {
             super(name);
 
-            localizedName = TheTech.prefix(localizedName);
+            localizedName = prefix(localizedName);
         }
 
         public class ModItemTurretBuild extends ItemTurretBuild {
@@ -58,13 +63,49 @@ public class Types {
     }
 
     public static class ModCore extends CoreBlock {
+        public float shieldReload = 60f;
+        public float shieldHp = 1;
+
         public ModCore(String name) {
             super(name);
+            localizedName = prefix(localizedName);
+        }
 
-            localizedName = TheTech.prefix(localizedName);
+        @Override
+        public void setBars() {
+            super.setBars();
+
+            addBar("shield", (ModCoreBuild build) -> new Bar(
+                        () -> build.shield.isBroken() ? bundle.get("shield.progress") : bundle.get("shield.health"),
+                        () -> build.shield.isBroken() ? Color.orange : Color.cyan,
+                        () -> build.shield.isBroken() ? build.shield.progress() : build.shield.health()
+            ));
         }
 
         public class ModCoreBuild extends CoreBuild {
+            public Shield shield;
+
+            public ModCoreBuild() {
+                shield = new Shield() {{
+                    maxHealth = shieldHp;
+                    reloadTime = shieldReload;
+                }};
+            }
+
+            @Override
+            public void draw() {
+                super.draw();
+                if(shield.region == null) {
+                    shield.region = mod("shield-" + size);
+                }
+
+                shield.renderer(x, y);
+            }
+
+            @Override
+            public void damage(Team source, float damage) {
+                super.damage(source, shield.damage(damage));
+            }
         }
     }
 
@@ -72,7 +113,7 @@ public class Types {
         public ModCrafter(String name) {
             super(name);
 
-            localizedName = TheTech.prefix(localizedName);
+            localizedName = prefix(localizedName);
         }
 
         public class ModCrafterBuild extends GenericCrafterBuild {
@@ -87,7 +128,7 @@ public class Types {
         public ModBlock(String name) {
             super(name);
 
-            localizedName = TheTech.prefix(localizedName);
+            localizedName = prefix(localizedName);
 
             flashHit = true;
             flashColor = null;
@@ -129,7 +170,7 @@ public class Types {
         public ModItem(String name, Color color) {
             super(name, color);
 
-            localizedName = TheTech.prefix(localizedName);
+            localizedName = prefix(localizedName);
         }
     }
 
@@ -137,7 +178,7 @@ public class Types {
         public ModDrill(String name) {
             super(name);
 
-            localizedName = TheTech.prefix(localizedName);
+            localizedName = prefix(localizedName);
 
             hasItems = true;
             itemCapacity = 15;
@@ -160,7 +201,8 @@ public class Types {
 
             config(Liquid.class, (LiquidUnloaderBuild tile, Liquid liquid) -> tile.config = liquid);
             configClear((LiquidUnloaderBuild build) -> build.config = Liquids.water);
-            TheTech.on(EventType.ClientLoadEvent.class, () -> {
+
+            on(EventType.ClientLoadEvent.class, () -> {
                 centerRegion = mod(name + "-center");
             });
         }
@@ -322,40 +364,40 @@ public class Types {
     public static class ModFloor extends Floor {
         public ModFloor(String name) {
             super(name);
-            localizedName = TheTech.prefix(localizedName);
+            localizedName = prefix(localizedName);
         }
 
         public ModFloor(String name, int variants) {
             super(name, variants);
-            localizedName = TheTech.prefix(localizedName);
+            localizedName = prefix(localizedName);
         }
     }
 
     public static class ModStaticWall extends StaticWall {
         public ModStaticWall(String name) {
             super(name);
-            localizedName = TheTech.prefix(localizedName);
+            localizedName = prefix(localizedName);
         }
     }
 
     public static class ModLiquid extends Liquid {
         public ModLiquid(String name, Color color) {
             super(name, color);
-            localizedName = TheTech.prefix(localizedName);
+            localizedName = prefix(localizedName);
         }
     }
 
     public static class ModOreBlock extends OreBlock {
         public ModOreBlock(String name, Item ore) {
             super(name, ore);
-            localizedName = TheTech.prefix(localizedName);
+            localizedName = prefix(localizedName);
         }
     }
 
     public static class ModConveyor extends Conveyor {
         public ModConveyor(String name) {
             super(name);
-            localizedName = TheTech.prefix(localizedName);
+            localizedName = prefix(localizedName);
         }
 
         public class ModConveyorBuild extends ConveyorBuild {
@@ -365,7 +407,7 @@ public class Types {
     public static class ModEnemy extends Router {
         public ModEnemy(String name) {
             super(name);
-            localizedName = TheTech.prefix(localizedName);
+            localizedName = prefix(localizedName);
         }
 
         public class ModEnemyBuild extends RouterBuild {
@@ -382,7 +424,7 @@ public class Types {
 
         public ModStatusEffect(String name) {
             super(name);
-            localizedName = TheTech.prefix(localizedName);
+            localizedName = prefix(localizedName);
         }
 
         @Override

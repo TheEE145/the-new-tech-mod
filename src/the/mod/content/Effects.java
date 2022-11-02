@@ -6,8 +6,9 @@ import mindustry.entities.effect.*;
 import the.mod.utils.ThePal;
 
 public class Effects {
-    public static MultiEffect craftMeteria, laserEndEffect;
+    public static MultiEffect craftMeteria, laserEndEffect, longLaserEndEffect;
     public static ExplosionEffect meteriaExplode;
+    public static ParticleEffect laserStartEffect;
     public static WaveEffect virusMEffect;
 
     public static void load() {
@@ -20,19 +21,26 @@ public class Effects {
            waveStroke = 5;
         }};
 
-        laserEndEffect = new MultiEffect() {{
-            effects = new Effect[] {
-                    new WaveEffect() {{
-                        strokeFrom = 1;
-                        strokeTo = 1;
+        laserStartEffect = new ParticleEffect() {{
+            lenFrom = 1;
+            lenTo = 1;
 
-                        sizeFrom = 0;
-                        sizeTo = 4;
+            strokeFrom = 1;
+            strokeTo = 1;
 
-                        colorFrom = colorTo = Color.red;
-                        lifetime = 15;
-                    }},
+            sizeFrom = 1f;
+            sizeTo = 1.2f;
 
+            particles = 2;
+            baseLength = 2;
+            length = 4;
+
+            lifetime = 10;
+            colorFrom = colorTo = Color.lightGray;
+        }};
+
+        MultiEffect tmp1 = new MultiEffect() {{
+            effects = new Effect[]{
                     new ParticleEffect() {{
                         lenFrom = 1;
                         lenTo = 1;
@@ -47,7 +55,7 @@ public class Effects {
                         baseLength = 2;
                         length = 4;
 
-                        lifetime = 10;
+                        lifetime = 20;
                         colorFrom = colorTo = Color.orange;
                     }},
 
@@ -65,9 +73,43 @@ public class Effects {
                         baseLength = 2;
                         length = 4;
 
-                        lifetime = 10;
+                        lifetime = 20;
                         colorFrom = colorTo = Color.lightGray;
                     }}
+            };
+        }};
+
+        longLaserEndEffect = new MultiEffect() {{
+            effects = new Effect[] {
+                    new WaveEffect() {{
+                        strokeFrom = 1;
+                        strokeTo = 1;
+
+                        sizeFrom = 0;
+                        sizeTo = 4;
+
+                        colorFrom = colorTo = Color.purple;
+                        lifetime = 25;
+                    }},
+
+                    tmp1
+            };
+        }};
+
+        laserEndEffect = new MultiEffect() {{
+            effects = new Effect[] {
+                    new WaveEffect() {{
+                        strokeFrom = 1;
+                        strokeTo = 1;
+
+                        sizeFrom = 0;
+                        sizeTo = 4;
+
+                        colorFrom = colorTo = Color.red;
+                        lifetime = 15;
+                    }},
+
+                    tmp1
             };
         }};
 

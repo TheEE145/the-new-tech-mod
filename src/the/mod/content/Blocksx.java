@@ -13,6 +13,7 @@ import mindustry.world.draw.*;
 import mindustry.world.meta.BuildVisibility;
 import the.mod.TheTech;
 import the.mod.types.*;
+import the.mod.utils.Shield;
 import the.mod.utils.ThePal;
 import the.mod.utils.Types.*;
 import the.mod.types.Lasers.*;
@@ -59,7 +60,7 @@ public class Blocksx {
 
     //lasers
     public static Lasers.LaserMirror mirror, mirror135, mirror0;
-    public static Lasers.LaserBlock laser;
+    public static Lasers.LaserBlock laser, longLaser;
 
     public static <T extends Block> T add(T type) {
         all.add(type);
@@ -310,6 +311,8 @@ public class Blocksx {
             size = 4;
 
             unitCapModifier = 8;
+            shieldReload = 600f;
+            shieldHp = 2000f;
         }});
 
         //drills
@@ -550,10 +553,30 @@ public class Blocksx {
             laserStroke = 1f;
             laserRadius = 80f;
             drawTargetTile = false;
+
             endEffect = Effects.laserEndEffect;
+            startEffect = Effects.laserStartEffect;
 
             requirements(Category.effect, with(
                     Itemsx.silica, 5
+            ));
+        }});
+
+        longLaser = add(new LaserBlock("long-laser") {{
+            health = 250;
+
+            lasers = 14;
+            laserAlpha = 0.85f;
+            laserColor = Color.purple;
+            laserStroke = 0.75f;
+            laserRadius = 160f;
+            drawTargetTile = false;
+
+            endEffect = Effects.longLaserEndEffect;
+            startEffect = Effects.laserStartEffect;
+
+            requirements(Category.effect, with(
+                    Itemsx.silica, 10
             ));
         }});
     }
