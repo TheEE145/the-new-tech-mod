@@ -58,7 +58,7 @@ public class Blocksx {
     public static ModCore terra;
 
     //lasers
-    public static Lasers.LaserMirror mirror;
+    public static Lasers.LaserMirror mirror, mirror135, mirror0;
     public static Lasers.LaserBlock laser;
 
     public static <T extends Block> T add(T type) {
@@ -511,12 +511,34 @@ public class Blocksx {
         }});
 
         //lasers
+        mirror0 = add(new LaserMirror("mirror-0") {{
+            health = 140;
+            offset = 0;
+
+            rotate = false;
+            conveyorPlacement = false;
+
+            requirements(Category.effect, with(
+                    Itemsx.silica, 2
+            ));
+        }});
+
         mirror = add(new LaserMirror("mirror") {{
-            defaultAngle = 0;
             health = 140;
             offset = 90;
 
-            requirements(Category.effect, with());
+            requirements(Category.effect, with(
+                    Itemsx.silica, 2
+            ));
+        }});
+
+        mirror135 = add(new LaserMirror("mirror-135") {{
+            health = 140;
+            offset = 135;
+
+            requirements(Category.effect, with(
+                    Itemsx.silica, 2
+            ));
         }});
 
         laser = add(new LaserBlock("laser") {{
@@ -530,7 +552,9 @@ public class Blocksx {
             drawTargetTile = false;
             endEffect = Effects.laserEndEffect;
 
-            requirements(Category.effect, with());
+            requirements(Category.effect, with(
+                    Itemsx.silica, 5
+            ));
         }});
     }
 }

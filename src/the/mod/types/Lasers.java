@@ -1,18 +1,23 @@
 package the.mod.types;
 
+import arc.Core;
 import arc.Events;
 import arc.func.Func;
 import arc.graphics.Color;
 import arc.graphics.g2d.*;
+import arc.scene.ui.Dialog;
+import arc.scene.ui.Slider;
+import arc.scene.ui.layout.Table;
 import arc.struct.Seq;
 import arc.util.Log;
-import arc.util.io.Reads;
-import arc.util.io.Writes;
+import arc.util.io.*;
+import static mindustry.Vars.*;
 import mindustry.content.Blocks;
 import mindustry.entities.Effect;
 import mindustry.entities.TargetPriority;
 import mindustry.game.EventType;
 import mindustry.gen.Building;
+import mindustry.gen.Call;
 import mindustry.gen.Sounds;
 import mindustry.graphics.Layer;
 import mindustry.ui.Bar;
@@ -26,12 +31,23 @@ public class Lasers {
     public static void load() {
         Events.on(EventType.TapEvent.class, event -> {
             Building b = event.tile.build;
+
+            Log.info(b);
             if(b == null) {
                 return;
             }
 
+            Log.info(b instanceof LaserBlock.LaserBlockBuild);
             if(b instanceof LaserBlock.LaserBlockBuild) {
-                //TODO change laser angle dialog
+                TheTech.show("rotation set", (d) -> {
+                    d.addCloseButton();
+                    d.cont.pane(t -> {
+                        t.add("set rotation").growX().row();
+                        t.slider(0f, 360f, 1f, (value) -> {
+                            ((LaserBlock.LaserBlockBuild) b).angle = value;
+                        }).size(300f, 50f);
+                    });
+                });
             }
         });
     }
@@ -215,6 +231,11 @@ public class Lasers {
             public float angle = 0;
             public int len;
 
+            //for extends
+            public boolean canWork() {
+                return true;
+            }
+
             public boolean canMirror() {
                 return link.target().block() != null && (link.target().block() instanceof LaserMirror);
             }
@@ -262,17 +283,22 @@ public class Lasers {
             public void draw() {
                 super.draw();
 
-                len = 0;
-                link = new LaserLink(x, y);
+                if(canWork()) {
+                    len = 0;
+                    link = new LaserLink(x, y);
 
-                str(new LaserModule(link.startX, link.startY, thx(angle, laserRadius) + x, thy(angle, laserRadius) + y) {{
-                    color = laserColor;
-                    a = laserAlpha;
-                    th = laserStroke;
-                }}, angle);
+                    str(new LaserModule(link.startX, link.startY, thx(angle, laserRadius) + x, thy(angle, laserRadius) + y) {{
+                        color = laserColor;
+                        a = laserAlpha;
+                        th = laserStroke;
+                    }}, angle);
+                }
 
                 Draw.draw(Layer.turret, () -> {
-                    link.draw();
+                    if(canWork()) {
+                        link.draw();
+                    }
+
                     if(turretRegion != null) {
                         Draw.color(Color.white);
                         Draw.alpha(1f);
@@ -280,7 +306,7 @@ public class Lasers {
                     };
                 });
 
-                if(!link.lasers.isEmpty()) {
+                if(!link.lasers.isEmpty() && canWork()) {
                     Tile target = link.target();
 
                     if(endEffect != null) {
