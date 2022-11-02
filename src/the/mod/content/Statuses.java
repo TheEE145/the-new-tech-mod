@@ -11,8 +11,13 @@ public class Statuses {
     public static final Seq<Types.ModStatusEffect> all = new Seq<>();
 
     public static BacteriaStatus virus1stage, virus2stage, virus3stage;
+    public static Types.ModStatusEffect sonicPulse;
 
     public static void load() {
+        sonicPulse = new Types.ModStatusEffect("sonic-pulse") {{
+            buildSpeedMultiplier = speedMultiplier = 3.0f;
+        }};
+
         virus3stage = new BacteriaStatus("virus-3stage") {{
             aColor = Color.pink;
             alpha = 0.8f;
@@ -56,7 +61,7 @@ public class Statuses {
         public void draw(Unit unit) {
             super.draw(unit);
 
-            Draw.draw(Layer.shields, () -> {
+            Draw.draw(Layer.shields - 1, () -> {
                 Draw.color(aColor);
                 Draw.alpha(alpha);
                 Draw.rect(unit.type.shadowRegion, unit.x, unit.y, unit.rotation - 90);

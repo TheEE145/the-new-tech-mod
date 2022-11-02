@@ -63,6 +63,9 @@ public class Blocksx {
     public static Lasers.LaserBlock laser, longLaser;
     public static LaserMultiMirror multiMirror;
 
+    //other
+    public static RadiusBlock sonicPulsar;
+
     public static <T extends Block> T add(T type) {
         all.add(type);
         TheTech.all.add(type);
@@ -594,5 +597,8 @@ public class Blocksx {
                     Itemsx.silica, 10
             ));
         }});
+
+        //other
+
     }
 }

@@ -103,6 +103,10 @@ public class TheTech extends Mod {
         });
     }
 
+    public static float len(float x1, float x2, float y1, float y2) {
+        return (float) Math.sqrt(TheTech.pow(x2 - x1) + TheTech.pow(y2 - y1));
+    }
+
     public static float pow(float n) {
         return n*n;
     }
