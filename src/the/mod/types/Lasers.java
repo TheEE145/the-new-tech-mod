@@ -1,29 +1,18 @@
 package the.mod.types;
 
-import arc.Core;
 import arc.Events;
-import arc.func.Func;
 import arc.graphics.Color;
 import arc.graphics.g2d.*;
-import arc.scene.ui.Dialog;
-import arc.scene.ui.Slider;
-import arc.scene.ui.layout.Table;
 import arc.struct.Seq;
 import arc.util.Log;
 import arc.util.io.*;
-import static mindustry.Vars.*;
-import mindustry.content.Blocks;
 import mindustry.entities.Effect;
 import mindustry.entities.TargetPriority;
 import mindustry.game.EventType;
 import mindustry.gen.Building;
-import mindustry.gen.Call;
-import mindustry.gen.Sounds;
 import mindustry.graphics.Layer;
 import mindustry.ui.Bar;
-import mindustry.world.Block;
 import mindustry.world.Tile;
-import mindustry.world.meta.BlockGroup;
 import the.mod.TheTech;
 import the.mod.utils.Types;
 
@@ -46,6 +35,18 @@ public class Lasers {
                         t.slider(0f, 360f, 5f, (value) -> {
                             ((LaserBlock.LaserBlockBuild) b).angle = value;
                         }).size(300f, 50f).get().setValue(((LaserBlock.LaserBlockBuild) b).angle);
+                    });
+                });
+            }
+
+            if(b instanceof LaserMultiMirror.laserMultiMirrorBuild) {
+                TheTech.show("rotation set", (d) -> {
+                    d.addCloseButton();
+                    d.cont.pane(t -> {
+                        t.add("set rotation").growX().row();
+                        t.slider(0f, 360f, 5f, (value) -> {
+                            ((LaserMultiMirror.laserMultiMirrorBuild) b).angle = value;
+                        }).size(300f, 50f).get().setValue(((LaserMultiMirror.laserMultiMirrorBuild) b).angle);
                     });
                 });
             }
@@ -163,9 +164,35 @@ public class Lasers {
         }
     }
 
+    public static class LaserMultiMirror extends LaserMirror {
+        public LaserMultiMirror(String name) {
+            super(name);
+        }
+
+        public class laserMultiMirrorBuild extends LaserMirrorBuild {
+            public float angle;
+
+            @Override
+            public float angle() {
+                return rotation == 0 || rotation == 2 ? -angle : angle;
+            }
+
+            @Override
+            public void write(Writes write) {
+                super.write(write);
+                write.f(angle);
+            }
+
+            @Override
+            public void read(Reads read, byte revision) {
+                super.read(read, revision);
+                angle = read.f();
+            }
+        }
+    }
+
     public static class LaserMirror extends Types.ModBlock {
         public float offset;
-        public float defaultAngle;
 
         public LaserMirror(String name) {
             super(name);
@@ -183,11 +210,7 @@ public class Lasers {
                     return -offset;
                 }
 
-                if(rotation == 3 || rotation == 1) {
-                    return offset;
-                }
-
-                return defaultAngle;
+                return offset;
             }
         }
     }

@@ -61,6 +61,7 @@ public class Blocksx {
     //lasers
     public static Lasers.LaserMirror mirror, mirror135, mirror0;
     public static Lasers.LaserBlock laser, longLaser;
+    public static LaserMultiMirror multiMirror;
 
     public static <T extends Block> T add(T type) {
         all.add(type);
@@ -541,6 +542,14 @@ public class Blocksx {
 
             requirements(Category.effect, with(
                     Itemsx.silica, 2
+            ));
+        }});
+
+        multiMirror = add(new LaserMultiMirror("mirror-all") {{
+            health = 150;
+
+            requirements(Category.effect, with(
+                    Itemsx.silica, 4
             ));
         }});
 
