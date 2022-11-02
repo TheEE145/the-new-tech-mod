@@ -374,6 +374,8 @@ public class Types {
     }
 
     public static class ModStaticWall extends StaticWall {
+        public Item itemDrop;
+
         public ModStaticWall(String name) {
             super(name);
             localizedName = prefix(localizedName);

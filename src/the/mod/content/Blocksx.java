@@ -449,6 +449,8 @@ public class Blocksx {
         virusMStaticWall = add(new ModStaticWall("m-virus-wall-static") {{
             variants = 3;
             mapColor = Color.gray;
+
+            itemDrop = Itemsx.virusM;
         }});
 
         mantiumWall = add(new ModStaticWall("mantium-wall") {{
@@ -555,6 +557,10 @@ public class Blocksx {
 
         laser = add(new LaserBlock("laser") {{
             health = 200;
+
+            hasItems = true;
+            itemCapacity = 5;
+            mineable = true;
 
             lasers = 7;
             laserAlpha = 1f;

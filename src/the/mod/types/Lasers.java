@@ -1,6 +1,7 @@
 package the.mod.types;
 
 import arc.Events;
+import arc.func.Cons3;
 import arc.graphics.Color;
 import arc.graphics.g2d.*;
 import arc.struct.Seq;
@@ -12,7 +13,10 @@ import mindustry.game.EventType;
 import mindustry.gen.Building;
 import mindustry.graphics.Layer;
 import mindustry.ui.Bar;
+import mindustry.world.Block;
 import mindustry.world.Tile;
+import mindustry.world.blocks.environment.Floor;
+import mindustry.world.blocks.environment.StaticWall;
 import the.mod.TheTech;
 import the.mod.utils.Types;
 
@@ -217,8 +221,12 @@ public class Lasers {
 
     public static class LaserBlock extends Types.ModBlock {
         public static final float theta = (float) (Math.PI * 2);
+        public Cons3<Tile, Block, Building> onTarget;
         public Effect endEffect, startEffect;
+        public boolean mineable = false;
         public TextureRegion turretRegion;
+        public float mineSpeed = 60f;
+        public float damage = 10;
 
         public float startY = 4 * size;
         public boolean drawTargetTile;
@@ -254,6 +262,7 @@ public class Lasers {
             public LaserLink link;
             public float angle = 0;
             public int len;
+            public float progress;
 
             //for extends
             public boolean canWork() {
@@ -307,6 +316,33 @@ public class Lasers {
                 return (float) (Math.sin((angle / 360) * theta) * rad);
             }
 
+            public void targetRenderer() {
+                Tile target = link.target();
+
+                Block block = target.block();
+                Building building = target.build;
+
+                if(building != null) {
+                    building.damage(damage);
+                }
+
+                if(block != null) {
+                    if(block instanceof Types.ModStaticWall || block instanceof Types.ModFloor) {
+                        if(block.itemDrop != null) {
+                            progress--;
+                            if(progress <= 0) {
+                                dump(block.itemDrop);
+                                progress = mineSpeed;
+                            }
+                        }
+                    }
+                }
+
+                if(onTarget != null) {
+                    onTarget.get(target, block, building);
+                }
+            }
+
             @Override
             public void draw() {
                 super.draw();
@@ -352,6 +388,8 @@ public class Lasers {
                             Lines.rect(target.worldx() - 5, target.worldy() - 5, 10, 10);
                         });
                     }
+
+                    targetRenderer();
                 }
             }
 
