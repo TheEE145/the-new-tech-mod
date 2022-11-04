@@ -2,13 +2,23 @@ package the.mod.utils;
 
 import arc.graphics.Color;
 import arc.graphics.g2d.*;
-import mindustry.graphics.Pal;
-import the.mod.TheTech;
+import mindustry.graphics.*;
+import the.mod.types.Other;
+
+import java.util.concurrent.atomic.AtomicBoolean;
+
+import static mindustry.Vars.*;
 
 public class Drawx {
+    public static final float SCREEN_BOUNDS = 4592.235f;
+    public static TextureRegion circle, sun, pix;
+
     public static class Math {
         private static boolean beamBigger = true;
         public static float beamStroke = 0f;
+
+        public static boolean sun = false;
+        public static Color sunColor = Color.white;
 
         public static void renderer() {
             if(beamBigger) {
@@ -26,6 +36,15 @@ public class Drawx {
                     beamBigger = true;
                 }
             }
+
+            AtomicBoolean sun = new AtomicBoolean(false);
+            world.tiles.eachTile(t -> {
+                if(t.build instanceof Other.SunGenerator.SunGeneratorBuild) {
+                    sun.set(true);
+                }
+            });
+
+            Math.sun = sun.get();
         }
     }
 
@@ -76,7 +95,6 @@ public class Drawx {
         radius(x, y, radius, 2, color, alpha);
     }
 
-    public static TextureRegion circle;
     public static void beam(float x, float y, float x1, float y1, float stroke, Color color, float alpha) {
         Lines.stroke(stroke);
         Draw.color(color);

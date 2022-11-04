@@ -66,6 +66,7 @@ public class Blocksx {
     public static LaserMultiMirror multiMirror;
 
     //other
+    public static Other.SunGenerator sunGenerator;
     public static RadiusBlock sonicPulsar;
 
     public static <T extends Block> T add(T type) {
@@ -619,6 +620,14 @@ public class Blocksx {
                     Itemsx.silicaSand, 50,
                     Itemsx.virusM, 10
             ));
+        }});
+
+        sunGenerator = add(new Other.SunGenerator("sun-generator") {{
+            health = 1000;
+            size = 4;
+
+            buildVisibility = BuildVisibility.sandboxOnly;
+            requirements(Category.effect, with());
         }});
     }
 }

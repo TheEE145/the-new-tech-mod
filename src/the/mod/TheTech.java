@@ -3,6 +3,7 @@ package the.mod;
 import arc.*;
 import arc.func.*;
 import arc.graphics.*;
+import arc.graphics.g2d.Draw;
 import arc.graphics.g2d.TextureRegion;
 
 import arc.scene.ui.layout.Table;
@@ -12,6 +13,7 @@ import arc.util.Timer;
 import mindustry.content.Blocks;
 import mindustry.content.SerpuloTechTree;
 import mindustry.ctype.UnlockableContent;
+import mindustry.graphics.Layer;
 import mindustry.mod.*;
 import mindustry.game.EventType;
 import mindustry.ui.dialogs.BaseDialog;
@@ -19,6 +21,7 @@ import mindustry.world.Block;
 import mindustry.world.Tile;
 import the.mod.content.*;
 import the.mod.types.Lasers;
+import the.mod.types.Other;
 import the.mod.utils.Drawx;
 
 import java.util.Random;
@@ -39,6 +42,17 @@ public class TheTech extends Mod {
 
     //Vars.mods.locateMod("the-new-tech-mod");
     public TheTech() {
+        on(EventType.Trigger.postDraw.getClass(), () -> {
+            Log.info("test");
+            if(Drawx.Math.sun && Drawx.pix != null) {
+                Draw.draw(Layer.max + 1, () -> {
+                    Draw.color(Drawx.Math.sunColor);
+                    Draw.alpha(0.75f);
+                    Draw.rect(Drawx.pix, 0, 0, Drawx.SCREEN_BOUNDS, Drawx.SCREEN_BOUNDS);
+                });
+            }
+        });
+
         on(EventType.ClientLoadEvent.class, () -> {
             show("@beta.title", d -> {
                 d.addCloseButton();
@@ -105,6 +119,8 @@ public class TheTech extends Mod {
 
             //assets
             Drawx.circle = TheTech.mod("circlex");
+            Drawx.sun = TheTech.mod("sunx");
+            Drawx.pix = TheTech.mod("pix");
 
             //renderer
             Timer.schedule(Drawx.Math::renderer, 1, 0.02f);
@@ -131,6 +147,7 @@ public class TheTech extends Mod {
         Redcon.load();
 
         Lasers.load();
+        Other.SunGenerator.loadEvent();
     }
 
     public static Tile getTileByDraw(float x, float y) {
