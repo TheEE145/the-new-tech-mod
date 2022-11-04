@@ -1,3 +1,3 @@
-![](https://github.com/TheEE145/the-new-tech-mod/blob/master/sprites/ui/modlogog.png)
+![](https://github.com/TheEE145/the-new-tech-mod/blob/master/sprites/ui/font_conver.png)
 <hr>
-java mod
+Java mindustry mod.

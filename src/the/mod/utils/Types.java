@@ -38,6 +38,7 @@ public class Types {
             super(name);
 
             localizedName = prefix(localizedName);
+            consumeLiquid(the.mod.content.Liquids.emethen, 0.25f).boost();
         }
 
         public class ModItemTurretBuild extends ItemTurretBuild {
