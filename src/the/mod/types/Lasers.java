@@ -235,6 +235,7 @@ public class Lasers {
 
             TheTech.on(EventType.ClientLoadEvent.class, () -> {
                 turretRegion = TheTech.mod(name + "-turret");
+                uiIcon = TheTech.mod(name + "-preview");
             });
 
             canBurn = false;
