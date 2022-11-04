@@ -8,11 +8,9 @@ import arc.graphics.g2d.TextureRegion;
 
 import arc.scene.ui.layout.Table;
 import arc.struct.Seq;
-import arc.util.Log;
-import arc.util.Timer;
-import mindustry.content.Blocks;
-import mindustry.content.SerpuloTechTree;
+import arc.util.*;
 import mindustry.ctype.UnlockableContent;
+import mindustry.gen.Building;
 import mindustry.graphics.Layer;
 import mindustry.mod.*;
 import mindustry.game.EventType;
@@ -36,6 +34,18 @@ public class TheTech extends Mod {
     public static Mods.LoadedMod mod;
     private String subtitle, dName;
 
+    public static boolean isPart(Building b, Building b2) {
+        return b.x == b2.x && b.y == b2.y;
+    }
+
+    public static Block toBlock(Building build) {
+        if(build == null) {
+            return null;
+        }
+
+        return world.tile(build.tileX(), build.tileY()).block();
+    }
+
     public String bundle(String text) {
         return bundle.get(text);
     }
@@ -43,7 +53,7 @@ public class TheTech extends Mod {
     //Vars.mods.locateMod("the-new-tech-mod");
     public TheTech() {
         on(EventType.Trigger.postDraw.getClass(), () -> {
-            Log.info("test");
+            Log.info("test"); //why? i don`t know
             if(Drawx.Math.sun && Drawx.pix != null) {
                 Draw.draw(Layer.max + 1, () -> {
                     Draw.color(Drawx.Math.sunColor);

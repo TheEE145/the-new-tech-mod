@@ -10,11 +10,13 @@ import mindustry.graphics.*;
 import mindustry.ui.*;
 import mindustry.world.*;
 import mindustry.world.meta.BlockStatus;
+import the.mod.TheTech;
 import the.mod.content.*;
 import the.mod.utils.*;
 
 import static arc.Core.*;
 import static mindustry.Vars.*;
+import static the.mod.TheTech.toBlock;
 
 public class Meteria {
     public static class MeteriaNode extends RadiusBlock {
@@ -38,7 +40,7 @@ public class Meteria {
             ));
 
             addBar("@meteria.boost", (MeteriaNodeBuild build) -> new Bar(
-                    () -> bundle.get("meteria.boost") + ": " + (int) Math.floor(build.local$maxMeteria - maxMeteria),
+                    () -> bundle.get("meteria.boost") + ": " + (int) Math.floor(build.local$maxMeteria/maxMeteria * 100) + "%",
                     () -> ThePal.meteria,
                     () -> (int) Math.floor(build.local$maxMeteria - maxMeteria) == 0 ? 0 : 1
             ));
@@ -134,6 +136,7 @@ public class Meteria {
                 blocksInRange = new Seq<>();
                 blocksInRangeP = new Seq<>();
 
+                Seq<Building> cache = new Seq<>();
                 for(Building e : buildings((build) -> {
                     Block block = toBlock(build);
 
@@ -155,7 +158,26 @@ public class Meteria {
 
                     return build instanceof MeteriaReceiverBuild;
                 })) {
+                    cache.add(e);
+                }
 
+                //remove all duplicates to display normal
+                Seq<Building> result = new Seq<>();
+                for(Building e : cache) {
+                    boolean found = false;
+                    for(Building e2 : result) {
+                        if(TheTech.isPart(e, e2)) {
+                            found = true;
+                            break;
+                        }
+                    }
+
+                    if(!found) {
+                        result.add(e);
+                    }
+                }
+
+                for(Building e : result) {
                     addLink(world.tile(e.tileX(), e.tileY()));
                 }
             }

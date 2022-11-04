@@ -61,14 +61,6 @@ public class RadiusBlock extends Types.ModBlock {
             return collision(x, y, radius);
         }
 
-        public Block toBlock(Building build) {
-            if(build == null || build == this) {
-                return null;
-            }
-
-            return world.tile(build.tileX(), build.tileY()).block();
-        }
-
         public Seq<Building> buildings(Boolf<Building> boolf) {
             return buildings(boolf, radius);
         }
