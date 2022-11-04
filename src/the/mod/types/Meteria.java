@@ -11,19 +11,20 @@ import mindustry.ui.*;
 import mindustry.world.*;
 import mindustry.world.meta.BlockStatus;
 import the.mod.content.*;
-import the.mod.utils.ThePal;
-import the.mod.utils.Types;
+import the.mod.utils.*;
 
 import static arc.Core.*;
 import static mindustry.Vars.*;
 
 public class Meteria {
-    public static class MeteriaNode extends Types.ModBlock {
+    public static class MeteriaNode extends RadiusBlock {
         public float maxMeteria;
-        public int range;
 
         public MeteriaNode(String name) {
             super(name);
+
+            colorByTeam = false;
+            radColor = ThePal.meteria;
         }
 
         @Override
@@ -51,7 +52,7 @@ public class Meteria {
             ));
         }
 
-        public class MeteriaNodeBuild extends ModBlockBuild {
+        public class MeteriaNodeBuild extends RadiusBlockBuild {
             public Seq<Building> buildsInRange;
             public Seq<Block> blocksInRange;
             public Seq<Vec2> blocksInRangeP;
@@ -68,6 +69,7 @@ public class Meteria {
                 blocksInRangeP = new Seq<>();
             }
 
+            @Deprecated
             public void drawField() {
                 Draw.draw(Layer.max, () -> {
                     Draw.color(ThePal.meteria);
@@ -78,23 +80,28 @@ public class Meteria {
                 });
             }
 
+            @Deprecated
             public float range() {
-                return range * 8;
+                return -1;
             }
 
             public void drawLinks() {
                 Draw.draw(Layer.max, () -> {
-                    Draw.color(ThePal.meteria);
-                    Draw.alpha(0.25f);
-                    Lines.stroke(1.5f);
-
                     Vec2 vec;
                     float sie;
                     for(int i = 0; i < blocksInRange.size; i++) {
                         vec = blocksInRangeP.get(i);
                         sie = blocksInRange.get(i).size * 8;
 
-                        Lines.rect(vec.x - sie/2 - ratio, vec.y - sie/2 - ratio, sie + ratio * 2, sie + ratio * 2);
+                        if(blocksInRange.get(i) instanceof MeteriaNode) {
+                            Drawx.beam(x, y, vec.x, vec.y, ThePal.meteria, 0.25f);
+                            Draw.color(ThePal.meteria);
+                        } else {
+                            Draw.color(ThePal.meteria);
+                            Lines.stroke(1.5f);
+                            Draw.alpha(0.25f);
+                            Lines.rect(vec.x - sie/2 - ratio, vec.y - sie/2 - ratio, sie + ratio * 2, sie + ratio * 2);
+                        }
                     }
 
                     Draw.flush();
@@ -127,48 +134,29 @@ public class Meteria {
                 blocksInRange = new Seq<>();
                 blocksInRangeP = new Seq<>();
 
-                Tile tile;
-                Block block;
-                for(int x = tileX() - range; x < tileX() + range; x++) {
-                    for(int y = tileY() - range; y < tileY() + range; y++) {
-                        if(x < 0 || y < 0) {
-                            continue;
-                        }
+                for(Building e : buildings((build) -> {
+                    Block block = toBlock(build);
 
-                        if(x > world.width() || y > world.height()) {
-                            continue;
-                        }
-
-                        tile = world.tile(x, y);
-                        if(tile == null) {
-                            continue;
-                        }
-
-                        if(tile.build == this) {
-                            continue;
-                        }
-
-                        block = tile.block();
-                        if(block instanceof MeteriaNodeBooster) {
-                            addLink(tile);
-                        }
-
-                        if(block instanceof MeteriaNode) {
-                            addLink(tile);
-                        }
-
-                        if(block instanceof MeteriaSource) {
-                            addLink(tile);
-                        }
-
-                        if(block instanceof MeteriaCrafter) {
-                            addLink(tile);
-                        }
-
-                        if(tile.build instanceof MeteriaReceiverBuild) {
-                            addLink(tile);
-                        }
+                    if(block instanceof MeteriaNodeBooster) {
+                        return true;
                     }
+
+                    if(block instanceof MeteriaNode) {
+                        return true;
+                    }
+
+                    if(block instanceof MeteriaSource) {
+                        return true;
+                    }
+
+                    if(block instanceof MeteriaCrafter) {
+                        return true;
+                    }
+
+                    return build instanceof MeteriaReceiverBuild;
+                })) {
+
+                    addLink(world.tile(e.tileX(), e.tileY()));
                 }
             }
 
@@ -188,7 +176,6 @@ public class Meteria {
             public void draw() {
                 super.draw();
                 drawLinks();
-                drawField();
 
                 updateTact();
             }

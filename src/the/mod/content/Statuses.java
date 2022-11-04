@@ -33,7 +33,7 @@ public class Statuses {
 
             damageMultiplier = speedMultiplier = buildSpeedMultiplier = 0.5f;
             onTimeEnd = (unit) -> {
-                unit.apply(virus3stage, 480);
+                unit.apply(virus3stage, Timer.second8);
             };
         }};
 
@@ -44,7 +44,7 @@ public class Statuses {
 
             damageMultiplier = speedMultiplier = buildSpeedMultiplier = 0.8f;
             onTimeEnd = (unit) -> {
-                unit.apply(virus2stage, 480);
+                unit.apply(virus2stage, Timer.second8);
             };
         }};
     }

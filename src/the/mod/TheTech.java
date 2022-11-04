@@ -8,6 +8,7 @@ import arc.graphics.g2d.TextureRegion;
 import arc.scene.ui.layout.Table;
 import arc.struct.Seq;
 import arc.util.Log;
+import arc.util.Timer;
 import mindustry.content.Blocks;
 import mindustry.content.SerpuloTechTree;
 import mindustry.ctype.UnlockableContent;
@@ -18,6 +19,7 @@ import mindustry.world.Block;
 import mindustry.world.Tile;
 import the.mod.content.*;
 import the.mod.types.Lasers;
+import the.mod.utils.Drawx;
 
 import java.util.Random;
 
@@ -100,6 +102,12 @@ public class TheTech extends Mod {
                     scene.add(t);
                 }
             }
+
+            //assets
+            Drawx.circle = TheTech.mod("circlex");
+
+            //renderer
+            Timer.schedule(Drawx.Math::renderer, 1, 0.02f);
         });
     }
 

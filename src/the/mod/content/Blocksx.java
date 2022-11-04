@@ -6,6 +6,7 @@ import mindustry.content.*;
 import mindustry.entities.bullet.*;
 import mindustry.entities.part.*;
 import mindustry.gen.*;
+import mindustry.graphics.Pal;
 import mindustry.graphics.Shaders;
 import mindustry.type.*;
 import mindustry.world.Block;
@@ -15,6 +16,7 @@ import the.mod.TheTech;
 import the.mod.types.*;
 import the.mod.utils.Shield;
 import the.mod.utils.ThePal;
+import the.mod.utils.Timer;
 import the.mod.utils.Types.*;
 import the.mod.types.Lasers.*;
 
@@ -241,7 +243,7 @@ public class Blocksx {
                 //meteria nodes
         meteriaNode = add(new MeteriaNode("meteria-node") {{
             maxMeteria = 10000;
-            range = 25;
+            radius = 200;
 
             size = 2;
 
@@ -252,7 +254,7 @@ public class Blocksx {
 
         largeMeteriaNode = add(new MeteriaNode("large-meteria-node") {{
             maxMeteria = 50000;
-            range = 50;
+            radius = 400;
 
             size = 3;
 
@@ -263,7 +265,7 @@ public class Blocksx {
 
         sandboxMeteriaNode = add(new MeteriaNode("sandbox-meteria-node") {{
             maxMeteria = 900000;
-            range = 1000;
+            radius = 8000;
             size = 3;
 
             category = Category.power;
@@ -599,6 +601,24 @@ public class Blocksx {
         }});
 
         //other
+        sonicPulsar = add(new RadiusBlock("sonic-pulsar") {{
+            health = 200;
+            size = 2;
 
+            radius = 56;
+            colorByTeam = true;
+
+            after = (build) -> {
+                for(Unit unit : build.units()) {
+                    unit.apply(Statuses.sonicPulse, Timer.second8);
+                }
+            };
+
+            requirements(Category.effect, with(
+                    Itemsx.silica, 25,
+                    Itemsx.silicaSand, 50,
+                    Itemsx.virusM, 10
+            ));
+        }});
     }
 }
