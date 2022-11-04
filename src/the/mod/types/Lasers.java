@@ -1,36 +1,29 @@
 package the.mod.types;
 
-import arc.Events;
-import arc.func.Cons3;
-import arc.graphics.Color;
+import arc.*;
+import arc.func.*;
+import arc.graphics.*;
 import arc.graphics.g2d.*;
-import arc.struct.Seq;
-import arc.util.Log;
+import arc.struct.*;
 import arc.util.io.*;
-import mindustry.entities.Effect;
-import mindustry.entities.TargetPriority;
-import mindustry.game.EventType;
-import mindustry.gen.Building;
-import mindustry.graphics.Layer;
-import mindustry.ui.Bar;
-import mindustry.world.Block;
-import mindustry.world.Tile;
-import mindustry.world.blocks.environment.Floor;
-import mindustry.world.blocks.environment.StaticWall;
+import mindustry.entities.*;
+import mindustry.game.*;
+import mindustry.gen.*;
+import mindustry.graphics.*;
+import mindustry.ui.*;
+import mindustry.world.*;
 import the.mod.TheTech;
-import the.mod.utils.Types;
+import the.mod.utils.*;
 
 public class Lasers {
     public static void load() {
         Events.on(EventType.TapEvent.class, event -> {
             Building b = event.tile.build;
 
-            Log.info(b);
             if(b == null) {
                 return;
             }
 
-            Log.info(b instanceof LaserBlock.LaserBlockBuild);
             if(b instanceof LaserBlock.LaserBlockBuild) {
                 TheTech.show("rotation set", (d) -> {
                     d.addCloseButton();

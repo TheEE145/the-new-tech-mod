@@ -6,16 +6,11 @@ import arc.graphics.g2d.*;
 import arc.struct.Seq;
 import static mindustry.Vars.*;
 
-import arc.util.Log;
 import mindustry.gen.*;
-import mindustry.graphics.Drawf;
-import mindustry.graphics.Layer;
-import mindustry.graphics.Pal;
-import mindustry.world.Block;
-import mindustry.world.Tile;
+import mindustry.graphics.*;
+import mindustry.world.*;
 import the.mod.TheTech;
-import the.mod.utils.Drawx;
-import the.mod.utils.Types;
+import the.mod.utils.*;
 
 public class RadiusBlock extends Types.ModBlock {
     public static boolean collision(float x1, float y1, float x2, float y2, float radius) {
