@@ -95,7 +95,8 @@ public class Meteria {
                         vec = blocksInRangeP.get(i);
                         sie = blocksInRange.get(i).size * 8;
 
-                        if(blocksInRange.get(i) instanceof MeteriaNode) {
+                        Building b = buildsInRange.get(i);
+                        if(b instanceof MeteriaNodeBuild) {
                             Drawx.beam(x, y, vec.x, vec.y, ThePal.meteria, 0.25f);
                             Draw.color(ThePal.meteria);
                         } else {
@@ -178,6 +179,10 @@ public class Meteria {
                 }
 
                 for(Building e : result) {
+                    if(TheTech.isPart(e, this)) {
+                        continue;
+                    }
+
                     addLink(world.tile(e.tileX(), e.tileY()));
                 }
             }
