@@ -6,6 +6,7 @@ import arc.graphics.*;
 import arc.graphics.g2d.*;
 import arc.struct.*;
 import arc.util.io.*;
+import mindustry.content.Blocks;
 import mindustry.entities.*;
 import mindustry.game.*;
 import mindustry.gen.*;
@@ -235,7 +236,6 @@ public class Lasers {
 
             TheTech.on(EventType.ClientLoadEvent.class, () -> {
                 turretRegion = TheTech.mod(name + "-turret");
-                uiIcon = TheTech.mod(name + "-preview");
             });
 
             canBurn = false;

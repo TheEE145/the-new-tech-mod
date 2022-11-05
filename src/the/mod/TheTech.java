@@ -21,6 +21,7 @@ import the.mod.content.*;
 import the.mod.types.Lasers;
 import the.mod.types.Other;
 import the.mod.utils.Drawx;
+import the.mod.utils.Terminal;
 
 import java.util.Random;
 
@@ -158,6 +159,7 @@ public class TheTech extends Mod {
 
         Lasers.load();
         Other.SunGenerator.loadEvent();
+        Terminal.TerminalBlock.loadEvent();
     }
 
     public static Tile getTileByDraw(float x, float y) {

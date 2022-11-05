@@ -1,5 +1,6 @@
 package the.mod.utils;
 
+import arc.Events;
 import arc.func.*;
 import arc.graphics.*;
 import arc.graphics.g2d.*;
@@ -25,7 +26,9 @@ import mindustry.world.blocks.liquid.Conduit;
 import mindustry.world.blocks.production.*;
 import mindustry.world.blocks.storage.*;
 import mindustry.world.consumers.*;
+import the.mod.TheTech;
 
+import static arc.Core.atlas;
 import static arc.Core.bundle;
 import static the.mod.TheTech.*;
 
@@ -97,6 +100,11 @@ public class Types {
             super(name);
 
             localizedName = prefix(localizedName);
+            TheTech.on(EventType.ClientLoadEvent.class, () -> {
+                if(atlas.has(modId + "-" + name + "-preview")) {
+                    uiIcon = mod(name + "-preview");
+                }
+            });
         }
 
         public class ModCrafterBuild extends GenericCrafterBuild {
@@ -116,6 +124,12 @@ public class Types {
             flashHit = true;
             flashColor = null;
             update = true;
+
+            TheTech.on(EventType.ClientLoadEvent.class, () -> {
+                if(atlas.has(modId + "-" + name + "-preview")) {
+                    uiIcon = mod(name + "-preview");
+                }
+            });
         }
 
         public class ModBlockBuild extends WallBuild {

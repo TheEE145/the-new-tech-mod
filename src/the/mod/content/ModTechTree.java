@@ -26,6 +26,7 @@ public class ModTechTree {
                 node(Blocksx.meteriaBooster);
 
                 node(Blocksx.coalMeteriaGenerator, Seq.with(new Objectives.Research(Items.coal)), () -> {
+                    node(Blocksx.emethenMeteriaGenerator);
                 });
             });
 

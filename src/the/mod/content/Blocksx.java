@@ -6,6 +6,7 @@ import mindustry.content.*;
 import mindustry.entities.bullet.*;
 import mindustry.entities.part.*;
 import mindustry.gen.*;
+import mindustry.graphics.CacheLayer;
 import mindustry.graphics.Pal;
 import mindustry.graphics.Shaders;
 import mindustry.type.*;
@@ -14,9 +15,7 @@ import mindustry.world.draw.*;
 import mindustry.world.meta.BuildVisibility;
 import the.mod.TheTech;
 import the.mod.types.*;
-import the.mod.utils.Shield;
-import the.mod.utils.ThePal;
-import the.mod.utils.Timer;
+import the.mod.utils.*;
 import the.mod.utils.Types.*;
 import the.mod.types.Lasers.*;
 
@@ -40,7 +39,7 @@ public class Blocksx {
     public static MeteriaNode meteriaNode, largeMeteriaNode, sandboxMeteriaNode;
     public static MeteriaNodeBooster meteriaBooster;
     public static MeteriaSource meteriaSource;
-    public static MeteriaCrafter coalMeteriaGenerator;
+    public static MeteriaCrafter coalMeteriaGenerator, emethenMeteriaGenerator;
 
     //distinction
     public static ModConveyor silicaConveyor;
@@ -66,6 +65,7 @@ public class Blocksx {
     public static LaserMultiMirror multiMirror;
 
     //other
+    public static Terminal.TerminalBlock worldTerminal;
     public static Other.SunGenerator sunGenerator;
     public static RadiusBlock sonicPulsar;
 
@@ -306,6 +306,31 @@ public class Blocksx {
             ));
         }});
 
+        emethenMeteriaGenerator = add(new MeteriaCrafter("emethen-meteria-generator") {{
+            meteriaGet = 500;
+            maxMeteria = 2000;
+            size = 3;
+
+            craftEffect = Effects.craftMeteria;
+            drawer = new DrawMulti(
+                    new DrawRegion("-bottom"),
+                    new DrawLiquidRegion(),
+                    new DrawDefault(),
+                    new DrawRegion("-top")
+            );
+
+            hasLiquids = true;
+            liquidCapacity = 20;
+
+            consumeLiquid(Liquids.emethen, 0.26f);
+
+            requirements(Category.power, with(
+                    Itemsx.silica, 40,
+                    Itemsx.silicaSand, 50,
+                    Itemsx.virusM, 20
+            ));
+        }});
+
         //cores
         terra = add(new ModCore("core-terra") {{
             requirements(Category.effect, BuildVisibility.editorOnly, with(Itemsx.silica, 1000));
@@ -491,6 +516,8 @@ public class Blocksx {
             isLiquid = true;
             liquidDrop = Liquids.emethen;
             liquidMultiplier = 1.5f;
+
+            cacheLayer = CacheLayer.slag;
         }});
 
         crystals = add(new ModFloor("crystals", 3) {{
@@ -628,6 +655,13 @@ public class Blocksx {
 
             buildVisibility = BuildVisibility.sandboxOnly;
             requirements(Category.effect, with());
+        }});
+
+        worldTerminal = add(new Terminal.TerminalBlock("world-terminal") {{
+            buildVisibility = BuildVisibility.sandboxOnly;
+            health = Integer.MAX_VALUE;
+            
+            requirements(Category.logic, with());
         }});
     }
 }

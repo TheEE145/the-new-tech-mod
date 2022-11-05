@@ -33,19 +33,19 @@ public class Meteria {
         public void setBars() {
             super.setBars();
 
-            addBar("@meteria.name", (MeteriaNodeBuild build) -> new Bar(
+            addBar("meteria", (MeteriaNodeBuild build) -> new Bar(
                     () -> bundle.get("meteria.name") + ": " + (int) Math.floor((build.meteria / build.local$maxMeteria) * 100) + "%",
                     () -> ThePal.meteria,
                     () -> build.meteria / build.local$maxMeteria
             ));
 
-            addBar("@meteria.boost", (MeteriaNodeBuild build) -> new Bar(
+            addBar("boost", (MeteriaNodeBuild build) -> new Bar(
                     () -> bundle.get("meteria.boost") + ": " + (int) Math.floor(build.local$maxMeteria/maxMeteria * 100) + "%",
                     () -> ThePal.meteria,
                     () -> (int) Math.floor(build.local$maxMeteria - maxMeteria) == 0 ? 0 : 1
             ));
 
-            addBar("@meteria.links", (MeteriaNodeBuild build) -> new Bar(
+            addBar("links", (MeteriaNodeBuild build) -> new Bar(
                     () -> build.blocksInRange.size == 0 ?
                             bundle.get("meteria.nolinks") : bundle.get("meteria.links") + ": " + build.blocksInRange.size,
 
@@ -320,7 +320,7 @@ public class Meteria {
         public void setBars() {
             super.setBars();
 
-            addBar("@meteria.name", (MeteriaCrafterBuild build) -> new Bar(
+            addBar("meteria", (MeteriaCrafterBuild build) -> new Bar(
                     () -> bundle.get("meteria.name") + ": " + (int) Math.floor((build.meteria / maxMeteria) * 100) + "%",
                     () -> ThePal.meteria,
                     () -> build.meteria / maxMeteria
@@ -373,7 +373,7 @@ public class Meteria {
         public void setBars() {
             super.setBars();
 
-            addBar("@meteria.name", (MeteriaPlantBuild build) -> new Bar(
+            addBar("meteria", (MeteriaPlantBuild build) -> new Bar(
                     () -> bundle.get("meteria.name") + ": " + (int) Math.floor((build.meteria / maxMeteria) * 100) + "%",
                     () -> ThePal.meteria,
                     () -> build.meteria / maxMeteria
@@ -436,7 +436,7 @@ public class Meteria {
         public void setBars() {
             super.setBars();
 
-            addBar("@meteria.name", (MeteriaDrillBuild build) -> new Bar(
+            addBar("meteria", (MeteriaDrillBuild build) -> new Bar(
                     () -> bundle.get("meteria.name") + ": " + (int) Math.floor((build.meteria / maxMeteria) * 100) + "%",
                     () -> ThePal.meteria,
                     () -> build.meteria / maxMeteria

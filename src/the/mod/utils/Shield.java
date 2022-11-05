@@ -40,7 +40,7 @@ public class Shield {
     public void renderer(float x, float y) {
         Draw.draw(Layer.shields, () -> {
             Draw.alpha(isBroken() ? progress() : 1f);
-            Draw.rect(region, x, y, region.width + 5, region.height + 5);
+            Draw.rect(region, x, y, region.width, region.height);
         });
 
         if(progress > 0) {

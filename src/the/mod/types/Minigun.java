@@ -20,7 +20,7 @@ public class Minigun extends ModItemTurret {
     public void setBars() {
         super.setBars();
 
-        addBar("@minigun.heat", (MinigunBuild e) -> {
+        addBar("heat", (MinigunBuild e) -> {
             return new Bar(
                     () -> e.tacker.cool ? bundle.get("minigun.cool") : bundle.get("minigun.heat") + ": " + (int) e.tacker.heat + "%",
                     () -> e.tacker.cool ? Color.cyan : Color.orange,
