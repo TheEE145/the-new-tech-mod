@@ -17,6 +17,16 @@ import the.mod.TheTech;
 import the.mod.utils.*;
 
 public class Lasers {
+    public static final float theta = (float) (Math.PI * 2);
+
+    public static float thx(float angle, float rad) {
+        return (float) (Math.cos((angle / 360) * theta) * rad);
+    }
+
+    public static float thy(float angle, float rad) {
+        return (float) (Math.sin((angle / 360) * theta) * rad);
+    }
+
     public static void load() {
         Events.on(EventType.TapEvent.class, event -> {
             Building b = event.tile.build;
@@ -214,7 +224,6 @@ public class Lasers {
     }
 
     public static class LaserBlock extends Types.ModBlock {
-        public static final float theta = (float) (Math.PI * 2);
         public Cons3<Tile, Block, Building> onTarget;
         public Effect endEffect, startEffect;
         public boolean mineable = false;
@@ -300,14 +309,6 @@ public class Lasers {
                         th = m.th;
                     }}, angle + r);
                 }
-            }
-
-            public float thx(float angle, float rad) {
-                return (float) (Math.cos((angle / 360) * theta) * rad);
-            }
-
-            public float thy(float angle, float rad) {
-                return (float) (Math.sin((angle / 360) * theta) * rad);
             }
 
             public void targetRenderer() {

@@ -28,6 +28,7 @@ import mindustry.world.blocks.production.*;
 import mindustry.world.blocks.storage.*;
 import mindustry.world.consumers.*;
 import the.mod.TheTech;
+import the.mod.types.Lasers;
 
 import static arc.Core.atlas;
 import static arc.Core.bundle;
@@ -450,7 +451,7 @@ public class Types {
         public boolean helicopter;
 
         public TextureRegion topRegion, rotorRegion;
-        public float rotorSpeed = 25;
+        public float rotorSpeed = 15;
         public Rotor[] rotors;
 
         public ModUnitType(String name) {
@@ -475,13 +476,21 @@ public class Types {
             super.draw(unit);
 
             if(helicopter && rotors != null) {
-                Draw.draw(Layer.flyingUnit + 10, () -> {
+                float rot = unit.rotation;
+                Draw.draw(Layer.flyingUnit + 5, () -> {
                     for(Rotor r : rotors) {
-                        Draw.rect(rotorRegion, unit.x + r.x, unit.y + r.y, r.rotation());
-                        Draw.rect(topRegion, unit.x + r.x, unit.y + r.y);
+                        float xx = Lasers.thx(rot, r.x);
+                        float xy = Lasers.thy(rot, r.y);
+
+                        float yx = Lasers.thx(rot, r.y);
+                        float yy = Lasers.thy(rot, r.y);
+
+                        Draw.rect(rotorRegion, unit.x + xx + yx, unit.y + xy + yy, rotorRegion.width/4f, rotorRegion.height/4f, r.rotation);
+                        Draw.rect(topRegion, unit.x + xx + yx, unit.y + xy + yy);
                     }
                 });
             }
+
         }
 
         @Override
