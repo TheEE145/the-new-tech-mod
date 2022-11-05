@@ -65,7 +65,6 @@ public class Blocksx {
     public static LaserMultiMirror multiMirror;
 
     //other
-    public static Terminal.TerminalBlock worldTerminal;
     public static Other.SunGenerator sunGenerator;
     public static RadiusBlock sonicPulsar;
 
@@ -655,13 +654,6 @@ public class Blocksx {
 
             buildVisibility = BuildVisibility.sandboxOnly;
             requirements(Category.effect, with());
-        }});
-
-        worldTerminal = add(new Terminal.TerminalBlock("world-terminal") {{
-            buildVisibility = BuildVisibility.sandboxOnly;
-            health = Integer.MAX_VALUE;
-            
-            requirements(Category.logic, with());
         }});
     }
 }
