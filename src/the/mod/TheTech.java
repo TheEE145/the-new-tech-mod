@@ -151,8 +151,8 @@ public class TheTech extends Mod {
         Statuses.load();
         Itemsx.load();
         Liquids.load();
-        Blocksx.load();
         Unitsx.load();
+        Blocksx.load();
 
         ModTechTree.load();
         Redcon.load();

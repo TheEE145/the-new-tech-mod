@@ -1,7 +1,9 @@
 package the.mod.content;
 
 import arc.struct.Seq;
+import mindustry.entities.bullet.MissileBulletType;
 import mindustry.gen.EntityMapping;
+import mindustry.type.Weapon;
 import the.mod.TheTech;
 import the.mod.utils.Types;
 
@@ -24,6 +26,7 @@ public class Unitsx {
             health = 1000;
             flying = true;
 
+            rotorScale = 2f;
             buildSpeed = 5;
 
             itemCapacity = 40;
@@ -38,6 +41,19 @@ public class Unitsx {
             };
 
             speed = 2;
+            weapons.add(
+                    new Types.ModWeapon("rocket1x") {{
+                        x = 12;
+                        y = 4;
+
+                        mirror = true;
+                        reload = 15f;
+
+                        bullet = new MissileBulletType() {{
+                            damage = speed = 7;
+                        }};
+                    }}
+            );
         }});
     }
 }

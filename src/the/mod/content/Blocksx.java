@@ -337,7 +337,7 @@ public class Blocksx {
             alwaysUnlocked = true;
 
             isFirstTier = true;
-            unitType = UnitTypes.alpha;
+            unitType = Unitsx.hellx;
             health = 3500;
             itemCapacity = 4000;
             size = 4;

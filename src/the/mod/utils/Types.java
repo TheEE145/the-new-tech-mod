@@ -451,7 +451,7 @@ public class Types {
         public boolean helicopter;
 
         public TextureRegion topRegion, rotorRegion;
-        public float rotorSpeed = 15;
+        public float rotorSpeed = 15, rotorScale = 2f;
         public Rotor[] rotors;
 
         public ModUnitType(String name) {
@@ -477,7 +477,7 @@ public class Types {
 
             if(helicopter && rotors != null) {
                 float rot = unit.rotation;
-                Draw.draw(Layer.flyingUnit + 5, () -> {
+                Draw.draw(Layer.flyingUnit, () -> {
                     for(Rotor r : rotors) {
                         float xx = Lasers.thx(rot, r.x);
                         float xy = Lasers.thy(rot, r.y);
@@ -485,7 +485,18 @@ public class Types {
                         float yx = Lasers.thx(rot, r.y);
                         float yy = Lasers.thy(rot, r.y);
 
-                        Draw.rect(rotorRegion, unit.x + xx + yx, unit.y + xy + yy, rotorRegion.width/4f, rotorRegion.height/4f, r.rotation);
+                        Draw.rect(
+                                rotorRegion,
+
+                                unit.x + xx + yx,
+                                unit.y + xy + yy,
+
+                                rotorRegion.width/(4f + rotorScale),
+                                rotorRegion.height/(4f + rotorScale),
+
+                                r.rotation
+                        );
+
                         Draw.rect(topRegion, unit.x + xx + yx, unit.y + xy + yy);
                     }
                 });
@@ -518,6 +529,12 @@ public class Types {
             }
 
             public float x, y = x = 0;
+        }
+    }
+
+    public static class ModWeapon extends Weapon {
+        public ModWeapon(String name) {
+            super(modId + "-" + name);
         }
     }
 }
