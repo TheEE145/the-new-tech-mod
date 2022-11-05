@@ -41,8 +41,9 @@ public class Blocksx {
     public static MeteriaSource meteriaSource;
     public static MeteriaCrafter coalMeteriaGenerator, emethenMeteriaGenerator;
 
-    //distinction
+    //distribution
     public static ModConveyor silicaConveyor;
+    public static ModBridge silicaBridge;
     public static ModEnemy silicaRouter;
 
     //drills
@@ -546,6 +547,13 @@ public class Blocksx {
         silicaRouter = add(new ModEnemy("silica-router") {{
             requirements(Category.distribution, with(Itemsx.silica, 3));
             buildCostMultiplier = 4f;
+        }});
+
+        silicaBridge = add(new ModBridge("silica-bridge-conveyor") {{
+            requirements(Category.distribution, with(Itemsx.silica, 6, Itemsx.virusM, 6));
+            fadeIn = moveArrows = false;
+            range = 5;
+            arrowSpacing = 6f;
         }});
 
         //lasers

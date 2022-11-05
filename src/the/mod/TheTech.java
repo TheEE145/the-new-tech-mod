@@ -158,7 +158,6 @@ public class TheTech extends Mod {
 
         Lasers.load();
         Other.SunGenerator.loadEvent();
-        Terminal.TerminalBlock.loadEvent();
     }
 
     public static Tile getTileByDraw(float x, float y) {

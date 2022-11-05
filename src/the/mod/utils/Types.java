@@ -436,4 +436,12 @@ public class Types {
             }
         }
     }
+
+    public static class ModBridge extends ItemBridge {
+        public ModBridge(String name) {
+            super(name);
+
+            localizedName = prefix(localizedName);
+        }
+    }
 }
