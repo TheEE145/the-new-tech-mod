@@ -31,21 +31,29 @@ public abstract class Tacker {
             this.rotation = rotation;
         }
 
-        @Override
-        protected void hand() {
+        public float rotation() {
+            return rotation/360f;
+        }
+
+        public void tack(float angle) {
             if(reverse) {
-                rotation--;
+                rotation -= angle;
 
                 if(rotation <= 0) {
                     rotation = 360;
                 }
             } else {
-                rotation++;
+                rotation += angle;
 
                 if(rotation >= 360) {
                     rotation = 0;
                 }
             }
+        }
+
+        @Override
+        protected void hand() {
+            tack(1);
         }
     }
 

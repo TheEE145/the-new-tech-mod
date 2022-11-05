@@ -8,6 +8,7 @@ import arc.math.*;
 import arc.math.geom.*;
 import arc.scene.ui.layout.*;
 import arc.struct.*;
+import arc.util.ArcRuntimeException;
 import arc.util.io.*;
 import mindustry.content.*;
 import mindustry.entities.*;
@@ -442,6 +443,72 @@ public class Types {
             super(name);
 
             localizedName = prefix(localizedName);
+        }
+    }
+
+    public static class ModUnitType extends UnitType {
+        public boolean helicopter;
+
+        public TextureRegion topRegion, rotorRegion;
+        public float rotorSpeed = 25;
+        public Rotor[] rotors;
+
+        public ModUnitType(String name) {
+            this(name, false);
+        }
+
+        @SuppressWarnings("all")
+        public ModUnitType(String name, boolean helicopter) {
+            super(name);
+
+            localizedName = prefix(localizedName);
+            if(this.helicopter = helicopter) {
+                TheTech.on(EventType.ClientLoadEvent.class, () -> {
+                    topRegion = TheTech.mod(name + "-top");
+                    rotorRegion = TheTech.mod(name + "-rotor");
+                });
+            }
+        }
+
+        @Override
+        public void draw(Unit unit) {
+            super.draw(unit);
+
+            if(helicopter && rotors != null) {
+                Draw.draw(Layer.flyingUnit + 10, () -> {
+                    for(Rotor r : rotors) {
+                        Draw.rect(rotorRegion, unit.x + r.x, unit.y + r.y, r.rotation());
+                        Draw.rect(topRegion, unit.x + r.x, unit.y + r.y);
+                    }
+                });
+            }
+        }
+
+        @Override
+        public void createIcons(MultiPacker packer) {
+            try {
+                super.createIcons(packer);
+            } catch(ArcRuntimeException ignored) {
+            }
+        }
+
+        @Override
+        public void update(Unit unit) {
+            super.update(unit);
+
+            if(helicopter && rotors != null) {
+                for(Rotor r : rotors) {
+                    r.tack(rotorSpeed);
+                }
+            }
+        }
+
+        public static class Rotor extends Tacker.RotationTicker {
+            public Rotor() {
+                super(0);
+            }
+
+            public float x, y = x = 0;
         }
     }
 }
