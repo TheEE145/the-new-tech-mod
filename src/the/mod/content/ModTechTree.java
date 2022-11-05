@@ -44,7 +44,9 @@ public class ModTechTree {
 
             //conveyors
             node(Blocksx.silicaConveyor, () -> {
-               node(Blocksx.silicaRouter);
+               node(Blocksx.silicaRouter, () -> {
+                   node(Blocksx.silicaBridge);
+               });
             });
 
             //items
