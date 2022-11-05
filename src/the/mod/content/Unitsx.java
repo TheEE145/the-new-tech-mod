@@ -23,7 +23,7 @@ public class Unitsx {
         hellx = add(new Types.ModUnitType("hellx", true) {{
             constructor = EntityMapping.map(3);
 
-            health = 1000;
+            health = 250;
             flying = true;
 
             rotorScale = 2f;
