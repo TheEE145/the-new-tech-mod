@@ -65,6 +65,7 @@ jar{
 
         include "bundles/**"
         include "sprites/**"
+        include "sprites-override/**"
     }
 }
 
