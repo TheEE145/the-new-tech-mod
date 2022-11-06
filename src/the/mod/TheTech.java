@@ -10,6 +10,7 @@ import arc.scene.ui.layout.Table;
 import arc.struct.Seq;
 import arc.util.*;
 import mindustry.ctype.UnlockableContent;
+import mindustry.game.Team;
 import mindustry.gen.Building;
 import mindustry.graphics.Layer;
 import mindustry.mod.*;
@@ -142,6 +143,8 @@ public class TheTech extends Mod {
                 e.accessible = true;
                 e.alwaysUnlocked = true;
             });
+
+            Team.blue.name = bundle.get("team.blue");
         });
     }
 
