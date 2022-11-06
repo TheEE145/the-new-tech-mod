@@ -332,6 +332,10 @@ public class Other {
             }
 
             @Override
+            public void drawTeam() {
+            }
+
+            @Override
             public void drawLight(){
                 super.drawLight();
                 Drawf.light(x, y, 40f, Tmp.c1.set(item.color).mul(0.7f), 0.35f);

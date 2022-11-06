@@ -32,6 +32,8 @@ public class ModTechTree {
 
             //drills
             node(Blocksx.silicaDrill, () -> {
+                node(Blocksx.crasher);
+
                 node(Blocksx.updatedDrill, () -> {
                     node(Blocksx.meteriaDrill, Seq.with(
                             new Objectives.Research(Blocksx.meteriaNode),
@@ -98,6 +100,8 @@ public class ModTechTree {
                     node(Blocksx.mirror0);
                 });
             });
+
+            node(Blocksx.sunGenerator);
         });
     }
 }

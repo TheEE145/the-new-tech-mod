@@ -671,7 +671,6 @@ public class Blocksx {
             health = 1000;
             size = 4;
 
-            buildVisibility = BuildVisibility.sandboxOnly;
             requirements(Category.effect, with());
         }});
 

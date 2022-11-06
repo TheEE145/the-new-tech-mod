@@ -797,6 +797,10 @@ public class RedconPlanetGenerator extends PlanetGenerator{
         for(Tile t : tiles) {
             if((t.block() == Blocks.coreShard || t.block() == Blocks.coreFoundation || t.block() == Blocks.coreNucleus) && t.build != null) {
                 t.setNet(Blocksx.terra, t.build.team, t.build.rotation);
+            } else {
+                if(Mathf.chance(0.0025f) && t.block() == air) {
+                    t.setNet(Blocksx.virusMCrystal);
+                }
             }
         }
     }
