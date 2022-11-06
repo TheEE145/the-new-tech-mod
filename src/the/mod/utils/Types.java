@@ -427,7 +427,6 @@ public class Types {
 
     public static class ModStatusEffect extends StatusEffect {
         public Cons<Unit> onTimeEnd;
-        private boolean endCond = false;
 
         public void damage(float damage) {
             this.damage = damage/60;
@@ -442,9 +441,8 @@ public class Types {
         public void update(Unit unit, float time) {
             super.update(unit, time);
 
-            if((time <= 5f) && (onTimeEnd != null) && !endCond) {
+            if((time <= 2f) && (onTimeEnd != null)) {
                 onTimeEnd.get(unit);
-                endCond = true;
             }
         }
     }
