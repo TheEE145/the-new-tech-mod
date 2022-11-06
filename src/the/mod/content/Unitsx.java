@@ -26,9 +26,7 @@ public class Unitsx {
             health = 250;
             flying = true;
 
-            rotorScale = 2f;
             buildSpeed = 5;
-
             itemCapacity = 40;
             mineFloor = true;
             mineSpeed = 3f;
@@ -36,6 +34,7 @@ public class Unitsx {
 
             rotors = new Rotor[] {
                     new Rotor() {{
+                        small = 2f;
                         y = -1;
                     }}
             };

@@ -451,7 +451,7 @@ public class Types {
         public boolean helicopter;
 
         public TextureRegion topRegion, rotorRegion;
-        public float rotorSpeed = 15, rotorScale = 2f;
+        public float rotorSpeed = 15;
         public Rotor[] rotors;
 
         public ModUnitType(String name) {
@@ -473,13 +473,21 @@ public class Types {
             tacker.add(this);
         }
 
+        public float layer(Unit unit) {
+            if(unit == null) {
+                return Layer.flyingUnit;
+            }
+
+            return unit.elevation > 0.5f ? (lowAltitude ? Layer.flyingUnitLow : Layer.flyingUnit) : groundLayer + Mathf.clamp(hitSize / 4000f, 0, 0.01f);
+        }
+
         @Override
         public void draw(Unit unit) {
             super.draw(unit);
 
             if(helicopter && rotors != null) {
                 float rot = unit.rotation;
-                Draw.draw(Layer.flyingUnit, () -> {
+                Draw.draw(layer(unit), () -> {
                     for(Rotor r : rotors) {
                         float xx = Lasers.thx(rot, r.x);
                         float xy = Lasers.thy(rot, r.y);
@@ -493,8 +501,8 @@ public class Types {
                                 unit.x + xx + yx,
                                 unit.y + xy + yy,
 
-                                rotorRegion.width/(4f + rotorScale),
-                                rotorRegion.height/(4f + rotorScale),
+                                rotorRegion.width/(4f + r.small),
+                                rotorRegion.height/(4f + r.small),
 
                                 r.rotation
                         );
@@ -531,6 +539,7 @@ public class Types {
                 super(0);
             }
 
+            public float small = 0f;
             public float x, y = x = 0;
         }
     }
