@@ -469,6 +469,8 @@ public class Types {
                     rotorRegion = TheTech.mod(name + "-rotor");
                 });
             }
+
+            tacker.add(this);
         }
 
         @Override
@@ -501,7 +503,6 @@ public class Types {
                     }
                 });
             }
-
         }
 
         @Override
@@ -512,15 +513,17 @@ public class Types {
             }
         }
 
-        @Override
-        public void update(Unit unit) {
-            super.update(unit);
-
+        public void tact() {
             if(helicopter && rotors != null) {
                 for(Rotor r : rotors) {
                     r.tack(rotorSpeed);
                 }
             }
+        }
+
+        @Override
+        public void update(Unit unit) {
+            super.update(unit);
         }
 
         public static class Rotor extends Tacker.RotationTicker {

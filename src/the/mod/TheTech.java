@@ -21,6 +21,7 @@ import the.mod.content.*;
 import the.mod.types.Lasers;
 import the.mod.types.Other;
 import the.mod.utils.Drawx;
+import the.mod.utils.Types;
 
 import java.util.Random;
 
@@ -28,6 +29,7 @@ import static arc.Core.*;
 import static mindustry.Vars.*;
 
 public class TheTech extends Mod {
+    public static final Seq<Types.ModUnitType> tacker = new Seq<>();
     public static final Seq<UnlockableContent> all = new Seq<>();
     public static final String modId = "the-new-tech-mod";
     public static final String prefix = "[red][THE][]";
@@ -133,8 +135,13 @@ public class TheTech extends Mod {
             Drawx.pix = TheTech.mod("pix");
 
             //renderer
-            Timer.schedule(Drawx.Math::renderer, 1, 0.02f);
+            Timer.schedule(this::renderer, 1, 0.02f);
         });
+    }
+
+    public void renderer() {
+        Drawx.Math.renderer();
+        tacker.each(Types.ModUnitType::tact);
     }
 
     public static float len(float x1, float x2, float y1, float y2) {
