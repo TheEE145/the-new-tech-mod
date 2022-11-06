@@ -4,6 +4,8 @@ import arc.*;
 import arc.func.*;
 import arc.graphics.*;
 import arc.graphics.g2d.*;
+import arc.scene.ui.Slider;
+import arc.scene.ui.layout.Table;
 import arc.struct.*;
 import arc.util.io.*;
 import mindustry.content.Blocks;
@@ -28,37 +30,6 @@ public class Lasers {
     }
 
     public static void load() {
-        Events.on(EventType.TapEvent.class, event -> {
-            Building b = event.tile.build;
-
-            if(b == null) {
-                return;
-            }
-
-            if(b instanceof LaserBlock.LaserBlockBuild) {
-                TheTech.show("rotation set", (d) -> {
-                    d.addCloseButton();
-                    d.cont.pane(t -> {
-                        t.add("set rotation").growX().row();
-                        t.slider(0f, 360f, 5f, (value) -> {
-                            ((LaserBlock.LaserBlockBuild) b).angle = value;
-                        }).size(300f, 50f).get().setValue(((LaserBlock.LaserBlockBuild) b).angle);
-                    });
-                });
-            }
-
-            if(b instanceof LaserMultiMirror.laserMultiMirrorBuild) {
-                TheTech.show("rotation set", (d) -> {
-                    d.addCloseButton();
-                    d.cont.pane(t -> {
-                        t.add("set rotation").growX().row();
-                        t.slider(0f, 360f, 5f, (value) -> {
-                            ((LaserMultiMirror.laserMultiMirrorBuild) b).angle = value;
-                        }).size(300f, 50f).get().setValue(((LaserMultiMirror.laserMultiMirrorBuild) b).angle);
-                    });
-                });
-            }
-        });
     }
 
     public static class LaserModule {
@@ -175,6 +146,9 @@ public class Lasers {
     public static class LaserMultiMirror extends LaserMirror {
         public LaserMultiMirror(String name) {
             super(name);
+            configurable = true;
+
+            config(Integer.class, (laserMultiMirrorBuild build, Integer value) -> {});
         }
 
         public class laserMultiMirrorBuild extends LaserMirrorBuild {
@@ -195,6 +169,19 @@ public class Lasers {
             public void read(Reads read, byte revision) {
                 super.read(read, revision);
                 angle = read.f();
+            }
+
+            @Override
+            public void buildConfiguration(Table table) {
+                table.table(t -> {
+                    Slider s = t.slider(0, 360, 10, (value) -> {
+                        angle = value;
+                    }).get();
+
+                    s.update(() -> {
+                        s.setValue(angle);
+                    });
+                });
             }
         }
     }
@@ -243,6 +230,9 @@ public class Lasers {
         public LaserBlock(String name) {
             super(name);
             canBurn = false;
+            configurable = true;
+
+            config(Integer.class, (LaserBlockBuild build, Integer value) -> {});
         }
 
         @Override
@@ -400,6 +390,19 @@ public class Lasers {
             public void read(Reads read, byte revision) {
                 super.read(read, revision);
                 angle = read.f();
+            }
+
+            @Override
+            public void buildConfiguration(Table table) {
+                table.table(t -> {
+                    Slider s = t.slider(0, 360, 10, (value) -> {
+                        angle = value;
+                    }).get();
+
+                    s.update(() -> {
+                        s.setValue(angle);
+                    });
+                });
             }
         }
     }
