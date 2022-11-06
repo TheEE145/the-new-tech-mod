@@ -58,6 +58,8 @@ public class ModTechTree {
                 });
 
                 nodeI.get(Itemsx.virusM, () -> {
+                    node(Blocksx.virusMCrystal);
+
                     nodeI.get(Itemsx.virusMSand, () -> {
 
                     });

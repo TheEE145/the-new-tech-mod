@@ -1,8 +1,12 @@
 package the.mod.content;
 
+import arc.graphics.Color;
 import arc.struct.Seq;
+import mindustry.content.StatusEffects;
+import mindustry.entities.Effect;
 import mindustry.entities.bullet.MissileBulletType;
 import mindustry.gen.EntityMapping;
+import mindustry.type.StatusEffect;
 import mindustry.type.Weapon;
 import the.mod.TheTech;
 import the.mod.utils.Types;
@@ -20,8 +24,9 @@ public class Unitsx {
     public static Types.ModUnitType hellx;
 
     public static void load() {
-        hellx = add(new Types.ModUnitType("hellx", true) {{
+        hellx = add(new Types.ModUnitType("hellx") {{
             constructor = EntityMapping.map(3);
+            helicopter = true;
 
             health = 250;
             flying = true;
@@ -50,6 +55,12 @@ public class Unitsx {
 
                         bullet = new MissileBulletType() {{
                             damage = speed = 7;
+
+                            frontColor = Color.white;
+                            backColor = trailColor = hitColor = Color.acid;
+
+                            status = StatusEffects.disarmed;
+                            despawnEffect = hitEffect = Effects.bulletCollision;
                         }};
                     }}
             );

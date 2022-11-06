@@ -1,10 +1,14 @@
 package the.mod.utils;
 
+import arc.func.Cons3;
+import arc.func.Floatc2;
 import arc.graphics.Color;
 import arc.graphics.g2d.*;
+import arc.math.Angles;
 import mindustry.graphics.*;
 import the.mod.types.Other;
 
+import java.util.Vector;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import static mindustry.Vars.*;
@@ -128,5 +132,28 @@ public class Drawx {
 
     public static void beam(float x, float y, float x1, float y1, Color color) {
         beam(x, y, x1, y1, color, 1f);
+    }
+
+    public static void sideShard(float x, float y, float size, float width, float sides, float r) {
+        for(int i = 0; i < 360; i += 360/sides) {
+            Drawf.tri(x, y, width, size, r + i);
+        }
+    }
+
+    public static void shard(float x, float y, float size, float width, float r){
+        sideShard(x, y, size, width, 2, r);
+    }
+
+    public static void randomVectors(float x, float y, long seed, int amount, float length, Cons3<Float, Float, Integer> cons) {
+        int[] id = {0};
+        Angles.randLenVectors(seed, amount, length, (x1, y1) -> {
+            cons.get(x1 + x, y1 + y, id[0]++);
+        });
+    }
+
+    public static void randomVectors(float x, float y, long seed, int amount, float length, Floatc2 cons) {
+        randomVectors(x, y, seed, amount, length, (x2, y2, ignored) -> {
+            cons.get(x2, y2);
+        });
     }
 }

@@ -1,15 +1,33 @@
 package the.mod.content;
 
 import arc.graphics.Color;
+import arc.math.Mathf;
 import mindustry.entities.Effect;
 import mindustry.entities.effect.*;
-import the.mod.utils.ThePal;
+import the.mod.utils.*;
+
+import static the.mod.utils.Drawx.*;
+import static arc.graphics.g2d.Draw.*;
 
 public class Effects {
-    public static MultiEffect craftMeteria, laserEndEffect, longLaserEndEffect;
+    public static MultiEffect craftMeteria, laserEndEffect, longLaserEndEffect, bread;
     public static ExplosionEffect meteriaExplode;
     public static ParticleEffect laserStartEffect;
     public static WaveEffect virusMEffect;
+    public static SparkEffect bulletCollision;
+
+    public static class SparkEffect extends Effect {
+        public SparkEffect(float lifetime, int count, float length, float max, boolean f, float sides) {
+            super(lifetime, e -> {
+                e.scaled(25f, s -> {
+                    color(Color.white, e.color, f ? s.finpow() : s.fin());
+                    randomVectors(e.x, e.y, e.id, count, length, (x, y, i) -> {
+                        Drawx.sideShard(x, y, 5f * s.fout() + Mathf.randomSeed(e.id + i, max), 4f * s.fout(), sides, Mathf.angle(x - e.x, y - e.y));
+                    });
+                });
+            });
+        }
+    }
 
     public static void load() {
         meteriaExplode = new ExplosionEffect() {{
@@ -156,5 +174,22 @@ public class Effects {
            colorFrom = colorTo = ThePal.virusM;
            lifetime = 20;
         }};
+
+        bread = new MultiEffect() {{
+            effects = new Effect[] {
+                    new SparkEffect(100f, 7, 18f, 7f, false, 3),
+                    new WaveEffect() {{
+                        strokeFrom = 1;
+                        strokeTo = 1;
+
+                        sizeFrom = 0;
+                        sizeTo = 3;
+
+                        lifetime = 20;
+                    }}
+            };
+        }};
+
+        bulletCollision = new SparkEffect(75f, 3, 10f, 7f, false, 5);
     }
 }

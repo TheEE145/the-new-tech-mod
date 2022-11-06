@@ -11,6 +11,7 @@ import arc.struct.*;
 import arc.util.ArcRuntimeException;
 import arc.util.io.*;
 import mindustry.content.*;
+import mindustry.ctype.Content;
 import mindustry.entities.*;
 import mindustry.game.*;
 import mindustry.gen.*;
@@ -102,11 +103,15 @@ public class Types {
             super(name);
 
             localizedName = prefix(localizedName);
-            TheTech.on(EventType.ClientLoadEvent.class, () -> {
-                if(atlas.has(modId + "-" + name + "-preview")) {
-                    uiIcon = mod(name + "-preview");
-                }
-            });
+        }
+
+        @Override
+        public void load() {
+            super.load();
+
+            if(atlas.has(name + "-preview")) {
+                uiIcon = get(name + "-preview");
+            }
         }
 
         public class ModCrafterBuild extends GenericCrafterBuild {
@@ -126,12 +131,15 @@ public class Types {
             flashHit = true;
             flashColor = null;
             update = true;
+        }
 
-            TheTech.on(EventType.ClientLoadEvent.class, () -> {
-                if(atlas.has(modId + "-" + name + "-preview")) {
-                    uiIcon = mod(name + "-preview");
-                }
-            });
+        @Override
+        public void load() {
+            super.load();
+
+            if(atlas.has(name + "-preview")) {
+                uiIcon = get(name + "-preview");
+            }
         }
 
         public class ModBlockBuild extends WallBuild {
@@ -200,10 +208,12 @@ public class Types {
 
             config(Liquid.class, (LiquidUnloaderBuild tile, Liquid liquid) -> tile.config = liquid);
             configClear((LiquidUnloaderBuild build) -> build.config = Liquids.water);
+        }
 
-            on(EventType.ClientLoadEvent.class, () -> {
-                centerRegion = mod(name + "-center");
-            });
+        @Override
+        public void load() {
+            super.load();
+            centerRegion = get(name + "-center");
         }
 
         /*
@@ -455,22 +465,20 @@ public class Types {
         public Rotor[] rotors;
 
         public ModUnitType(String name) {
-            this(name, false);
-        }
-
-        @SuppressWarnings("all")
-        public ModUnitType(String name, boolean helicopter) {
             super(name);
 
             localizedName = prefix(localizedName);
-            if(this.helicopter = helicopter) {
-                TheTech.on(EventType.ClientLoadEvent.class, () -> {
-                    topRegion = TheTech.mod(name + "-top");
-                    rotorRegion = TheTech.mod(name + "-rotor");
-                });
-            }
-
             tacker.add(this);
+        }
+
+        @Override
+        public void load() {
+            super.load();
+
+            if(helicopter) {
+                topRegion = TheTech.get(name + "-top");
+                rotorRegion = TheTech.get(name + "-rotor");
+            }
         }
 
         public float layer(Unit unit) {
@@ -547,6 +555,14 @@ public class Types {
     public static class ModWeapon extends Weapon {
         public ModWeapon(String name) {
             super(modId + "-" + name);
+        }
+    }
+
+    public static class ModB extends Block {
+        public ModB(String name) {
+            super(name);
+
+            localizedName = prefix(localizedName);
         }
     }
 }

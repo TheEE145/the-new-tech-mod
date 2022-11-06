@@ -34,6 +34,7 @@ public class Blocksx {
     public static ModFloor virusMFloor, mantium, orangeIce, emethen, crystals;
     public static ModStaticWall virusMStaticWall, orangeIceWall, mantiumWall;
     public static ModOreBlock silicaOre;
+    public static Other.CrystalBlock virusMCrystal;
 
     //energy
     public static MeteriaNode meteriaNode, largeMeteriaNode, sandboxMeteriaNode;
@@ -68,6 +69,7 @@ public class Blocksx {
     //other
     public static Other.SunGenerator sunGenerator;
     public static RadiusBlock sonicPulsar;
+    public static Other.CrystalCrasher crasher;
 
     public static <T extends Block> T add(T type) {
         all.add(type);
@@ -131,7 +133,7 @@ public class Blocksx {
                 trailRotation = true;
                 trailEffect = Fx.disperseTrail;
 
-                hitEffect = despawnEffect = Fx.hitBulletColor;
+                despawnEffect = hitEffect = Effects.bulletCollision;;
             }});
         }});
 
@@ -182,6 +184,7 @@ public class Blocksx {
 
                         lifetime = 34f;
                         rotationOffset = 90f;
+                        despawnEffect = hitEffect = Effects.bulletCollision;
                     }},
 
                     Itemsx.silicaSand, new BasicBulletType() {{
@@ -216,7 +219,10 @@ public class Blocksx {
 
                             lifetime = 16f;
                             rotationOffset = 90f;
+                            despawnEffect = hitEffect = Effects.bulletCollision;
                         }};
+
+                        despawnEffect = hitEffect = Effects.bulletCollision;
                     }},
 
                     Itemsx.virusM, new BasicBulletType() {{
@@ -234,6 +240,7 @@ public class Blocksx {
                         lifetime = 34f;
                         rotationOffset = 90f;
                         status = Statuses.virus1stage;
+                        despawnEffect = hitEffect = Effects.bulletCollision;
                     }}
             );
 
@@ -528,6 +535,10 @@ public class Blocksx {
             variants = 3;
         }});
 
+        virusMCrystal = add(new Other.CrystalBlock("virus-m-crystal", Itemsx.virusM, 25) {{
+            health = 1;
+        }});
+
         //distribution
         silicaConveyor = add(new ModConveyor("silica-conveyor") {{
             size = 1;
@@ -662,6 +673,16 @@ public class Blocksx {
 
             buildVisibility = BuildVisibility.sandboxOnly;
             requirements(Category.effect, with());
+        }});
+
+        crasher = add(new Other.CrystalCrasher("crystal-crasher") {{
+            length = 8;
+            size = 2;
+
+            health = 150;
+            requirements(Category.production, with(
+                    Itemsx.silica, 15
+            ));
         }});
     }
 }

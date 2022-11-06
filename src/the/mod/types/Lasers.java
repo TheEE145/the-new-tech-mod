@@ -242,12 +242,14 @@ public class Lasers {
 
         public LaserBlock(String name) {
             super(name);
-
-            TheTech.on(EventType.ClientLoadEvent.class, () -> {
-                turretRegion = TheTech.mod(name + "-turret");
-            });
-
             canBurn = false;
+        }
+
+        @Override
+        public void load() {
+            super.load();
+
+            turretRegion = TheTech.get(name + "-turret");
         }
 
         @Override

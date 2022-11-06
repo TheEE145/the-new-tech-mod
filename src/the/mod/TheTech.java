@@ -136,6 +136,12 @@ public class TheTech extends Mod {
 
             //renderer
             Timer.schedule(this::renderer, 1, 0.02f);
+
+            content.planets().each(e -> {
+                e.unlock();
+                e.accessible = true;
+                e.alwaysUnlocked = true;
+            });
         });
     }
 
