@@ -26,13 +26,18 @@ import mindustry.graphics.Drawf;
 import mindustry.graphics.Layer;
 import mindustry.type.Category;
 import mindustry.type.Item;
+import mindustry.type.Liquid;
 import mindustry.world.Block;
 import mindustry.world.Tile;
+import mindustry.world.blocks.power.PowerNode;
 import mindustry.world.meta.BuildVisibility;
+import mindustry.world.meta.Env;
+import mindustry.world.modules.ItemModule;
 import the.mod.TheTech;
 import the.mod.content.Effects;
 import the.mod.utils.*;
 
+import static mindustry.Vars.content;
 import static mindustry.Vars.world;
 import static mindustry.type.ItemStack.with;
 
@@ -350,6 +355,97 @@ public class Other {
             @Override
             public void onDestroyed() {
                 destroyEffect.at(x, y, item.color);
+            }
+        }
+    }
+
+    public static class AllSource extends PowerNode {
+        public AllSource(String name) {
+            super(name);
+
+            hasItems = hasLiquids = true;
+
+            itemCapacity = Integer.MAX_VALUE;
+            liquidCapacity = Integer.MAX_VALUE;
+
+            update = true;
+            maxNodes = Integer.MAX_VALUE;
+            outputsPower = true;
+            consumesPower = false;
+            envEnabled = Env.any;
+
+            buildVisibility = BuildVisibility.sandboxOnly;
+            requirements(Category.effect, with());
+            
+            localizedName = TheTech.prefix(localizedName);
+        }
+
+        @Override
+        public void setBars() {
+            super.setBars();
+
+            removeBar("items");
+            removeBar("liquid");
+            removeBar("liquid-");
+        }
+
+        public class AllSourceBuild extends PowerNodeBuild implements Meteria.MeteriaGiverBuild {
+            public ItemModule flowItems = new ItemModule();
+
+            @Override
+            public void updateTile() {
+                super.updateTile();
+
+                if(enabled) {
+                    for(Item item : content.items()) {
+                        items.set(item, Integer.MAX_VALUE);
+                    }
+
+                    liquids.clear();
+                    for(Liquid liquid : content.liquids()) {
+                        liquids.add(liquid, Integer.MAX_VALUE/2f);
+                    }
+
+                    dump();
+                    for(Liquid liquid : content.liquids()) {
+                        dumpLiquid(liquid);
+                    }
+                }
+            }
+
+            @Override
+            public float getPowerProduction() {
+                return enabled ? Integer.MAX_VALUE : 0f;
+            }
+
+            @Override
+            public float value() {
+                return enabled ? Integer.MAX_VALUE : 0f;
+            }
+
+            @Override
+            public ItemModule flowItems(){
+                return flowItems;
+            }
+
+            @Override
+            public void handleItem(Building source, Item item){
+                flowItems.handleFlow(item, 1);
+            }
+
+            @Override
+            public boolean acceptItem(Building source, Item item){
+                return enabled;
+            }
+
+            @Override
+            public boolean acceptLiquid(Building source, Liquid liquid){
+                return enabled;
+            }
+
+            @Override
+            public void handleLiquid(Building source, Liquid liquid, float amount){
+                liquids.handleFlow(liquid, amount);
             }
         }
     }

@@ -15,6 +15,7 @@ import mindustry.gen.*;
 import mindustry.graphics.*;
 import mindustry.ui.*;
 import mindustry.world.*;
+import mindustry.world.meta.Stat;
 import the.mod.TheTech;
 import the.mod.utils.*;
 
@@ -197,6 +198,9 @@ public class Lasers {
             priority = TargetPriority.transport;
             conveyorPlacement = true;
             underBullets = true;
+
+            update = true;
+            noUpdateDisabled = false;
         }
 
         public class LaserMirrorBuild extends ModBlockBuild {
@@ -225,7 +229,7 @@ public class Lasers {
         public float laserAlpha;
 
         public float laserRadius;
-        public int lasers;
+        public int lasers, tier = 1;
 
         public LaserBlock(String name) {
             super(name);
@@ -251,6 +255,19 @@ public class Lasers {
                     () -> Color.orange,
                     () -> (float) b.len / (float) lasers
             ));
+        }
+
+        @Override
+        public void setStats() {
+            super.setStats();
+
+            stats.add(Stat.damage, damage);
+            stats.add(Stat.tiles, laserRadius/8);
+
+            if(mineable) {
+                stats.add(Stat.mineSpeed, mineSpeed);
+                stats.add(Stat.mineTier, tier);
+            }
         }
 
         public class LaserBlockBuild extends ModBlockBuild {
@@ -315,10 +332,10 @@ public class Lasers {
 
                 if(block != null) {
                     if(block instanceof Types.ModStaticWall || block instanceof Types.ModFloor) {
-                        if(block.itemDrop != null) {
+                        if(block.itemDrop != null && items.total() < itemCapacity) {
                             progress--;
                             if(progress <= 0) {
-                                dump(block.itemDrop);
+                                items.add(block.itemDrop, 1);
                                 progress = mineSpeed;
                             }
                         }
@@ -333,17 +350,6 @@ public class Lasers {
             @Override
             public void draw() {
                 super.draw();
-
-                if(canWork()) {
-                    len = 0;
-                    link = new LaserLink(x, y);
-
-                    str(new LaserModule(link.startX, link.startY, thx(angle, laserRadius) + x, thy(angle, laserRadius) + y) {{
-                        color = laserColor;
-                        a = laserAlpha;
-                        th = laserStroke;
-                    }}, angle);
-                }
 
                 Draw.draw(Layer.turret, () -> {
                     if(canWork()) {
@@ -375,9 +381,28 @@ public class Lasers {
                             Lines.rect(target.worldx() - 5, target.worldy() - 5, 10, 10);
                         });
                     }
+                }
+            }
 
+            @Override
+            public void update() {
+                super.update();
+                if(canWork()) {
+                    len = 0;
+                    link = new LaserLink(x, y);
+
+                    str(new LaserModule(link.startX, link.startY, thx(angle, laserRadius) + x, thy(angle, laserRadius) + y) {{
+                        color = laserColor;
+                        a = laserAlpha;
+                        th = laserStroke;
+                    }}, angle);
+                }
+
+                if(!link.lasers.isEmpty() && canWork()) {
                     targetRenderer();
                 }
+
+                dump();
             }
 
             @Override

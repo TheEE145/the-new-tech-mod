@@ -15,7 +15,7 @@ import static mindustry.Vars.*;
 
 public class Drawx {
     public static final float SCREEN_BOUNDS = 4592.235f;
-    public static TextureRegion circle, sun, pix;
+    public static TextureRegion circle, sun, pix, arrowx;
 
     public static class Math {
         private static boolean beamBigger = true;

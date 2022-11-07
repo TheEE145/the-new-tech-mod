@@ -9,15 +9,24 @@ import arc.graphics.g2d.TextureRegion;
 import arc.scene.ui.layout.Table;
 import arc.struct.Seq;
 import arc.util.*;
+import mindustry.content.Blocks;
 import mindustry.ctype.UnlockableContent;
 import mindustry.game.Team;
 import mindustry.gen.Building;
 import mindustry.graphics.Layer;
 import mindustry.mod.*;
 import mindustry.game.EventType;
+import mindustry.type.ItemStack;
+import mindustry.type.LiquidStack;
+import mindustry.ui.Styles;
 import mindustry.ui.dialogs.BaseDialog;
 import mindustry.world.Block;
 import mindustry.world.Tile;
+import mindustry.world.blocks.heat.HeatProducer;
+import mindustry.world.blocks.production.GenericCrafter;
+import mindustry.world.blocks.production.HeatCrafter;
+import mindustry.world.consumers.*;
+import mindustry.world.meta.Stat;
 import the.mod.content.*;
 import the.mod.types.Lasers;
 import the.mod.types.Other;
@@ -134,6 +143,7 @@ public class TheTech extends Mod {
             Drawx.circle = TheTech.mod("circlex");
             Drawx.sun = TheTech.mod("sunx");
             Drawx.pix = TheTech.mod("pix");
+            Drawx.arrowx = TheTech.mod("arrowx");
 
             //renderer
             Timer.schedule(this::renderer, 1, 0.02f);
@@ -145,7 +155,87 @@ public class TheTech extends Mod {
             });
 
             Team.blue.name = bundle.get("team.blue");
+            content.blocks().each(this::updateStats);
         });
+    }
+
+    public void clear(Stat stat, Block b) {
+        b.stats.add(stat, "");
+        b.stats.remove(stat);
+    }
+
+    public void addx(LiquidStack[] liquids, Table table) {
+        for(LiquidStack stack : liquids) {
+            addx(stack.amount * 60, stack.liquid.uiIcon, table);
+        }
+    }
+
+    public void addx(ItemStack[] items, Table table) {
+        for(ItemStack stack : items) {
+            addx(stack.amount, stack.item.uiIcon, table);
+        }
+    }
+
+    public void addx(float value, TextureRegion icon, Table table) {
+        table.image(icon).height(32).width(Math.min(icon.width, 32));
+        table.add(" " + (int) value + ". ");
+    }
+
+    public void arrowx(Table table) {
+        table.image(Drawx.arrowx).color(Color.darkGray).size(48);
+    }
+
+    public void updateStats(Block b) {
+        clear(Stat.input, b);
+        clear(Stat.output, b);
+
+        if(b instanceof GenericCrafter b2) {
+            b.stats.add(Statsx.requirements, t -> {
+                t.row();
+                t.pane(table -> {
+                    table.setBackground(Styles.grayPanel);
+                    table.pane(input -> {
+                        for(Consume consume : b2.consumers) {
+                            if(consume instanceof ConsumeItems) {
+                                addx(((ConsumeItems) consume).items, input);
+                            }
+
+                            if(consume instanceof ConsumeLiquids) {
+                                addx(((ConsumeLiquids) consume).liquids, input);
+                            }
+
+                            if(consume instanceof ConsumeLiquid) {
+                                addx(LiquidStack.with(((ConsumeLiquid) consume).liquid, ((ConsumeLiquid) consume).amount), table);
+                            }
+
+                            if(consume instanceof ConsumePower) {
+                                addx(((ConsumePower) consume).usage * 60, Blocks.powerNode.uiIcon, table);
+                            }
+                        }
+
+                        if(b2 instanceof HeatCrafter b3) {
+                            addx(b3.heatRequirement * 60, Blocks.electricHeater.uiIcon, table);
+                        }
+                    }).padLeft(6f);
+
+                    arrowx(table);
+
+                    table.pane(output -> {
+                        if(b2.outputItems != null) {
+                            addx(b2.outputItems, output);
+                        }
+
+                        if(b2.outputLiquids != null) {
+                            addx(b2.outputLiquids, output);
+                        }
+
+                        if(b2 instanceof HeatProducer b3) {
+                            addx(b3.heatOutput * 60, Blocks.electricHeater.uiIcon, table);
+                        }
+                    }).padRight(6f);
+                });
+            });
+        }
     }
 
     public void renderer() {
@@ -163,6 +253,7 @@ public class TheTech extends Mod {
 
     @Override
     public void loadContent() {
+        Statsx.load();
         Effects.load();
         Statuses.load();
         Itemsx.load();

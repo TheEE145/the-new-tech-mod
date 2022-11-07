@@ -70,6 +70,7 @@ public class Blocksx {
     public static Other.SunGenerator sunGenerator;
     public static RadiusBlock sonicPulsar;
     public static Other.CrystalCrasher crasher;
+    public static Other.AllSource allSource;
 
     public static <T extends Block> T add(T type) {
         all.add(type);
@@ -614,7 +615,7 @@ public class Blocksx {
             health = 200;
 
             hasItems = true;
-            itemCapacity = 5;
+            itemCapacity = 15;
             mineable = true;
 
             lasers = 7;
@@ -686,6 +687,13 @@ public class Blocksx {
             requirements(Category.production, with(
                     Itemsx.silica, 15
             ));
+        }});
+
+        allSource = add(new Other.AllSource("all-source") {{
+            health = Integer.MAX_VALUE;
+            size = 1;
+
+            laserRange = 800;
         }});
     }
 }

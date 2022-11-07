@@ -27,6 +27,8 @@ public class Meteria {
 
             colorByTeam = false;
             radColor = ThePal.meteria;
+            update = true;
+            noUpdateDisabled = false;
         }
 
         @Override
@@ -157,7 +159,7 @@ public class Meteria {
                         return true;
                     }
 
-                    return build instanceof MeteriaReceiverBuild;
+                    return build instanceof MeteriaReceiverBuild || build instanceof MeteriaGiverBuild;
                 })) {
                     cache.add(e);
                 }
@@ -203,7 +205,11 @@ public class Meteria {
             public void draw() {
                 super.draw();
                 drawLinks();
+            }
 
+            @Override
+            public void update() {
+                super.update();
                 updateTact();
             }
 
@@ -231,6 +237,18 @@ public class Meteria {
 
                     if(b instanceof MeteriaReceiverBuild b2) {
                         ((MeteriaReceiverBuild) b).meteria(add(b2.meteria(), b2.meteriaCapacity()));
+                    }
+
+                    if(b instanceof MeteriaGiverBuild b2) {
+                        meteria += b2.value();
+
+                        if(meteria < 0) {
+                            meteria = 0;
+                        }
+
+                        if(meteria > local$maxMeteria) {
+                            meteria = local$maxMeteria;
+                        }
                     }
 
                     if(b instanceof MeteriaNodeBuild) {
@@ -422,6 +440,10 @@ public class Meteria {
         float meteriaCapacity();
 
         void meteria(float meteria);
+    }
+
+    public interface MeteriaGiverBuild {
+        float value();
     }
 
     public static class MeteriaDrill extends Types.ModDrill {
