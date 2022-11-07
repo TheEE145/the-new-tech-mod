@@ -124,6 +124,7 @@ public class Types {
         public ModBlock(String name) {
             super(name);
 
+            flashColor = Color.white;
             localizedName = prefix(localizedName);
 
             flashHit = true;
