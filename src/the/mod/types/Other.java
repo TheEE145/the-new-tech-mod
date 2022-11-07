@@ -19,10 +19,10 @@ import mindustry.content.Blocks;
 import mindustry.entities.Effect;
 import mindustry.entities.bullet.BasicBulletType;
 import mindustry.game.EventType;
+import mindustry.game.Team;
 import mindustry.gen.Building;
 import mindustry.gen.Bullet;
 import mindustry.gen.Hitboxc;
-import mindustry.gen.Tex;
 import mindustry.graphics.Drawf;
 import mindustry.graphics.Layer;
 import mindustry.graphics.Pal;
@@ -31,7 +31,6 @@ import mindustry.type.Item;
 import mindustry.type.Liquid;
 import mindustry.type.LiquidStack;
 import mindustry.ui.Bar;
-import mindustry.world.Block;
 import mindustry.world.Tile;
 import mindustry.world.blocks.logic.LogicBlock;
 import mindustry.world.blocks.power.PowerNode;
@@ -566,6 +565,113 @@ public class Other {
                         }
                     }
                 }
+            }
+        }
+    }
+
+    public static class UnbreakableWall extends Types.ModBlock {
+        public UnbreakableWall(String name) {
+            super(name);
+
+            chanceDeflect = Integer.MAX_VALUE;
+            flashHit = true;
+
+            insulated = true;
+            absorbLasers = true;
+            flashColor = Color.white;
+            health = Integer.MAX_VALUE;
+            solid = true;
+
+            update = true;
+            canBurn = false;
+            schematicPriority = Integer.MAX_VALUE;
+        }
+
+        public class UnbreakableWallBuild extends ModBlockBuild {
+            @Override
+            public void damage(Bullet bullet, Team source, float damage) {
+                world.tile(tileX(), tileY()).setNet(block, team, rotation);
+            }
+
+            @Override
+            public void damage(float amount, boolean withEffect) {
+                world.tile(tileX(), tileY()).setNet(block, team, rotation);
+            }
+
+            @Override
+            public void damage(float damage) {
+                world.tile(tileX(), tileY()).setNet(block, team, rotation);
+            }
+
+            @Override
+            public void damage(Team source, float damage) {
+                world.tile(tileX(), tileY()).setNet(block, team, rotation);
+            }
+
+            @Override
+            public void damageContinuous(float amount) {
+                world.tile(tileX(), tileY()).setNet(block, team, rotation);
+            }
+
+            @Override
+            public void damageContinuousPierce(float amount) {
+                world.tile(tileX(), tileY()).setNet(block, team, rotation);
+            }
+
+            @Override
+            public void damagePierce(float amount) {
+                world.tile(tileX(), tileY()).setNet(block, team, rotation);
+            }
+
+            @Override
+            public void damagePierce(float amount, boolean withEffect) {
+                world.tile(tileX(), tileY()).setNet(block, team, rotation);
+            }
+
+            @Override
+            public boolean dead() {
+                world.tile(tileX(), tileY()).setNet(block, team, rotation);
+                return false;
+            }
+
+            @Override
+            public void dead(boolean dead) {
+                super.dead(false);
+                world.tile(tileX(), tileY()).setNet(block, team, rotation);
+            }
+
+            @Override
+            public void kill() {
+                world.tile(tileX(), tileY()).setNet(block, team, rotation);
+            }
+
+            @Override
+            public void killed() {
+                world.tile(tileX(), tileY()).setNet(block, team, rotation);
+            }
+
+            @Override
+            public float health() {
+                world.tile(tileX(), tileY()).setNet(block, team, rotation);
+                return Integer.MAX_VALUE;
+            }
+
+            @Override
+            public void updateTile() {
+                super.updateTile();
+                health = Integer.MAX_VALUE;
+            }
+
+            @Override
+            public void afterDestroyed() {
+                super.afterDestroyed();
+                world.tile(tileX(), tileY()).setNet(block, team, rotation);
+            }
+
+            @Override
+            public void onDestroyed() {
+                super.onDestroyed();
+                world.tile(tileX(), tileY()).setNet(block, team, rotation);
             }
         }
     }

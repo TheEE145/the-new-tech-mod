@@ -27,6 +27,7 @@ public class Blocksx {
 
     //defence
     public static ModBlock silicaWall, largeSilicaWall, virusMWall, virusMWallLarge;
+    public static Other.UnbreakableWall unbreakableWall;
     public static ModItemTurret silicaTurret;
     public static Minigun ares;
 
@@ -485,6 +486,11 @@ public class Blocksx {
             requirements(Category.defense, with(
                     Itemsx.virusM, 24
             ));
+        }});
+
+        unbreakableWall = add(new Other.UnbreakableWall("unbrekable-wall") {{
+            buildVisibility = BuildVisibility.sandboxOnly;
+            requirements(Category.defense, with());
         }});
 
         //redcon
