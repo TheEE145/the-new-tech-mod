@@ -60,7 +60,9 @@ public class ModTechTree {
                 });
 
                 nodeI.get(Itemsx.virusM, () -> {
-                    node(Blocksx.virusMCrystal);
+                    node(Blocksx.virusMCrystal, Seq.with(new Objectives.Research(Blocksx.crasher)), () -> {
+
+                    });
 
                     nodeI.get(Itemsx.virusMSand, () -> {
 
@@ -68,6 +70,10 @@ public class ModTechTree {
                 });
 
                 nodeI.get(Itemsx.silicaSand, () -> {
+
+                });
+
+                node(Blocksx.silicaCrystal, Seq.with(new Objectives.Research(Blocksx.crasher)), () -> {
 
                 });
             });

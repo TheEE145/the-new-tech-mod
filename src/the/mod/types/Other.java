@@ -199,7 +199,8 @@ public class Other {
                 if(tile.block() instanceof CrystalBlock) {
                     tile.block().destroyEffect.at(tile.build.x, tile.build.y);
 
-                    items.add(((CrystalBlock) tile.block()).item, 20);
+                    CrystalBlock b = (CrystalBlock) tile.block();
+                    items.add(b.item, b.amount);
                     tile.setNet(Blocks.air);
                 }
             }
@@ -248,6 +249,8 @@ public class Other {
                         }
                     }
                 }
+
+                dump();
             }
         }
     }
@@ -255,7 +258,7 @@ public class Other {
     public static class CrystalBlock extends Types.ModB {
         public boolean defaultBlockAssets = true;
         public Color color;
-        public int sprites = 3;
+        public int sprites = 3, amount;
         public Item item;
 
         public TextureRegion[] regions;
@@ -269,6 +272,8 @@ public class Other {
             drawDisabled = false;
 
             this.item = item;
+            this.amount = amount;
+
             requirements(Category.effect, with(item, amount));
             destroyEffect = breakEffect = Effects.bread;
 

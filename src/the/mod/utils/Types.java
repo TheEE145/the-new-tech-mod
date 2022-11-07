@@ -1,6 +1,5 @@
 package the.mod.utils;
 
-import arc.Events;
 import arc.func.*;
 import arc.graphics.*;
 import arc.graphics.g2d.*;
@@ -8,10 +7,9 @@ import arc.math.*;
 import arc.math.geom.*;
 import arc.scene.ui.layout.*;
 import arc.struct.*;
-import arc.util.ArcRuntimeException;
+import arc.util.*;
 import arc.util.io.*;
 import mindustry.content.*;
-import mindustry.ctype.Content;
 import mindustry.entities.*;
 import mindustry.game.*;
 import mindustry.gen.*;
@@ -31,8 +29,7 @@ import mindustry.world.consumers.*;
 import the.mod.TheTech;
 import the.mod.types.Lasers;
 
-import static arc.Core.atlas;
-import static arc.Core.bundle;
+import static arc.Core.*;
 import static the.mod.TheTech.*;
 
 import static mindustry.Vars.*;
@@ -215,13 +212,6 @@ public class Types {
             super.load();
             centerRegion = get(name + "-center");
         }
-
-        /*
-            @Override
-            public void drawPlanConfig(BuildPlan plan, Eachable<BuildPlan> list){
-                drawPlanConfigCenter(plan, plan.config, name + "-center");
-            }
-         */
 
         @Override
         public void setBars(){

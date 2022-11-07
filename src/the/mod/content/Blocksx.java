@@ -34,7 +34,7 @@ public class Blocksx {
     public static ModFloor virusMFloor, mantium, orangeIce, emethen, crystals;
     public static ModStaticWall virusMStaticWall, orangeIceWall, mantiumWall;
     public static ModOreBlock silicaOre;
-    public static Other.CrystalBlock virusMCrystal;
+    public static Other.CrystalBlock virusMCrystal, silicaCrystal;
 
     //energy
     public static MeteriaNode meteriaNode, largeMeteriaNode, sandboxMeteriaNode;
@@ -536,6 +536,10 @@ public class Blocksx {
         }});
 
         virusMCrystal = add(new Other.CrystalBlock("virus-m-crystal", Itemsx.virusM, 25) {{
+            health = 1;
+        }});
+
+        silicaCrystal = add(new Other.CrystalBlock("silica-crystal-2", Itemsx.silica, 25) {{
             health = 1;
         }});
 
