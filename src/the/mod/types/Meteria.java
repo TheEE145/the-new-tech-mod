@@ -32,6 +32,13 @@ public class Meteria {
         }
 
         @Override
+        public void setStats() {
+            super.setStats();
+
+            stats.add(Statsx.meteriaCapacity, maxMeteria);
+        }
+
+        @Override
         public void setBars() {
             super.setBars();
 
@@ -335,6 +342,14 @@ public class Meteria {
         }
 
         @Override
+        public void setStats() {
+            super.setStats();
+
+            stats.add(Statsx.meteriaProduce, meteriaGet);
+            stats.add(Statsx.meteriaCapacity, maxMeteria);
+        }
+
+        @Override
         public void setBars() {
             super.setBars();
 
@@ -385,6 +400,14 @@ public class Meteria {
 
         public MeteriaPlant(String name) {
             super(name);
+        }
+
+        @Override
+        public void setStats() {
+            super.setStats();
+
+            stats.add(Statsx.meteriaCapacity, maxMeteria);
+            stats.add(Statsx.meteriaConsume, meteriaConsume);
         }
 
         @Override
@@ -452,6 +475,14 @@ public class Meteria {
 
         public MeteriaDrill(String name) {
             super(name);
+        }
+
+        @Override
+        public void setStats() {
+            super.setStats();
+
+            stats.add(Statsx.meteriaCapacity, maxMeteria);
+            stats.add(Statsx.meteriaConsume, meteriaConsume);
         }
 
         @Override

@@ -23,6 +23,34 @@ public abstract class Tacker {
 
     protected abstract void hand();
 
+    public static class BasicTicker extends Tacker {
+        public float max = 100, min = 0, cur = 1, val = 0;
+        public boolean fall = false;
+
+        public float delta() {
+            return (val - min) / (max - min);
+        }
+
+        @Override
+        protected void hand() {
+            if(fall) {
+                val -= cur;
+
+                if(val < min) {
+                    val = min;
+                    fall = false;
+                }
+            } else {
+                val += cur;
+
+                if(val > max) {
+                    val = max;
+                    fall = true;
+                }
+            }
+        }
+    }
+
     public static class RotationTicker extends Tacker {
         public boolean reverse;
         public float rotation;

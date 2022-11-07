@@ -66,6 +66,9 @@ public class Blocksx {
     public static Lasers.LaserBlock laser, longLaser;
     public static LaserMultiMirror multiMirror;
 
+    //logic
+    public static Other.ProcessorSpeedUpBlock cooler;
+
     //other
     public static Other.SunGenerator sunGenerator;
     public static RadiusBlock sonicPulsar;
@@ -651,6 +654,31 @@ public class Blocksx {
             ));
         }});
 
+        //logic
+        cooler = add(new Other.ProcessorSpeedUpBlock("processor-booster") {{
+            consumeLiquidAmount = 17f / 60f;
+            hasLiquids = true;
+            health = 200;
+            links = 6;
+            size = 3;
+            boost = 3;
+
+            drawer = new Drawer.Plan[] {
+                    new Drawer.Plan("-bottom", ""),
+                    new Drawer.Plan("-liquid", "liquid"),
+                    new Drawer.Plan("base"),
+                    new Drawer.Plan("-heat", "heat")
+            };
+
+            requirements(Category.logic, with(
+                    Itemsx.silica, 50,
+                    Itemsx.silicaSand, 25,
+                    Itemsx.virusM, 30,
+                    Itemsx.coalSand, 6
+            ));
+        }});
+
+
         //other
         sonicPulsar = add(new RadiusBlock("sonic-pulsar") {{
             health = 200;
@@ -670,6 +698,9 @@ public class Blocksx {
                     Itemsx.silicaSand, 50,
                     Itemsx.virusM, 10
             ));
+
+            hasLiquids = true;
+            liquidCapacity = 48;
         }});
 
         sunGenerator = add(new Other.SunGenerator("sun-generator") {{

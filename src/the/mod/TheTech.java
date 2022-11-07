@@ -295,8 +295,4 @@ public class TheTech extends Mod {
             runnable.run();
         });
     }
-
-    public static TextureRegion loadRegion(Block block, String prefix) {
-        return TheTech.mod(block.getContentType().name() + "." + block.name + "-" + prefix);
-    }
 }

@@ -22,16 +22,25 @@ import mindustry.game.EventType;
 import mindustry.gen.Building;
 import mindustry.gen.Bullet;
 import mindustry.gen.Hitboxc;
+import mindustry.gen.Tex;
 import mindustry.graphics.Drawf;
 import mindustry.graphics.Layer;
+import mindustry.graphics.Pal;
 import mindustry.type.Category;
 import mindustry.type.Item;
 import mindustry.type.Liquid;
+import mindustry.type.LiquidStack;
+import mindustry.ui.Bar;
 import mindustry.world.Block;
 import mindustry.world.Tile;
+import mindustry.world.blocks.logic.LogicBlock;
 import mindustry.world.blocks.power.PowerNode;
+import mindustry.world.consumers.ConsumeLiquidBase;
+import mindustry.world.consumers.ConsumeLiquidFilter;
 import mindustry.world.meta.BuildVisibility;
 import mindustry.world.meta.Env;
+import mindustry.world.meta.Stat;
+import mindustry.world.meta.StatUnit;
 import mindustry.world.modules.ItemModule;
 import the.mod.TheTech;
 import the.mod.content.Effects;
@@ -376,7 +385,7 @@ public class Other {
 
             buildVisibility = BuildVisibility.sandboxOnly;
             requirements(Category.effect, with());
-            
+
             localizedName = TheTech.prefix(localizedName);
         }
 
@@ -446,6 +455,117 @@ public class Other {
             @Override
             public void handleLiquid(Building source, Liquid liquid, float amount){
                 liquids.handleFlow(liquid, amount);
+            }
+        }
+    }
+
+    public static class ProcessorSpeedUpBlock extends Types.ModBlock {
+        public ConsumeLiquidBase liquidConsumer;
+        public Color color = Pal.turretHeat;
+        public int links = size * 4;
+        public float consumeLiquidAmount;
+        public float boost = 2;
+
+        public ProcessorSpeedUpBlock(String name) {
+            super(name);
+
+            update = true;
+            solid = true;
+            rotate = false;
+        }
+
+        @Override
+        public void setBars() {
+            super.setBars();
+
+            addBar("links", (ProcessorSpeedUpBlockBuild b) -> new Bar(
+                    () -> "\uF7E4: " + b.connections + " / " + links,
+                    () -> Color.orange,
+                    () -> (float) b.connections / links
+            ));
+        }
+
+        @Override
+        public void setStats() {
+            super.setStats();
+
+            stats.add(Stat.output, "@ \uF7E4", links);
+            stats.add(Stat.speedIncrease, boost * 100, StatUnit.percent);
+        }
+
+        @Override
+        public void init() {
+            if(hasLiquids) {
+                liquidConsumer = findConsumer(c -> c instanceof ConsumeLiquidBase);
+
+                if(liquidConsumer == null){
+                    liquidConsumer = consume(new ConsumeLiquidFilter(liquid ->
+                            liquid.temperature <= 0.5f && liquid.flammability < 0.1f, consumeLiquidAmount));
+                }
+            }
+
+            super.init();
+        }
+
+        public class ProcessorSpeedUpBlockBuild extends ModBlockBuild {
+            public Tacker.BasicTicker basicTicker = new Tacker.BasicTicker();
+            public int connections = 0;
+
+            public boolean canBoost() {
+                return enabled && canConsume() && efficiency() > 0.8f;
+            }
+
+            public float boost() {
+                return canBoost() ? boost : 0;
+            }
+
+            public float heat() {
+                return canBoost() ? (float) connections / links : 0;
+            }
+
+            @Override
+            public void updateTile() {
+                if(boost() == 0 && !basicTicker.paused()) {
+                    basicTicker.pause();
+                }
+
+                if(boost() > 0 && basicTicker.paused()) {
+                    basicTicker.resume();
+                }
+
+                basicTicker.tick();
+                connections = 0;
+
+                if(canBoost()) {
+                    float boost = boost();
+                    for(Building b : proximity) {
+                        if(b instanceof LogicBlock.LogicBuild && connections < links) {
+                            for(int i = 0; i < boost; i++) {
+                                b.updateTile();
+                            }
+
+                            connections++;
+                        }
+                    }
+                }
+
+                if(localDrawer != null && drawer != null) {
+                    for(Drawer e : localDrawer.drawers) {
+                        if(e instanceof Drawer.HeatDrawer e2) {
+                            e2.heat = heat() * basicTicker.delta();
+                            e2.color = color;
+                        }
+
+                        if(e instanceof Drawer.DrawLiquid e2 && hasLiquids && liquids != null) {
+                            e2.stack = LiquidStack.with(liquids.current(), liquids.currentAmount())[0];
+                            e2.cap = liquidCapacity;
+                        }
+
+                        if(e instanceof Drawer.DrawRotor e2) {
+                            e2.rotation = heat() * 50;
+                        }
+                    }
+                }
             }
         }
     }

@@ -119,6 +119,7 @@ public class Types {
         public float dynamicEffectChange = 0f;
         public Effect dynamicEffect = Fx.none;
         public boolean canBurn = true;
+        public Drawer.Plan[] drawer;
 
         public ModBlock(String name) {
             super(name);
@@ -140,8 +141,34 @@ public class Types {
         }
 
         public class ModBlockBuild extends WallBuild {
+            public Drawer.MultiDrawer localDrawer = new Drawer.MultiDrawer();
+            private boolean loaded = false;
+
+            public ModBlockBuild() {
+                if(drawer != null) {
+                    localDrawer.drawers = new Drawer[drawer.length];
+                    for(int i = 0; i < drawer.length; i++) {
+                        localDrawer.drawers[i] = drawer[i].get();
+                    }
+                }
+            }
+
             public void extinguish(float x, float y) {
                 Fires.extinguish(world.tileWorld(this.x + x, this.y + y), 9000);
+            }
+
+            @Override
+            public void draw() {
+                if(drawer == null) {
+                    super.draw();
+                } else {
+                    if(!loaded) {
+                        localDrawer.load(TheTech.toBlock(this));
+                        loaded = true;
+                    }
+
+                    localDrawer.draw(x, y);
+                }
             }
 
             public float diner() {
