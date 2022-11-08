@@ -10,6 +10,7 @@ import arc.scene.ui.layout.Table;
 import arc.struct.Seq;
 import arc.util.*;
 import mindustry.content.Blocks;
+import mindustry.ctype.ContentType;
 import mindustry.ctype.UnlockableContent;
 import mindustry.game.Team;
 import mindustry.gen.Building;
@@ -132,6 +133,23 @@ public class TheTech extends Mod {
                             });
                         });
                     }).size(300f, 50f);
+                    t.button(bundle("buffs.all"), () -> {
+                        show(bundle("buffs.all.warn"), bg -> {
+                            bg.cont.pane(h -> {
+                                h.margin(60f);
+                                h.add(bundle("buffs.all.text")).row();
+                                h.add(bundle("bd.confirm")).row();
+
+                                h.button(bundle("bd.confirm.y"), () -> {
+                                    Types.Buff.buffs.each(UnlockableContent::unlock);
+
+                                    bg.hide();
+                                }).width(300f).row();
+
+                                h.button(bundle("bd.confirm.n"), bg::hide).width(300f).row();
+                            });
+                        });
+                    }).size(300f, 50f);
                     t.pack();
                     t.visible(() -> state.isPaused() && state.isCampaign());
                     t.top();
@@ -156,6 +174,12 @@ public class TheTech extends Mod {
 
             Team.blue.name = bundle.get("team.blue");
             content.blocks().each(this::updateStats);
+
+            for(Types.Buff buff : Types.Buff.buffs) {
+                if(buff.unlocked()) {
+                    buff.activate();
+                }
+            }
         });
     }
 
@@ -196,20 +220,20 @@ public class TheTech extends Mod {
                     table.setBackground(Styles.grayPanel);
                     table.pane(input -> {
                         for(Consume consume : b2.consumers) {
-                            if(consume instanceof ConsumeItems) {
-                                addx(((ConsumeItems) consume).items, input);
+                            if(consume instanceof ConsumeItems x) {
+                                addx(x.items, input);
                             }
 
-                            if(consume instanceof ConsumeLiquids) {
-                                addx(((ConsumeLiquids) consume).liquids, input);
+                            if(consume instanceof ConsumeLiquids x) {
+                                addx(x.liquids, input);
                             }
 
-                            if(consume instanceof ConsumeLiquid) {
-                                addx(LiquidStack.with(((ConsumeLiquid) consume).liquid, ((ConsumeLiquid) consume).amount), table);
+                            if(consume instanceof ConsumeLiquid l) {
+                                addx(LiquidStack.with(l.liquid, l.amount), table);
                             }
 
-                            if(consume instanceof ConsumePower) {
-                                addx(((ConsumePower) consume).usage * 60, Blocks.powerNode.uiIcon, table);
+                            if(consume instanceof ConsumePower x) {
+                                addx(x.usage * 60, Blocks.powerNode.uiIcon, table);
                             }
                         }
 
@@ -233,6 +257,7 @@ public class TheTech extends Mod {
                             addx(b3.heatOutput * 60, Blocks.electricHeater.uiIcon, table);
                         }
                     }).padRight(6f);
+                    table.left();
                 });
             });
         }

@@ -1,13 +1,11 @@
 package the.mod.content;
 
 import arc.graphics.Color;
+import arc.util.Log;
 import mindustry.content.*;
 import mindustry.game.Team;
-import mindustry.graphics.Pal;
 import mindustry.graphics.g3d.*;
-import mindustry.maps.planet.SerpuloPlanetGenerator;
 import mindustry.type.Planet;
-import mindustry.world.meta.Attribute;
 import the.mod.utils.RedconPlanetGenerator;
 
 public class Redcon {
@@ -47,10 +45,10 @@ public class Redcon {
             alwaysUnlocked = true;
             landCloudColor = Color.orange.cpy().a(0.5f);
 
-            hiddenItems
-                    .addAll(Items.erekirItems)
-                    .addAll(Items.serpuloItems)
-                    .removeAll(Itemsx.all);
+            hiddenItems.addAll(Items.erekirItems);
+            hiddenItems.addAll(Items.serpuloItems);
+            hiddenItems.removeAll(Itemsx.all);
+            Log.info(hiddenItems);
 
             defaultCore = Blocksx.terra;
         }};

@@ -10,6 +10,8 @@ import arc.struct.*;
 import arc.util.*;
 import arc.util.io.*;
 import mindustry.content.*;
+import mindustry.ctype.ContentType;
+import mindustry.ctype.UnlockableContent;
 import mindustry.entities.*;
 import mindustry.game.*;
 import mindustry.gen.*;
@@ -26,6 +28,7 @@ import mindustry.world.blocks.liquid.Conduit;
 import mindustry.world.blocks.production.*;
 import mindustry.world.blocks.storage.*;
 import mindustry.world.consumers.*;
+import mindustry.world.meta.BuildVisibility;
 import the.mod.TheTech;
 import the.mod.types.Lasers;
 
@@ -124,7 +127,6 @@ public class Types {
         public ModBlock(String name) {
             super(name);
 
-            flashColor = Color.white;
             localizedName = prefix(localizedName);
 
             flashHit = true;
@@ -152,6 +154,8 @@ public class Types {
                         localDrawer.drawers[i] = drawer[i].get();
                     }
                 }
+
+                flashColor = Color.white;
             }
 
             public void extinguish(float x, float y) {
@@ -191,6 +195,7 @@ public class Types {
             @Override
             public void update() {
                 super.update();
+
                 if(Mathf.chanceDelta(dynamicEffectChange)) {
                     dynamicEffect.at(x + diner(), y + diner());
                 }
@@ -474,7 +479,7 @@ public class Types {
     }
 
     public static class ModUnitType extends UnitType {
-        public boolean helicopter;
+        public boolean helicopter, ground, legs;
 
         public TextureRegion topRegion, rotorRegion;
         public float rotorSpeed = 15;
@@ -484,16 +489,30 @@ public class Types {
             super(name);
 
             localizedName = prefix(localizedName);
+
             tacker.add(this);
         }
 
         @Override
+        @SuppressWarnings("unchecked")
         public void load() {
             super.load();
 
             if(helicopter) {
                 topRegion = TheTech.get(name + "-top");
                 rotorRegion = TheTech.get(name + "-rotor");
+            }
+
+            if(ground) {
+                constructor = MechUnit::create;
+            }
+
+            if(legs) {
+                constructor = LegsUnit::create;
+            }
+
+            if(!ground && !legs) {
+                constructor = EntityMapping.map(3);
             }
         }
 
@@ -579,6 +598,54 @@ public class Types {
             super(name);
 
             localizedName = prefix(localizedName);
+        }
+    }
+
+    public static class Buff extends UnlockableContent {
+        private ItemStack[] requirements = ItemStack.empty;
+
+        public static final Seq<Buff> buffs = new Seq<>();
+        public Cons<UnlockableContent> handler;
+        public boolean inited = false;
+
+        public void requirements(Object... args) {
+            requirements = ItemStack.with(args);
+        }
+
+        @Override
+        public ItemStack[] researchRequirements() {
+            return requirements;
+        }
+
+        public void handler(UnlockableContent c) {
+            if(handler != null) {
+                handler.get(c);
+            }
+        }
+
+        public Buff(String name) {
+            super(name);
+
+            buffs.add(this);
+        }
+
+        public void activate() {
+            if(inited) {
+                return;
+            }
+
+            all.each(this::handler);
+            inited = true;
+        }
+
+        @Override
+        public void onUnlock() {
+            activate();
+        }
+
+        @Override
+        public ContentType getContentType() {
+            return ContentType.error;
         }
     }
 }

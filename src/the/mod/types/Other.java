@@ -1,5 +1,6 @@
 package the.mod.types;
 
+import arc.Core;
 import arc.Events;
 import arc.graphics.Blending;
 import arc.graphics.Color;
@@ -221,7 +222,7 @@ public class Other {
             @Override
             public void buildConfiguration(Table table) {
                 table.table(t -> {
-                    TextButton b = t.button("start", () -> started = true).size(160f, 50f).get();
+                    TextButton b = t.button(Core.bundle.get("start"), () -> started = true).size(160f, 50f).get();
                     b.update(() -> {
                         b.visible(() -> !started);
                     });

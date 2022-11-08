@@ -10,6 +10,7 @@ import mindustry.graphics.*;
 import mindustry.ui.*;
 import mindustry.world.*;
 import mindustry.world.meta.BlockStatus;
+import mindustry.world.meta.Stat;
 import the.mod.TheTech;
 import the.mod.content.*;
 import the.mod.utils.*;
@@ -321,6 +322,13 @@ public class Meteria {
 
         public MeteriaNodeBooster(String name) {
             super(name);
+        }
+
+        @Override
+        public void setStats() {
+            super.setStats();
+
+            stats.add(Statsx.meteriaBoost, meteriaBoost);
         }
     }
 

@@ -3,7 +3,7 @@ package the.mod.content;
 import mindustry.world.meta.*;
 
 public class Statsx {
-    public static Stat requirements, meteriaConsume, meteriaProduce, meteriaCapacity;
+    public static Stat requirements, meteriaConsume, meteriaProduce, meteriaCapacity, meteriaBoost;
     public static StatCat meteria;
 
     public static void load() {
@@ -13,5 +13,6 @@ public class Statsx {
         meteriaConsume = new Stat("meteria-consume", meteria);
         meteriaProduce = new Stat("meteria-produce", meteria);
         meteriaCapacity = new Stat("meteria-capacity", meteria);
+        meteriaBoost = new Stat("meteria-boost", meteria);
     }
 }
