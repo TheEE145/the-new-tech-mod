@@ -206,7 +206,7 @@ public class Unitsx {
 
             range = Timer.second8 * 4; //time * speed = distance
             weapons.add(new Types.ModWeapon("air") {{
-                reload = Timer.second8;
+                reload = Timer.second8 / 4;
                 mirror = false;
                 x = y = 0;
 
