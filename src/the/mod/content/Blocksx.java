@@ -399,6 +399,7 @@ public class Blocksx {
             ));
 
             size = 1;
+            techNode = new TechTree.TechNode(Blocks.conduit.techNode, this, requirements);
         }});
 
         //crafters
