@@ -254,6 +254,12 @@ public class Unitsx {
             );
 
             color(Color.blue);
+            researchRequirements(ItemStack.with(
+                    Itemsx.virusM, 40,
+                    Itemsx.silica, 80,
+                    Itemsx.coalSand, 20,
+                    Itemsx.magmaAlloy, 10
+            ));
         }});
 
         trident = add(new Types.ModUnitType("trident") {{

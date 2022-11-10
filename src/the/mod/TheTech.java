@@ -215,7 +215,7 @@ public class TheTech extends Mod {
             table.left().row();
 
             table.pane(t -> {
-                TheTech.addx(b instanceof Types.ModBlock x ? x.requirements : b.researchRequirements(), t);
+                TheTech.addx(b instanceof Block x ? x.requirements : b.researchRequirements(), t);
             }).growX().height(48f);
         });
     }

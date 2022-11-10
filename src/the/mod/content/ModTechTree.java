@@ -95,18 +95,6 @@ public class ModTechTree {
                     });
 
                     node(Blocksx.updatedDrill, () -> {
-                        node(Blocksx.meteriaDrill, Seq.with(
-                                new Objectives.Research(Blocksx.meteriaNode),
-                                new Objectives.Research(Blocksx.coalMeteriaGenerator)
-                        ), () -> {
-                            //TODO tier 4 and 5 drills
-                        });
-
-                        node(speed, () -> {
-                            node(speed2, Seq.with(new Objectives.Research(Blocksx.meteriaDrill)), () -> {
-                                node(speed3);
-                            }) ;
-                        });
                     });
 
                     node(Blocksx.silicaConveyor, () -> {
@@ -126,6 +114,8 @@ public class ModTechTree {
 
                             nodeProduce(Itemsx.silicaSand, () -> {
                                 node(Blocksx.amot);
+                                node(Blocksx.sonicPulsar);
+                                node(Blocksx.cooler);
                             });
 
                             nodeProduce(Itemsx.coalSand, () -> {
@@ -145,6 +135,7 @@ public class ModTechTree {
 
                                 node(Blocksx.magmaFabric, () -> {
                                     nodeProduce(Itemsx.magmaAlloy, () -> {
+                                        node(Unitsx.javelin);
                                     });
                                 });
                             });
@@ -167,6 +158,17 @@ public class ModTechTree {
                                 });
 
                                 node(Blocksx.largeMeteriaNode, () -> {
+                                    node(Blocksx.meteriaDrill, Seq.with(
+                                            new Objectives.Research(Blocksx.coalMeteriaGenerator)
+                                    ), () -> {
+                                        //TODO tier 4 and 5 drills
+                                    });
+
+                                    node(speed, () -> {
+                                        node(speed2, Seq.with(new Objectives.Research(Blocksx.meteriaDrill)), () -> {
+                                            node(speed3);
+                                        }) ;
+                                    });
                                 });
 
                                 node(Blocksx.meteriaBooster);

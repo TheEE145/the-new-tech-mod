@@ -871,11 +871,8 @@ public class Blocksx {
             size = 2;
 
             plans.add(
-                    new UnitPlan(Unitsx.trident, Timer.second8, with(
-                            Itemsx.silica, 40,
-                            Itemsx.virusM, 20,
-                            Itemsx.coalSand, 10
-                    ))
+                    new UnitPlan(Unitsx.trident, Timer.second8, Unitsx.trident.researchRequirements()),
+                    new UnitPlan(Unitsx.javelin, Timer.second8 * 2, Unitsx.javelin.researchRequirements())
             );
 
             requirements(Category.units, with(
