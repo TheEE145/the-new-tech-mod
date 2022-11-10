@@ -11,7 +11,7 @@ public class Itemsx {
     public static ModItem
             silica, silicaSand,
             virusM, virusMSand,
-            coalSand;
+            coalSand, magmaAlloy;
 
     public static <T extends ModItem> T add(T type) {
         all.add(type);
@@ -24,9 +24,10 @@ public class Itemsx {
             alwaysUnlocked = true;
         }});
 
-        silicaSand = add(new ModItem("silica-crystal-sand", Color.lightGray));
-        virusM =     add(new ModItem("m-virus",             Color.cyan));
-        virusMSand = add(new ModItem("m-virus-sand",        Color.cyan));
-        coalSand =   add(new ModItem("coal-sand",           Color.black));
+        silicaSand = add(new ModItem("silica-crystal-sand", Color.lightGray  ));
+        virusM     = add(new ModItem("m-virus",             Color.cyan       ));
+        virusMSand = add(new ModItem("m-virus-sand",        Color.cyan       ));
+        coalSand   = add(new ModItem("coal-sand",           Color.black      ));
+        magmaAlloy = add(new ModItem("magma-alloy",         Color.orange     ));
     }
 }

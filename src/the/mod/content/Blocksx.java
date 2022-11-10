@@ -5,10 +5,11 @@ import arc.struct.Seq;
 import mindustry.content.*;
 import mindustry.entities.bullet.*;
 import mindustry.entities.part.*;
+import mindustry.entities.pattern.ShootMulti;
+import mindustry.entities.pattern.ShootSpread;
 import mindustry.gen.*;
 import mindustry.graphics.CacheLayer;
 import mindustry.graphics.Pal;
-import mindustry.graphics.Shaders;
 import mindustry.type.*;
 import mindustry.world.Block;
 import mindustry.world.draw.*;
@@ -30,7 +31,7 @@ public class Blocksx {
     public static ModBlock silicaWall, largeSilicaWall, virusMWall, virusMWallLarge;
     public static Other.UnbreakableWall unbreakableWall;
     public static Other.DPSBlock dpsBlock;
-    public static ModItemTurret silicaTurret;
+    public static ModItemTurret silicaTurret, scretch, amot;
     public static Minigun ares;
 
     //environment
@@ -54,10 +55,12 @@ public class Blocksx {
     public static MeteriaDrill meteriaDrill, largeDrill, nuclearDrill;
     public static ModDrill silicaDrill, updatedDrill;
 
-    //unloaders, why not
+    //liquids
+    public static ModPump basicPump;
     public static LiquidUnloader liquidUnloader;
 
     //crafters
+    public static MeteriaPlant magmaFabric;
     public static Other.MultiCrafter crusher;
 
     //cores
@@ -250,6 +253,125 @@ public class Blocksx {
             researchCost = with();
         }});
 
+        scretch = add(new ModItemTurret("scretch") {{
+            requirements(Category.turret, with(
+                    Itemsx.silica, 24,
+                    Itemsx.virusM, 12
+            ));
+
+            size = 1;
+            health = 300;
+            range = 155;
+            reload = 4;
+            recoil = 0f;
+            coolantMultiplier = 1.5f;
+            shootCone = 50f;
+            targetAir = false;
+            ammoUseEffect = Fx.none;
+            shootSound = Sounds.flame;
+            coolant = consumeCoolant(0.1f);
+
+            shootY = 8f;
+            rotateSpeed = 5f;
+            consumeAmmoOnce = true;
+            shootSound = Sounds.shoot;
+
+            drawer = new DrawTurret("redcon-") {{
+                parts.add(
+                        new RegionPart("-bolt") {{
+                            moveY = 2.7f;
+                            under = true;
+                        }},
+
+                        new RegionPart("-mid") {{
+                            moveY = -0.10f;
+                            under = true;
+                        }},
+
+                        new RegionPart("-blades") {{
+                            moveY = 2f;
+                            under = true;
+                        }}
+                );
+            }};
+
+            ammo(
+                    Items.coal, new BulletType(5f, 17f) {{
+                        ammoMultiplier = 3f;
+                        hitSize = 7f;
+                        lifetime = 30f;
+                        pierce = true;
+                        collidesAir = false;
+                        statusDuration = 60f * 4;
+                        shootEffect = Fx.shootSmallFlame;
+                        hitEffect = despawnEffect = Fx.hitFlameSmall;
+                        trailEffect = Fx.shootSmallFlame;
+                        trailColor = Pal.bulletYellow;
+                        trailChance = 1;
+                        status = StatusEffects.burning;
+                        keepVelocity = false;
+                        hittable = false;
+                    }},
+
+                    Itemsx.coalSand, new BulletType(5f, 35f){{
+                        ammoMultiplier = 6f;
+                        hitSize = 7f;
+                        lifetime = 30f;
+                        pierce = true;
+                        collidesAir = false;
+                        statusDuration = 60f * 4;
+                        shootEffect = Fx.shootSmallFlame;
+                        hitEffect = despawnEffect = Fx.hitFlameSmall;
+                        trailEffect = Fx.shootSmallFlame;
+                        trailColor = Pal.bulletYellow;
+                        trailChance = 1;
+                        status = StatusEffects.burning;
+                        keepVelocity = false;
+                        hittable = false;
+                    }}
+            );
+        }});
+
+        amot = add(new ModItemTurret("amot") {{
+            size = 2;
+            health = 200;
+            reload = 60;
+
+            range = 300;
+            shoot = new ShootSpread() {{
+                shots = 5;
+            }};
+
+            drawer = new DrawTurret("redcon-") {{
+                parts.add(
+                        new RegionPart("-bolt") {{
+                            moveY = -1f;
+                            under = true;
+                        }},
+
+                        new RegionPart("-back") {{
+                            moveY = -0.10f;
+                            under = true;
+                        }}
+                );
+            }};
+
+            ammo(
+                    Itemsx.silicaSand, new BasicBulletType(4, 20) {{
+                        Bullets.setup(this);
+
+                        lifetime *= 2;
+                        hitColor = frontColor = backColor = Color.white;
+                    }}
+            );
+
+            requirements(Category.turret, with(
+                    Itemsx.silica, 40,
+                    Itemsx.virusM, 20
+            ));
+        }});
+
+
                 //meteria nodes
         meteriaNode = add(new MeteriaNode("meteria-node") {{
             maxMeteria = 10000;
@@ -391,7 +513,7 @@ public class Blocksx {
             consumeLiquid(Liquids.emethen, 0.08f).boost();
         }});
 
-        //unloaders
+        //liquids
         liquidUnloader = add(new LiquidUnloader("liquid-unloader") {{
             requirements(Category.liquid, with(
                     Items.titanium, 25,
@@ -400,6 +522,11 @@ public class Blocksx {
 
             size = 1;
             techNode = new TechTree.TechNode(Blocks.conduit.techNode, this, requirements);
+        }});
+
+        basicPump = add(new ModPump("basic-pump") {{
+            requirements(Category.liquid, with(Itemsx.silica, 15, Itemsx.virusM, 10));
+            pumpAmount = 6f / 60f;
         }});
 
         //crafters
@@ -425,6 +552,29 @@ public class Blocksx {
                     Itemsx.silica, 75,
                     Itemsx.virusM, 25
             ));
+        }});
+
+        magmaFabric = add(new MeteriaPlant("magma-fabric") {{
+            health = 400;
+            size = 3;
+
+            meteriaConsume = 100;
+            maxMeteria = 500;
+            craftTime = 90;
+
+            requirements(Category.crafting, with(
+                    Itemsx.silica, 125,
+                    Itemsx.virusM, 75
+            ));
+
+            consumeLiquid(Liquids.emethen, 0.2f);
+            consumeItems(ItemStack.with(
+                    Itemsx.silica, 3,
+                    Itemsx.virusM, 6,
+                    Itemsx.coalSand, 4
+            ));
+
+            outputItem = ItemStack.with(Itemsx.magmaAlloy, 3)[0];
         }});
 
         //walls

@@ -111,7 +111,6 @@ public class ModTechTree {
 
                     node(Blocksx.silicaConveyor, () -> {
                         node(Blocksx.silicaRouter, () -> {
-                            node(Blocksx.silicaBridge);
                         });
                     });
 
@@ -119,53 +118,64 @@ public class ModTechTree {
                         node(Blocksx.virusMWall, Seq.with(new Objectives.Research(Blocksx.silicaWall)) , () -> {
                             node(Blocksx.virusMWallLarge);
                         });
-                    });
-                });
 
-                node(Blocksx.meteriaNode, () -> {
-                    node(capacity, () -> {
-                        node(capacity2, Seq.with(new Objectives.Research(Blocksx.coalMeteriaGenerator)), () -> {
-                            node(capacity3, Seq.with(
-                                    new Objectives.Research(Blocksx.largeMeteriaNode),
-                                    new Objectives.Research(Blocksx.meteriaBooster),
-                                    new Objectives.Research(Blocksx.emethenMeteriaGenerator)
-                            ), () -> {
+                        node(Blocksx.crusher, () -> {
+                            nodeProduce(Itemsx.virusMSand, () -> {
 
+                            });
+
+                            nodeProduce(Itemsx.silicaSand, () -> {
+                                node(Blocksx.amot);
+                            });
+
+                            nodeProduce(Itemsx.coalSand, () -> {
+                                node(Unitsx.trident);
+                            });
+
+                            node(Blocksx.baseFactory);
+                        });
+
+                        node(Blocksx.silicaBridge);
+
+                        node(Blocksx.basicPump, () -> {
+                            nodeProduce(Liquids.emethen, () -> {
+                                node(Blocksx.emethenMeteriaGenerator, Seq.with(new Objectives.Research(Blocksx.coalMeteriaGenerator)), () -> {
+
+                                });
+
+                                node(Blocksx.magmaFabric, () -> {
+                                    nodeProduce(Itemsx.magmaAlloy, () -> {
+                                    });
+                                });
                             });
                         });
                     });
 
-                    node(Blocksx.largeMeteriaNode, () -> {
+                    nodeProduce(Items.coal, () -> {
+                        node(Blocksx.coalMeteriaGenerator, () -> {
+                            node(Blocksx.meteriaNode, () -> {
+                                node(capacity, () -> {
+                                    node(capacity2, Seq.with(new Objectives.Research(Blocksx.coalMeteriaGenerator)), () -> {
+                                        node(capacity3, Seq.with(
+                                                new Objectives.Research(Blocksx.largeMeteriaNode),
+                                                new Objectives.Research(Blocksx.meteriaBooster),
+                                                new Objectives.Research(Blocksx.emethenMeteriaGenerator)
+                                        ), () -> {
+
+                                        });
+                                    });
+                                });
+
+                                node(Blocksx.largeMeteriaNode, () -> {
+                                });
+
+                                node(Blocksx.meteriaBooster);
+                            });
+                        });
+
+                        node(Blocksx.scretch, () -> {
+                        });
                     });
-
-                    node(Blocksx.meteriaBooster);
-                });
-
-                nodeProduce(Items.coal, () -> {
-                    node(Blocksx.coalMeteriaGenerator, () -> {
-                    });
-                });
-
-                nodeProduce(Liquids.emethen, () -> {
-                    node(Blocksx.emethenMeteriaGenerator, Seq.with(new Objectives.Research(Blocksx.coalMeteriaGenerator)), () -> {
-
-                    });
-                });
-
-                node(Blocksx.crusher, () -> {
-                    nodeProduce(Itemsx.virusMSand, () -> {
-
-                    });
-
-                    nodeProduce(Itemsx.silicaSand, () -> {
-
-                    });
-
-                    nodeProduce(Itemsx.coalSand, () -> {
-                        node(Unitsx.trident);
-                    });
-
-                    node(Blocksx.baseFactory);
                 });
 
                 node(Blocksx.silicaTurret, () -> {

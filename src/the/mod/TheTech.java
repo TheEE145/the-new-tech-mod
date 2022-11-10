@@ -25,7 +25,9 @@ import mindustry.ui.Styles;
 import mindustry.ui.dialogs.BaseDialog;
 import mindustry.world.Block;
 import mindustry.world.Tile;
+import mindustry.world.blocks.environment.Floor;
 import mindustry.world.blocks.heat.HeatProducer;
+import mindustry.world.blocks.production.Drill;
 import mindustry.world.blocks.production.GenericCrafter;
 import mindustry.world.blocks.production.HeatCrafter;
 import mindustry.world.consumers.*;
@@ -193,7 +195,7 @@ public class TheTech extends Mod {
     }
 
     public static void addx(float value, TextureRegion icon, Table table) {
-        table.image(icon).height(32).width(Math.min(icon.width, 32));
+        table.image(icon).height(33).width(Math.min(icon.width, 32) + 1);
         table.add(" " + (int) value + ". ");
     }
 
@@ -201,11 +203,50 @@ public class TheTech extends Mod {
         table.image(Drawx.arrowx).color(Color.darkGray).size(48);
     }
 
-    public void updateStats(Block b) {
-        clear(Stat.input, b);
-        clear(Stat.output, b);
+    public static void setup(Block b) {
+        b.stats.remove(Stat.buildCost);
+        b.stats.add(Stat.buildCost, table -> {
+            table.left().row();
 
-        if(b instanceof GenericCrafter b2 && !(b instanceof Other.MultiCrafter)) {
+            table.pane(t -> {
+                t.setBackground(Styles.grayPanel);
+                TheTech.addx(b.requirements, t);
+            }).growX().height(48f);
+        });
+
+        if(b instanceof Types.ModDrill drill) {
+            b.stats.remove(Stat.mineTier);
+            b.stats.add(Stat.mineTier, table -> {
+                table.left().row();
+                Seq<Block> blocks = new Seq<>();
+
+                for(Block block : content.blocks()) {
+                    if(block instanceof Floor f && !f.wallOre && f.itemDrop != null && f.itemDrop.hardness <= drill.tier &&
+                            f.itemDrop != drill.blockedItem && (indexer.isBlockPresent(f) || state.isMenu())) {
+
+                        blocks.add(block);
+                    }
+                }
+
+                table.pane(t -> {
+                    t.setBackground(Styles.grayPanel);
+
+                    t.row();
+                    t.row();
+
+                    for(Block block : blocks) {
+                        t.image(block.uiIcon).size(32f).padLeft(6);
+                    }
+
+                    t.row();
+                    t.row();
+                }).growX();
+            });
+        }
+    }
+
+    public void updateStats(Block b) {
+        if(b instanceof Types.ModCrafter b2 && !(b instanceof Other.MultiCrafter)) {
             b.stats.add(Statsx.requirements, t -> {
                 t.row();
                 t.pane(table -> {
@@ -228,10 +269,6 @@ public class TheTech extends Mod {
                                 addx(x.usage * 60, Blocks.powerNode.uiIcon, table);
                             }
                         }
-
-                        if(b2 instanceof HeatCrafter b3) {
-                            addx(b3.heatRequirement * 60, Blocks.electricHeater.uiIcon, table);
-                        }
                     }).padLeft(6f);
 
                     arrowx(table);
@@ -243,10 +280,6 @@ public class TheTech extends Mod {
 
                         if(b2.outputLiquids != null) {
                             addx(b2.outputLiquids, output);
-                        }
-
-                        if(b2 instanceof HeatProducer b3) {
-                            addx(b3.heatOutput * 60, Blocks.electricHeater.uiIcon, table);
                         }
                     }).padRight(6f);
                     table.left();

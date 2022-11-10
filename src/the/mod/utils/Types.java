@@ -50,6 +50,12 @@ public class Types {
             consumeLiquid(the.mod.content.Liquids.emethen, 0.25f).boost();
         }
 
+        @Override
+        public void setStats() {
+            super.setStats();
+            TheTech.setup(this);
+        }
+
         public class ModItemTurretBuild extends ItemTurretBuild {
         }
     }
@@ -61,6 +67,12 @@ public class Types {
         public ModCore(String name) {
             super(name);
             localizedName = prefix(localizedName);
+        }
+
+        @Override
+        public void setStats() {
+            super.setStats();
+            TheTech.setup(this);
         }
 
         @Override
@@ -123,6 +135,7 @@ public class Types {
 
             stats.remove(Stat.input);
             stats.remove(Stat.output);
+            TheTech.setup(this);
         }
 
         @Override
@@ -156,6 +169,12 @@ public class Types {
 
             flashHit = false;
             update = true;
+        }
+
+        @Override
+        public void setStats() {
+            super.setStats();
+            TheTech.setup(this);
         }
 
         @Override
@@ -243,6 +262,12 @@ public class Types {
             itemCapacity = 15;
         }
 
+        @Override
+        public void setStats() {
+            super.setStats();
+            TheTech.setup(this);
+        }
+
         public class ModDrillBuild extends DrillBuild {
         }
     }
@@ -250,6 +275,12 @@ public class Types {
     public static class LiquidUnloader extends ModBlock {
         public TextureRegion centerRegion;
         public Seq<Tile> nearbyBlocks;
+
+        @Override
+        public void setStats() {
+            super.setStats();
+            TheTech.setup(this);
+        }
 
         public LiquidUnloader(String name) {
             super(name);
@@ -456,7 +487,10 @@ public class Types {
             localizedName = prefix(localizedName);
         }
 
-        public class ModConveyorBuild extends ConveyorBuild {
+        @Override
+        public void setStats() {
+            super.setStats();
+            TheTech.setup(this);
         }
     }
 
@@ -466,7 +500,10 @@ public class Types {
             localizedName = prefix(localizedName);
         }
 
-        public class ModEnemyBuild extends RouterBuild {
+        @Override
+        public void setStats() {
+            super.setStats();
+            TheTech.setup(this);
         }
     }
 
@@ -497,6 +534,12 @@ public class Types {
             super(name);
 
             localizedName = prefix(localizedName);
+        }
+
+        @Override
+        public void setStats() {
+            super.setStats();
+            TheTech.setup(this);
         }
     }
 
@@ -704,6 +747,12 @@ public class Types {
             localizedName = prefix(localizedName);
         }
 
+        @Override
+        public void setStats() {
+            super.setStats();
+            TheTech.setup(this);
+        }
+
         public class ModFactoryBuild extends UnitFactoryBuild {
             @Override
             public void draw() {
@@ -739,7 +788,24 @@ public class Types {
             localizedName = prefix(localizedName);
         }
 
-        public class ModStorageBuild extends StorageBuild {
+        @Override
+        public void setStats() {
+            super.setStats();
+            TheTech.setup(this);
+        }
+    }
+
+    public static class ModPump extends Pump {
+        public ModPump(String name) {
+            super(name);
+
+            localizedName = prefix(localizedName);
+        }
+
+        @Override
+        public void setStats() {
+            super.setStats();
+            TheTech.setup(this);
         }
     }
 }
