@@ -148,10 +148,6 @@ public class ModTechTree {
                 });
 
                 nodeI.get(Items.coal, () -> {
-                    nodeI.get(Itemsx.coalSand, () -> {
-
-                    });
-
                     node(Blocksx.coalMeteriaGenerator, () -> {
                     });
                 });
@@ -163,16 +159,20 @@ public class ModTechTree {
 
                 });
 
-                node(Blocksx.silicaPress, () -> {
-                    node(Blocksx.meteriaPress, Seq.with(new Objectives.Research(Blocksx.meteriaNode)), () -> {
-                        nodeI.get(Itemsx.virusMSand, () -> {
+                node(Blocksx.crusher, () -> {
+                    nodeI.get(Itemsx.virusMSand, () -> {
 
-                        });
                     });
 
                     nodeI.get(Itemsx.silicaSand, () -> {
 
                     });
+
+                    nodeI.get(Itemsx.coalSand, () -> {
+                        node(Unitsx.trident);
+                    });
+
+                    node(Blocksx.baseFactory);
                 });
 
                 node(Blocksx.silicaTurret, () -> {
@@ -190,8 +190,6 @@ public class ModTechTree {
                         node(Blocksx.mirror0);
                     });
                 });
-
-                node(Blocksx.sunGenerator);
             });
         });
     }

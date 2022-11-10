@@ -11,12 +11,14 @@ import arc.graphics.g2d.TextureRegion;
 import arc.math.Mathf;
 import arc.scene.ui.TextButton;
 import arc.scene.ui.layout.Table;
+import arc.scene.utils.Selection;
 import arc.struct.Seq;
-import arc.util.Log;
-import arc.util.Tmp;
+import arc.util.*;
 import arc.util.io.Reads;
 import arc.util.io.Writes;
+import mindustry.Vars;
 import mindustry.content.Blocks;
+import mindustry.ctype.UnlockableContent;
 import mindustry.entities.Effect;
 import mindustry.entities.bullet.BasicBulletType;
 import mindustry.game.EventType;
@@ -27,95 +29,31 @@ import mindustry.gen.Hitboxc;
 import mindustry.graphics.Drawf;
 import mindustry.graphics.Layer;
 import mindustry.graphics.Pal;
-import mindustry.type.Category;
-import mindustry.type.Item;
-import mindustry.type.Liquid;
-import mindustry.type.LiquidStack;
+import mindustry.type.*;
 import mindustry.ui.Bar;
+import mindustry.ui.Styles;
 import mindustry.world.Tile;
+import mindustry.world.blocks.ItemSelection;
 import mindustry.world.blocks.logic.LogicBlock;
 import mindustry.world.blocks.power.PowerNode;
+import mindustry.world.blocks.production.GenericCrafter;
+import mindustry.world.blocks.units.UnitFactory;
+import mindustry.world.consumers.ConsumeItemDynamic;
 import mindustry.world.consumers.ConsumeLiquidBase;
 import mindustry.world.consumers.ConsumeLiquidFilter;
-import mindustry.world.meta.BuildVisibility;
-import mindustry.world.meta.Env;
-import mindustry.world.meta.Stat;
-import mindustry.world.meta.StatUnit;
+import mindustry.world.meta.*;
 import mindustry.world.modules.ItemModule;
 import the.mod.TheTech;
 import the.mod.content.Effects;
+import the.mod.content.Statsx;
 import the.mod.utils.*;
 
-import static mindustry.Vars.content;
-import static mindustry.Vars.world;
+import java.util.Objects;
+
+import static mindustry.Vars.*;
 import static mindustry.type.ItemStack.with;
 
 public class Other {
-    public static class SunGenerator extends Types.ModBlock {
-        public static void loadEvent() {
-            Events.on(EventType.TapEvent.class, e -> {
-                if(e.tile.build instanceof SunGeneratorBuild) {
-                    TheTech.show("change color", d -> {
-                        d.cont.pane(t -> {
-                            t.slider(0, 1, 0.01f, (value) -> {
-                                Drawx.Math.sunColor = new Color(value, Drawx.Math.sunColor.g, Drawx.Math.sunColor.b);
-                            }).size(300f, 45f).row();
-
-                            t.slider(0, 1, 0.01f, (value) -> {
-                                Drawx.Math.sunColor = new Color(Drawx.Math.sunColor.r, value, Drawx.Math.sunColor.b);
-                            }).size(300f, 45f).row();
-
-                            t.slider(0, 1, 0.01f, (value) -> {
-                                Drawx.Math.sunColor = new Color(Drawx.Math.sunColor.r, Drawx.Math.sunColor.g, value);
-                            }).size(300f, 45f).row();
-
-                            t.button("apply", d::hide).size(100f, 50f);
-                        });
-                    });
-                }
-            });
-        }
-
-        public SunGenerator(String name) {
-            super(name);
-        }
-
-        public class SunGeneratorBuild extends Types.ModBlock.ModBlockBuild {
-            float rotation = 0;
-
-            @Override
-            public void draw() {
-                super.draw();
-
-                if(Drawx.sun != null) {
-                    Draw.color(Drawx.Math.sunColor);
-                    Draw.alpha(0.55f);
-                    Draw.rect(Drawx.sun, x, y, size*6, size*6, rotation);
-                }
-
-                rotation++;
-                if(rotation >= 360) {
-                    rotation = 0;
-                }
-            }
-
-            @Override
-            public void write(Writes write) {
-                super.write(write);
-                Color c = Drawx.Math.sunColor;
-                write.f(c.r);
-                write.f(c.g);
-                write.f(c.b);
-            }
-
-            @Override
-            public void read(Reads read, byte revision) {
-                super.read(read, revision);
-                Drawx.Math.sunColor = new Color(read.f(), read.f(), read.f());
-            }
-        }
-    }
-
     public static class DBulletType extends BasicBulletType {
         public float heal = 5f;
         public Effect healEffect;
@@ -190,6 +128,85 @@ public class Other {
     public static class DraculaItemTurret extends Types.ModItemTurret implements DraculaTurret {
         public DraculaItemTurret(String name) {
             super(name);
+        }
+    }
+
+    public static class DPSBlock extends Types.ModBlock {
+        public Drawx.FontType type = Drawx.FontType.UNDER_LINE;
+        public float reloadTime = 180;
+
+        public DPSBlock(String name) {
+            super(name);
+            configurable = true;
+
+            update = true;
+            buildVisibility = BuildVisibility.sandboxOnly;
+            requirements(Category.defense, with());
+        }
+
+        public class DPSBlockBuild extends ModBlockBuild {
+            private float dmgTimer = 0;
+            private float timer = 0;
+            public float damage = 0;
+
+            @Override
+            public void draw() {
+                super.draw();
+
+                if(damage < 1) {
+                    return;
+                }
+
+                Draw.draw(Layer.overlayUI, () -> {
+                    Drawx.text(x, y + size * 4f + 3f, team.color, ((int) damage) + " damage", type);
+                });
+            }
+
+            public boolean justDamaged() {
+                return dmgTimer > 0;
+            }
+
+            @Override
+            public void updateTile() {
+                super.updateTile();
+                if(dmgTimer > 0) {
+                    dmgTimer--;
+                }
+
+                if(justDamaged()) {
+                    timer = reloadTime;
+                } else {
+                    timer--;
+                }
+
+                if(timer < 0) {
+                    timer = reloadTime;
+                    heal();
+
+                    if(!justDamaged()) {
+                        damage = 0;
+                    }
+                }
+
+                if(!justDamaged()) {
+                    damage -= 1f;
+                }
+            }
+
+            @Override
+            public float handleDamage(float amount) {
+                damage += amount;
+                dmgTimer = 10;
+
+                return super.handleDamage(amount);
+            }
+
+            @Override
+            public void buildConfiguration(Table table) {
+                table.slider(0, Drawx.FontType.values().length - 1, 1, type.ordinal(), value -> {
+                    type = Drawx.FontType.values()[(int) value];
+                }).size(300f, 50f);
+            }
         }
     }
 
@@ -588,6 +605,12 @@ public class Other {
             schematicPriority = Integer.MAX_VALUE;
         }
 
+        @Override
+        public void setBars(){
+            super.setBars();
+            removeBar("health");
+        }
+
         public class UnbreakableWallBuild extends ModBlockBuild {
             @Override
             public void damage(Bullet bullet, Team source, float damage) {
@@ -673,6 +696,293 @@ public class Other {
             public void onDestroyed() {
                 super.onDestroyed();
                 world.tile(tileX(), tileY()).setNet(block, team, rotation);
+            }
+        }
+    }
+
+    public static class MultiCrafter extends Types.ModCrafter {
+        public Seq<CraftPlan> plans;
+
+        public MultiCrafter(String name) {
+            super(name);
+
+            update = true;
+            solid = true;
+            configurable = true;
+            clearOnDoubleTap = true;
+
+            config(Integer.class, (MultiCrafterBuild tile, Integer i) -> {
+                if(!configurable) {
+                    return;
+                }
+
+                if(tile.plan == i) {
+                    return;
+                }
+
+                tile.plan = i < 0 || i >= plans.size ? -1 : i;
+                tile.progress = 0;
+            });
+
+            config(UnlockableContent.class, (MultiCrafterBuild tile, UnlockableContent val) -> {
+                if(!configurable) {
+                    return;
+                }
+
+                int next = plans.indexOf(p -> p.out == val);
+                if(tile.plan == next) {
+                    return;
+                }
+
+                tile.plan = next;
+                tile.progress = 0;
+            });
+
+            consume(new ConsumeItemDynamic((MultiCrafterBuild e) -> {
+                CraftPlan plan = e.plan();
+                return plan == null ? with() : plan.items;
+            }));
+
+            consume(new ConsumeLiquidDynamic((MultiCrafterBuild e) -> {
+                CraftPlan plan = e.plan();
+                return plan == null ? LiquidStack.with() : plan.liquids;
+            }));
+        }
+
+        @Override
+        public void setStats() {
+            super.setStats();
+
+            stats.add(Statsx.requirements, table -> {
+                table.left().row();
+
+                for(CraftPlan plan : plans) {
+                    table.pane(t -> {
+                        t.setBackground(Styles.grayPanel);
+
+                        TheTech.addx(plan.items, t);
+                        TheTech.addx(plan.liquids, t);
+                        TheTech.arrowx(t);
+
+                        TheTech.addx(plan.amount, plan.out != null ? plan.out.uiIcon : TheTech.get("alphaaaa"), t);
+                    }).growX().padTop(6).row();
+                }
+            });
+        }
+
+        @Override
+        public void init() {
+            liquidCapacity = 0;
+            itemCapacity = 0;
+
+            for(CraftPlan plan : plans) {
+                for(LiquidStack stack : plan.liquids) {
+                    liquidCapacity = Math.max(liquidCapacity, stack.amount * 120);
+                }
+
+                for(ItemStack stack : plan.items) {
+                    itemCapacity = Math.max(itemCapacity, stack.amount * 2);
+                }
+            }
+
+            if(liquidCapacity > 0) {
+                hasLiquids = true;
+            }
+
+            if(itemCapacity > 0) {
+                hasLiquids = true;
+            }
+
+            super.init();
+        }
+
+        @Override
+        public void setBars() {
+            super.setBars();
+
+            removeBar("progress");
+            addBar("progress", (MultiCrafterBuild b) -> {
+                return new Bar(
+                        () -> "progress",
+                        () -> Pal.bar,
+                        () -> b.loc / craftTime
+                );
+            });
+        }
+
+        public class MultiCrafterBuild extends ModCrafterBuild {
+            public float loc = craftTime;
+            public int plan = -1;
+
+            public CraftPlan plan() {
+                if(plan < 0 || plan >= plans.size) {
+                    return null;
+                }
+
+                return plans.get(plan);
+            }
+
+            @Override
+            public boolean acceptItem(Building source, Item item) {
+                return plan != -1 && items.get(item) < getMaximumAccepted(item) &&
+                        Structs.contains(plan() == null ? with() : plan().items, stack -> stack.item == item);
+            }
+
+            @Override
+            public boolean acceptLiquid(Building source, Liquid liquid) {
+                return plan != -1 &&
+                        Structs.contains(plan() == null ? LiquidStack.with() : plan().liquids, stack -> stack.liquid == liquid);
+            }
+
+            public boolean canBeCrafted() {
+                boolean canConsume = plan() != null;
+                if(canConsume) {
+                    for(ItemStack stackx : plan().items) {
+                        if(items.get(stackx.item) < stackx.amount) {
+                            canConsume = false;
+                        }
+                    }
+
+                    for(LiquidStack stackx : plan().liquids) {
+                        if(liquids.get(stackx.liquid) < stackx.amount) {
+                            canConsume = false;
+                        }
+                    }
+                }
+
+                return canConsume;
+            }
+
+            @Override
+            public void craft() {
+                consume();
+
+                CraftPlan plan = plan();
+                if(plan != null) {
+                    if(plan.out instanceof Item item) {
+                        int amount = (int) (items.get(item) + plan.amount);
+                        items.set(item, Math.min(amount, itemCapacity));
+                    }
+                }
+
+                if(wasVisible) {
+                    craftEffect.at(x, y);
+                }
+
+                loc = craftTime;
+            }
+
+            @Override
+            public void write(Writes write) {
+                super.write(write);
+                write.i(plan);
+            }
+
+            @Override
+            public void read(Reads read, byte revision) {
+                super.read(read, revision);
+                plan = read.i();
+            }
+
+            public boolean isFullInventory() {
+                CraftPlan plan = plan();
+                if(plan == null) {
+                    return false;
+                }
+
+                if(plan.out instanceof Item item) {
+                    return items.get(item) >= itemCapacity;
+                }
+
+                if(plan.out instanceof Liquid liquid) {
+                    return liquids.get(liquid) >= liquidCapacity;
+                }
+
+                return false;
+            }
+
+            @Override
+            public BlockStatus status() {
+                return canBeCrafted() ? isFullInventory() ? BlockStatus.noOutput : super.status() : BlockStatus.noInput;
+            }
+
+            @Override
+            public void updateTile() {
+                ItemStack[] stack = with();
+                LiquidStack[] lstack = LiquidStack.with();
+                CraftPlan plan = plan();
+
+                if(plan != null) {
+                    if(plan.out instanceof Liquid) {
+                        lstack = LiquidStack.with(plan.out, plan.amount);
+                    }
+
+                    if(plan.out instanceof Item) {
+                        stack = with(plan.out, plan.amount);
+                    }
+                }
+
+                outputItems = stack;
+                outputLiquids = lstack;
+
+                if(!isFullInventory()) {
+                    if(canBeCrafted()) {
+                        loc--;
+                    }
+
+                    if(loc < 0f) {
+                        craft();
+                    }
+                }
+
+                if(efficiency > 0){
+                    warmup = Mathf.approachDelta(warmup, warmupTarget(), warmupSpeed);
+
+                    //continuously output based on efficiency
+                    if(outputLiquids != null){
+                        float inc = getProgressIncrease(1f);
+                        for(var output : outputLiquids){
+                            handleLiquid(this, output.liquid, Math.min(output.amount * inc, liquidCapacity - liquids.get(output.liquid)));
+                        }
+                    }
+
+                    if(wasVisible && Mathf.chanceDelta(updateEffectChance)){
+                        updateEffect.at(x + Mathf.range(size * 4f), y + Mathf.range(size * 4));
+                    }
+                }else{
+                    warmup = Mathf.approachDelta(warmup, 0f, warmupSpeed);
+                }
+
+                //TODO may look bad, revert to edelta() if so
+                totalProgress += warmup * Time.delta;
+
+                dumpOutputs();
+            }
+
+            @Override
+            public void buildConfiguration(Table table) {
+                Seq<UnlockableContent> contents = plans.map(p -> p.out).filter(Objects::nonNull);
+
+                if(contents.any()) {
+                    ItemSelection.buildTable(MultiCrafter.this, table, contents, () -> plan() == null ? null : plan().out, p -> {
+                        plan = plans.indexOf(pl -> pl.out == p);
+                    });
+                } else {
+                    table.table(Styles.black3, t -> t.add("@none").color(Color.lightGray));
+                }
+            }
+        }
+
+        public static class CraftPlan {
+            public UnlockableContent out;
+            public float amount;
+
+            public ItemStack[] items = with();
+            public LiquidStack[] liquids = LiquidStack.with();
+
+            public CraftPlan(UnlockableContent out, float amount) {
+                this.out = out instanceof Liquid || out instanceof Item ? out : null;
+                this.amount = amount;
             }
         }
     }

@@ -65,17 +65,6 @@ public class TheTech extends Mod {
 
     //Vars.mods.locateMod("the-new-tech-mod");
     public TheTech() {
-        on(EventType.Trigger.postDraw.getClass(), () -> {
-            Log.info("test"); //why? i don`t know
-            if(Drawx.Math.sun && Drawx.pix != null) {
-                Draw.draw(Layer.max + 1, () -> {
-                    Draw.color(Drawx.Math.sunColor);
-                    Draw.alpha(0.75f);
-                    Draw.rect(Drawx.pix, 0, 0, Drawx.SCREEN_BOUNDS, Drawx.SCREEN_BOUNDS);
-                });
-            }
-        });
-
         on(EventType.ClientLoadEvent.class, () -> {
             show("@beta.title", d -> {
                 d.addCloseButton();
@@ -159,9 +148,10 @@ public class TheTech extends Mod {
 
             //assets
             Drawx.circle = TheTech.mod("circlex");
-            Drawx.sun = TheTech.mod("sunx");
-            Drawx.pix = TheTech.mod("pix");
+            Drawx.sun    = TheTech.mod("sunx");
+            Drawx.pix    = TheTech.mod("pix");
             Drawx.arrowx = TheTech.mod("arrowx");
+            Drawx.air    = TheTech.mod("air");
 
             //renderer
             Timer.schedule(this::renderer, 1, 0.02f);
@@ -188,24 +178,24 @@ public class TheTech extends Mod {
         b.stats.remove(stat);
     }
 
-    public void addx(LiquidStack[] liquids, Table table) {
+    public static void addx(LiquidStack[] liquids, Table table) {
         for(LiquidStack stack : liquids) {
             addx(stack.amount * 60, stack.liquid.uiIcon, table);
         }
     }
 
-    public void addx(ItemStack[] items, Table table) {
+    public static void addx(ItemStack[] items, Table table) {
         for(ItemStack stack : items) {
             addx(stack.amount, stack.item.uiIcon, table);
         }
     }
 
-    public void addx(float value, TextureRegion icon, Table table) {
+    public static void addx(float value, TextureRegion icon, Table table) {
         table.image(icon).height(32).width(Math.min(icon.width, 32));
         table.add(" " + (int) value + ". ");
     }
 
-    public void arrowx(Table table) {
+    public static void arrowx(Table table) {
         table.image(Drawx.arrowx).color(Color.darkGray).size(48);
     }
 
@@ -213,7 +203,7 @@ public class TheTech extends Mod {
         clear(Stat.input, b);
         clear(Stat.output, b);
 
-        if(b instanceof GenericCrafter b2) {
+        if(b instanceof GenericCrafter b2 && !(b instanceof Other.MultiCrafter)) {
             b.stats.add(Statsx.requirements, t -> {
                 t.row();
                 t.pane(table -> {
@@ -290,7 +280,6 @@ public class TheTech extends Mod {
         Redcon.load();
 
         Lasers.load();
-        Other.SunGenerator.loadEvent();
     }
 
     public static Tile getTileByDraw(float x, float y) {

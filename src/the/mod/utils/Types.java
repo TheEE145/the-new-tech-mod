@@ -17,6 +17,7 @@ import mindustry.game.*;
 import mindustry.gen.*;
 import mindustry.graphics.*;
 import mindustry.type.*;
+import mindustry.type.unit.TankUnitType;
 import mindustry.ui.*;
 import mindustry.world.*;
 import mindustry.world.blocks.*;
@@ -25,18 +26,19 @@ import mindustry.world.blocks.defense.turrets.*;
 import mindustry.world.blocks.distribution.*;
 import mindustry.world.blocks.environment.*;
 import mindustry.world.blocks.liquid.Conduit;
+import mindustry.world.blocks.payloads.Payload;
 import mindustry.world.blocks.production.*;
 import mindustry.world.blocks.storage.*;
+import mindustry.world.blocks.units.UnitFactory;
 import mindustry.world.consumers.*;
 import mindustry.world.meta.BuildVisibility;
+import mindustry.world.meta.Stat;
 import the.mod.TheTech;
 import the.mod.types.Lasers;
 
 import static arc.Core.*;
 import static the.mod.TheTech.*;
-
 import static mindustry.Vars.*;
-import static the.mod.TheTech.mod;
 
 public class Types {
     public static class ModItemTurret extends ItemTurret {
@@ -114,6 +116,27 @@ public class Types {
             }
         }
 
+        @Override
+        public void setStats() {
+            super.setStats();
+
+            stats.remove(Stat.input);
+            stats.remove(Stat.output);
+        }
+
+        @Override
+        public void setBars() {
+            super.setBars();
+
+            addBar("progress", (ModCrafterBuild b) -> {
+                return new Bar(
+                        () -> "progress",
+                        () -> Pal.bar,
+                        () -> b.progress
+                );
+            });
+        }
+
         public class ModCrafterBuild extends GenericCrafterBuild {
         }
     }
@@ -128,9 +151,9 @@ public class Types {
             super(name);
 
             localizedName = prefix(localizedName);
+            squareSprite = false;
 
-            flashHit = true;
-            flashColor = null;
+            flashHit = false;
             update = true;
         }
 
@@ -154,8 +177,6 @@ public class Types {
                         localDrawer.drawers[i] = drawer[i].get();
                     }
                 }
-
-                flashColor = Color.white;
             }
 
             public void extinguish(float x, float y) {
@@ -479,7 +500,8 @@ public class Types {
     }
 
     public static class ModUnitType extends UnitType {
-        public boolean helicopter, ground, legs;
+        public boolean helicopter, ground, legs, tank;
+        public boolean helicopterEnginesEnabled = false;
 
         public TextureRegion topRegion, rotorRegion;
         public float rotorSpeed = 15;
@@ -489,8 +511,14 @@ public class Types {
             super(name);
 
             localizedName = prefix(localizedName);
+            outlineColor = Pal.darkOutline;
 
             tacker.add(this);
+        }
+
+        public void color(Color color) {
+            trailColor = engineColor = color;
+            trailLength = 24;
         }
 
         @Override
@@ -501,6 +529,11 @@ public class Types {
             if(helicopter) {
                 topRegion = TheTech.get(name + "-top");
                 rotorRegion = TheTech.get(name + "-rotor");
+
+                if(!helicopterEnginesEnabled) {
+                    engines = Seq.with();
+                    engineSize = 0;
+                }
             }
 
             if(ground) {
@@ -511,7 +544,11 @@ public class Types {
                 constructor = LegsUnit::create;
             }
 
-            if(!ground && !legs) {
+            if(tank) {
+                constructor = TankUnit::create;
+            }
+
+            if(!ground && !legs && !tank) {
                 constructor = EntityMapping.map(3);
             }
         }
@@ -522,6 +559,16 @@ public class Types {
             }
 
             return unit.elevation > 0.5f ? (lowAltitude ? Layer.flyingUnitLow : Layer.flyingUnit) : groundLayer + Mathf.clamp(hitSize / 4000f, 0, 0.01f);
+        }
+
+        ItemStack[] requirements = ItemStack.empty;
+        public void researchRequirements(ItemStack[] items) {
+            requirements = items;
+        }
+
+        @Override
+        public ItemStack[] researchRequirements() {
+            return requirements;
         }
 
         @Override
@@ -646,6 +693,41 @@ public class Types {
         @Override
         public ContentType getContentType() {
             return ContentType.error;
+        }
+    }
+
+    public static class ModFactory extends UnitFactory {
+        public ModFactory(String name) {
+            super(name);
+
+            localizedName = prefix(localizedName);
+        }
+
+        public class ModFactoryBuild extends UnitFactoryBuild {
+            @Override
+            public void draw() {
+                Draw.rect(region, x, y);
+                Draw.rect(outRegion, x, y, rotdeg());
+
+                if(currentPlan != -1){
+                    UnitPlan plan = plans.get(currentPlan);
+                    Draw.draw(Layer.blockOver, () -> Drawf.construct(this, plan.unit, 0, progress / plan.time, speedScl, time));
+                }
+
+                Draw.z(Layer.blockOver);
+
+                payRotation = rotdeg();
+                drawPayload();
+
+                Draw.z(Layer.blockOver + 0.1f);
+
+                Draw.rect(topRegion, x, y);
+            }
+
+            @Override
+            public boolean acceptPayload(Building source, Payload payload) {
+                return super.acceptPayload(source, payload);
+            }
         }
     }
 }

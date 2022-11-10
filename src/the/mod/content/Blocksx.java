@@ -16,6 +16,7 @@ import mindustry.world.meta.BuildVisibility;
 import the.mod.TheTech;
 import the.mod.types.*;
 import the.mod.utils.*;
+import the.mod.utils.Bullets;
 import the.mod.utils.Types.*;
 import the.mod.types.Lasers.*;
 
@@ -28,6 +29,7 @@ public class Blocksx {
     //defence
     public static ModBlock silicaWall, largeSilicaWall, virusMWall, virusMWallLarge;
     public static Other.UnbreakableWall unbreakableWall;
+    public static Other.DPSBlock dpsBlock;
     public static ModItemTurret silicaTurret;
     public static Minigun ares;
 
@@ -56,8 +58,7 @@ public class Blocksx {
     public static LiquidUnloader liquidUnloader;
 
     //crafters
-    public static ModCrafter silicaPress;
-    public static MeteriaPlant meteriaPress;
+    public static Other.MultiCrafter crusher;
 
     //cores
     public static ModCore terra;
@@ -71,10 +72,12 @@ public class Blocksx {
     public static Other.ProcessorSpeedUpBlock cooler;
 
     //other
-    public static Other.SunGenerator sunGenerator;
     public static RadiusBlock sonicPulsar;
     public static Other.CrystalCrasher crasher;
     public static Other.AllSource allSource;
+
+    //units
+    public static ModFactory baseFactory;
 
     public static <T extends Block> T add(T type) {
         all.add(type);
@@ -136,9 +139,8 @@ public class Blocksx {
                 lifetime = 34f;
                 rotationOffset = 90f;
                 trailRotation = true;
-                trailEffect = Fx.disperseTrail;
 
-                despawnEffect = hitEffect = Effects.bulletCollision;;
+                despawnEffect = hitEffect = Effects.bulletCollision;
             }});
         }});
 
@@ -176,6 +178,7 @@ public class Blocksx {
 
             ammo(
                     Itemsx.silica, new BasicBulletType() {{
+                        Bullets.setup(this);
                         damage = 12;
                         speed = 8.5f;
 
@@ -185,14 +188,13 @@ public class Blocksx {
                         collidesTiles = false;
                         frontColor = Color.white;
                         backColor = trailColor = hitColor = Color.white;
-                        trailChance = 0.44f;
 
                         lifetime = 34f;
                         rotationOffset = 90f;
-                        despawnEffect = hitEffect = Effects.bulletCollision;
                     }},
 
                     Itemsx.silicaSand, new BasicBulletType() {{
+                        Bullets.setup(this);
                         damage = 9;
                         speed = 8.5f;
 
@@ -202,7 +204,6 @@ public class Blocksx {
                         collidesTiles = false;
                         frontColor = Color.white;
                         backColor = trailColor = hitColor = Color.white;
-                        trailChance = 0.44f;
 
                         lifetime = 34f;
                         rotationOffset = 90f;
@@ -211,6 +212,7 @@ public class Blocksx {
                         fragBullets = 7;
 
                         fragBullet = new BasicBulletType() {{
+                            Bullets.setup(this);
                             damage = 5;
                             speed = 6.5f;
 
@@ -220,17 +222,14 @@ public class Blocksx {
                             collidesTiles = true;
                             frontColor = Color.white;
                             backColor = trailColor = hitColor = Color.white;
-                            trailChance = 0.44f;
 
                             lifetime = 16f;
                             rotationOffset = 90f;
-                            despawnEffect = hitEffect = Effects.bulletCollision;
                         }};
-
-                        despawnEffect = hitEffect = Effects.bulletCollision;
                     }},
 
                     Itemsx.virusM, new BasicBulletType() {{
+                        Bullets.setup(this, ThePal.virusM);
                         damage = 6;
                         speed = 8.5f;
 
@@ -240,12 +239,10 @@ public class Blocksx {
                         collidesTiles = false;
                         frontColor = ThePal.virusM;
                         backColor = trailColor = hitColor = Color.blue;
-                        trailChance = 0.44f;
 
                         lifetime = 34f;
                         rotationOffset = 90f;
                         status = Statuses.virus1stage;
-                        despawnEffect = hitEffect = Effects.bulletCollision;
                     }}
             );
 
@@ -405,41 +402,27 @@ public class Blocksx {
         }});
 
         //crafters
-        silicaPress = add(new ModCrafter("silica-press") {{
-            health = 420;
+        crusher = add(new Other.MultiCrafter("crusher") {{
+            health = 300;
             size = 2;
 
-            hasItems = true;
-            itemCapacity = 15;
-            outputItem = with(Itemsx.silicaSand, 2)[0];
+            plans = Seq.with(
+                    new CraftPlan(Itemsx.silicaSand, 2) {{
+                        items = with(Itemsx.silica, 1);
+                    }},
 
-            consumeItems(with(
-                    Itemsx.silica, 1
-            ));
+                    new CraftPlan(Itemsx.virusMSand, 2) {{
+                        items = with(Itemsx.virusM, 1);
+                    }},
 
-            requirements(Category.crafting, with(
-                    Itemsx.silica, 50
-            ));
-        }});
-
-        meteriaPress = add(new MeteriaPlant("meteria-press") {{
-            health = 560;
-            size = 3;
-
-            maxMeteria = 500;
-            meteriaConsume = 100;
-
-            hasItems = true;
-            itemCapacity = 15;
-            outputItem = with(Itemsx.virusMSand, 2)[0];
-
-            consumeItems(with(
-                    Itemsx.virusM, 1
-            ));
+                    new CraftPlan(Itemsx.coalSand, 2) {{
+                        items = with(Items.coal, 1);
+                    }}
+            );
 
             requirements(Category.crafting, with(
                     Itemsx.silica, 75,
-                    Itemsx.silicaSand, 25
+                    Itemsx.virusM, 25
             ));
         }});
 
@@ -490,6 +473,12 @@ public class Blocksx {
 
         unbreakableWall = add(new Other.UnbreakableWall("unbrekable-wall") {{
             buildVisibility = BuildVisibility.sandboxOnly;
+            requirements(Category.defense, with());
+        }});
+
+        dpsBlock = add(new Other.DPSBlock("dps-block") {{
+            health = 1999999998;
+
             requirements(Category.defense, with());
         }});
 
@@ -709,13 +698,6 @@ public class Blocksx {
             liquidCapacity = 48;
         }});
 
-        sunGenerator = add(new Other.SunGenerator("sun-generator") {{
-            health = 1000;
-            size = 4;
-
-            requirements(Category.effect, with());
-        }});
-
         crasher = add(new Other.CrystalCrasher("crystal-crasher") {{
             length = 8;
             size = 2;
@@ -731,6 +713,26 @@ public class Blocksx {
             size = 1;
 
             laserRange = 800;
+        }});
+
+        //units
+        baseFactory = add(new ModFactory("baseFactory") {{
+            size = 2;
+
+            plans.add(
+                    new UnitPlan(Unitsx.trident, Timer.second8, with(
+                            Itemsx.silica, 40,
+                            Itemsx.virusM, 20,
+                            Itemsx.coalSand, 10
+                    ))
+            );
+
+            requirements(Category.units, with(
+                    Itemsx.silica, 50,
+                    Itemsx.silicaSand, 20,
+                    Itemsx.virusM, 30,
+                    Itemsx.virusMSand, 10
+            ));
         }});
     }
 }

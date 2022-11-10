@@ -5,24 +5,24 @@ import arc.func.Floatc2;
 import arc.graphics.Color;
 import arc.graphics.g2d.*;
 import arc.math.Angles;
+import arc.util.Align;
+import arc.util.pooling.Pools;
 import mindustry.graphics.*;
+import mindustry.ui.Fonts;
 import the.mod.types.Other;
 
-import java.util.Vector;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import static mindustry.Vars.*;
 
 public class Drawx {
+    public static final GlyphLayout layout = Pools.obtain(GlyphLayout.class, GlyphLayout::new);
     public static final float SCREEN_BOUNDS = 4592.235f;
-    public static TextureRegion circle, sun, pix, arrowx;
+    public static TextureRegion circle, sun, pix, arrowx, air;
 
     public static class Math {
         private static boolean beamBigger = true;
         public static float beamStroke = 0f;
-
-        public static boolean sun = false;
-        public static Color sunColor = Color.white;
 
         public static void renderer() {
             if(beamBigger) {
@@ -40,15 +40,6 @@ public class Drawx {
                     beamBigger = true;
                 }
             }
-
-            AtomicBoolean sun = new AtomicBoolean(false);
-            world.tiles.eachTile(t -> {
-                if(t.build instanceof Other.SunGenerator.SunGeneratorBuild) {
-                    sun.set(true);
-                }
-            });
-
-            Math.sun = sun.get();
         }
     }
 
@@ -155,5 +146,68 @@ public class Drawx {
         randomVectors(x, y, seed, amount, length, (x2, y2, ignored) -> {
             cons.get(x2, y2);
         });
+    }
+
+    public enum FontType {
+        UNDER_LINE,
+        UPPER_LINE,
+        BOTH_LINE,
+        NO_LINE
+    }
+
+    public static final Font font = Fonts.outline;
+    public static void text(float x, float y, Color color, CharSequence text, FontType type) {
+        boolean i = font.usesIntegerPositions();
+        font.setUseIntegerPositions(false);
+        font.getData().setScale(1f / 3f);
+        layout.setText(font, text);
+
+        boolean both = type == FontType.BOTH_LINE;
+
+        font.setColor(color);
+        float offset = layout.height / 2;
+
+        if(type == FontType.UNDER_LINE || both) {
+            offset = layout.height + 1;
+        }
+
+        if(type == FontType.UPPER_LINE) {
+            offset = layout.height - 1;
+        }
+
+        font.draw(text, x, y + offset, Align.center);
+        if(type != FontType.NO_LINE) {
+            float start = x - layout.width / 2f - 2f;
+            float end = x + layout.width / 2f + 1.5f;
+
+            if(type == FontType.UNDER_LINE || both) {
+                Drawx.line(start, y - 1, end, y - 1, color);
+            }
+
+            float offset2 = both ? 6 : 4;
+            if(type == FontType.UPPER_LINE || both) {
+                Drawx.line(start, y + offset2, end, y + offset2, color);
+            }
+        }
+
+        font.setUseIntegerPositions(i);
+        font.setColor(Color.white);
+        font.getData().setScale(1f);
+        Draw.reset();
+        Pools.free(layout);
+    }
+
+    public static void line(float x, float y, float x2, float y2, Color color) {
+        line(x, y, x2, y2, color, 1);
+    }
+
+    public static void line(float x, float y, float x2, float y2, Color color, float stroke) {
+        Lines.stroke(stroke + 1);
+        Draw.color(Pal.darkOutline);
+        Lines.line(x, y, x2, y2);
+
+        Lines.stroke(stroke);
+        Draw.color(color);
+        Lines.line(x, y, x2, y2);
     }
 }
