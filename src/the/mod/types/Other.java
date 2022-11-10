@@ -753,6 +753,10 @@ public class Other {
         public void setStats() {
             super.setStats();
 
+            if(liquidCapacity == 0) {
+                stats.remove(Stat.liquidCapacity);
+            }
+
             stats.add(Statsx.requirements, table -> {
                 table.left().row();
 
@@ -773,7 +777,7 @@ public class Other {
         @Override
         public void init() {
             liquidCapacity = 0;
-            itemCapacity = 0;
+            itemCapacity = 10;
 
             for(CraftPlan plan : plans) {
                 for(LiquidStack stack : plan.liquids) {
@@ -803,11 +807,19 @@ public class Other {
             removeBar("progress");
             addBar("progress", (MultiCrafterBuild b) -> {
                 return new Bar(
-                        () -> "progress",
+                        () -> Core.bundle.get("bar.progress"),
                         () -> Pal.bar,
-                        () -> b.loc / craftTime
+                        () -> 1f - b.loc / craftTime
                 );
             });
+
+            if(liquidCapacity == 0) {
+                removeBar("liquid");
+                removeBar("liquid-");
+            }
+
+            removeBar("items");
+            removeBar("item");
         }
 
         public class MultiCrafterBuild extends ModCrafterBuild {

@@ -206,14 +206,14 @@ public class Unitsx {
 
             range = Timer.second8 * 4; //time * speed = distance
             weapons.add(new Types.ModWeapon("air") {{
-                reload = Timer.second8 * 2;
+                reload = Timer.second8;
                 mirror = false;
                 x = y = 0;
 
                 bullet = new BasicBulletType(4f, 75) {{
                     Bullets.setup(this, Pal.bulletYellowBack);
                     hitColor = backColor = Pal.bulletYellowBack;
-                    lifetime = Timer.second8;
+                    lifetime = Timer.second8 / 4;
 
                     splashDamage = 25;
                     splashDamageRadius = 40;

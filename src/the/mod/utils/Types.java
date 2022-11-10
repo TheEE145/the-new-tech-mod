@@ -1,5 +1,6 @@
 package the.mod.utils;
 
+import arc.Core;
 import arc.func.*;
 import arc.graphics.*;
 import arc.graphics.g2d.*;
@@ -130,7 +131,7 @@ public class Types {
 
             addBar("progress", (ModCrafterBuild b) -> {
                 return new Bar(
-                        () -> "progress",
+                        () -> bundle.get("bar.progress"),
                         () -> Pal.bar,
                         () -> b.progress
                 );
