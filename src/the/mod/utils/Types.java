@@ -566,6 +566,12 @@ public class Types {
         }
 
         @Override
+        public void setStats() {
+            super.setStats();
+            TheTech.setup(this);
+        }
+
+        @Override
         @SuppressWarnings("unchecked")
         public void load() {
             super.load();
@@ -689,6 +695,12 @@ public class Types {
             super(name);
 
             localizedName = prefix(localizedName);
+        }
+
+        @Override
+        public void setStats() {
+            super.setStats();
+            TheTech.setup(this);
         }
     }
 

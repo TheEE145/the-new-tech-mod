@@ -312,6 +312,12 @@ public class Other {
     }
 
     public static class AllSource extends PowerNode {
+        @Override
+        public void setStats() {
+            super.setStats();
+            TheTech.setup(this);
+        }
+
         public AllSource(String name) {
             super(name);
 
@@ -676,6 +682,7 @@ public class Other {
         @Override
         public void setStats() {
             super.setStats();
+            TheTech.setup(this);
 
             if(liquidCapacity == 0) {
                 stats.remove(Stat.liquidCapacity);
@@ -702,6 +709,7 @@ public class Other {
         public void init() {
             liquidCapacity = 0;
             itemCapacity = 10;
+            hasItems = true;
 
             for(CraftPlan plan : plans) {
                 for(LiquidStack stack : plan.liquids) {
@@ -714,10 +722,6 @@ public class Other {
             }
 
             if(liquidCapacity > 0) {
-                hasLiquids = true;
-            }
-
-            if(itemCapacity > 0) {
                 hasLiquids = true;
             }
 

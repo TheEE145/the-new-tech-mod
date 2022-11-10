@@ -203,46 +203,21 @@ public class TheTech extends Mod {
         table.image(Drawx.arrowx).color(Color.darkGray).size(48);
     }
 
-    public static void setup(Block b) {
+    public static void addx(UnlockableContent[] content, Table table) {
+        for(UnlockableContent cont : content) {
+            table.image(cont.uiIcon).height(33).width(Math.min(cont.uiIcon.width, 32) + 1).padLeft(6);
+        }
+    }
+
+    public static void setup(UnlockableContent b) {
         b.stats.remove(Stat.buildCost);
         b.stats.add(Stat.buildCost, table -> {
             table.left().row();
 
             table.pane(t -> {
-                t.setBackground(Styles.grayPanel);
-                TheTech.addx(b.requirements, t);
+                TheTech.addx(b instanceof Types.ModBlock x ? x.requirements : b.researchRequirements(), t);
             }).growX().height(48f);
         });
-
-        if(b instanceof Types.ModDrill drill) {
-            b.stats.remove(Stat.mineTier);
-            b.stats.add(Stat.mineTier, table -> {
-                table.left().row();
-                Seq<Block> blocks = new Seq<>();
-
-                for(Block block : content.blocks()) {
-                    if(block instanceof Floor f && !f.wallOre && f.itemDrop != null && f.itemDrop.hardness <= drill.tier &&
-                            f.itemDrop != drill.blockedItem && (indexer.isBlockPresent(f) || state.isMenu())) {
-
-                        blocks.add(block);
-                    }
-                }
-
-                table.pane(t -> {
-                    t.setBackground(Styles.grayPanel);
-
-                    t.row();
-                    t.row();
-
-                    for(Block block : blocks) {
-                        t.image(block.uiIcon).size(32f).padLeft(6);
-                    }
-
-                    t.row();
-                    t.row();
-                }).growX();
-            });
-        }
     }
 
     public void updateStats(Block b) {
