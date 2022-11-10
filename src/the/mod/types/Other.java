@@ -18,20 +18,20 @@ import arc.util.io.Reads;
 import arc.util.io.Writes;
 import mindustry.Vars;
 import mindustry.content.Blocks;
+import mindustry.core.UI;
 import mindustry.ctype.UnlockableContent;
 import mindustry.entities.Effect;
 import mindustry.entities.bullet.BasicBulletType;
 import mindustry.game.EventType;
 import mindustry.game.Team;
-import mindustry.gen.Building;
-import mindustry.gen.Bullet;
-import mindustry.gen.Hitboxc;
+import mindustry.gen.*;
 import mindustry.graphics.Drawf;
 import mindustry.graphics.Layer;
 import mindustry.graphics.Pal;
 import mindustry.type.*;
 import mindustry.ui.Bar;
 import mindustry.ui.Styles;
+import mindustry.ui.dialogs.SettingsMenuDialog;
 import mindustry.world.Tile;
 import mindustry.world.blocks.ItemSelection;
 import mindustry.world.blocks.logic.LogicBlock;
@@ -45,8 +45,11 @@ import mindustry.world.meta.*;
 import mindustry.world.modules.ItemModule;
 import the.mod.TheTech;
 import the.mod.content.Effects;
+import the.mod.content.ModTechTree;
+import the.mod.content.Redcon;
 import the.mod.content.Statsx;
 import the.mod.utils.*;
+import the.mod.utils.Timer;
 
 import java.util.Objects;
 
@@ -400,9 +403,7 @@ public class Other {
             consumesPower = false;
             envEnabled = Env.any;
 
-            buildVisibility = BuildVisibility.sandboxOnly;
-            requirements(Category.effect, with());
-
+            requirements(Category.effect, BuildVisibility.sandboxOnly, with());
             localizedName = TheTech.prefix(localizedName);
         }
 

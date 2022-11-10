@@ -8,6 +8,8 @@ import mindustry.graphics.g3d.*;
 import mindustry.type.Planet;
 import the.mod.utils.RedconPlanetGenerator;
 
+import static mindustry.Vars.content;
+
 public class Redcon {
     public static Planet redcon;
 
@@ -29,6 +31,7 @@ public class Redcon {
             allowLaunchSchematics = true;
             enemyCoreSpawnReplace = true;
             allowLaunchLoadout = true;
+
             //doesn't play well with configs
             prebuildBase = false;
             ruleSetter = r -> {
@@ -45,9 +48,7 @@ public class Redcon {
             alwaysUnlocked = true;
             landCloudColor = Color.orange.cpy().a(0.5f);
 
-            hiddenItems.addAll(Items.erekirItems);
-            hiddenItems.addAll(Items.serpuloItems);
-            hiddenItems.removeAll(Itemsx.all);
+            hiddenItems.addAll(content.items()).removeAll(Itemsx.all);
             Log.info(hiddenItems);
 
             defaultCore = Blocksx.terra;

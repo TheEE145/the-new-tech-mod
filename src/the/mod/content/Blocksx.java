@@ -474,13 +474,13 @@ public class Blocksx {
 
         unbreakableWall = add(new Other.UnbreakableWall("unbrekable-wall") {{
             buildVisibility = BuildVisibility.sandboxOnly;
-            requirements(Category.defense, with());
+            requirements(Category.defense, BuildVisibility.sandboxOnly, with());
         }});
 
         dpsBlock = add(new Other.DPSBlock("dps-block") {{
             health = 1999999998;
 
-            requirements(Category.defense, with());
+            requirements(Category.defense, BuildVisibility.sandboxOnly, with());
         }});
 
         //redcon

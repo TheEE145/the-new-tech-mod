@@ -731,4 +731,15 @@ public class Types {
             }
         }
     }
+
+    public static class ModStorageBlock extends StorageBlock {
+        public ModStorageBlock(String name) {
+            super(name);
+
+            localizedName = prefix(localizedName);
+        }
+
+        public class ModStorageBuild extends StorageBuild {
+        }
+    }
 }

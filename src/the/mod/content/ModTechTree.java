@@ -4,7 +4,6 @@ import arc.Core;
 import arc.func.*;
 import arc.struct.Seq;
 import mindustry.content.Items;
-import mindustry.content.TechTree.TechNode;
 import mindustry.ctype.UnlockableContent;
 import mindustry.game.Objectives;
 import mindustry.world.meta.Stat;
@@ -16,7 +15,6 @@ import static mindustry.content.TechTree.*;
 public class ModTechTree {
     public static MeteriaCapacityBuff capacity, capacity2, capacity3;
     public static DrillSpeedBuff speed, speed2, speed3;
-    public static TechNode tech;
 
     public static void loadBuffs() {
         capacity = new MeteriaCapacityBuff("capacity-booster") {{
@@ -83,11 +81,7 @@ public class ModTechTree {
     public static void load() {
         loadBuffs();
 
-        tech = nodeRoot(Core.bundle.get("planet.the-new-tech-mod-redcon.name"), Blocksx.terra, () -> {
-            Cons2<UnlockableContent, Runnable> nodeI = (i, r) -> {
-                node(i, Seq.with(new Objectives.Produce(i)), r);
-            };
-
+        Redcon.redcon.techTree = nodeRoot(Core.bundle.get("planet.the-new-tech-mod-redcon.name"), Blocksx.terra, () -> {
             node(Itemsx.silica, () -> {
                 node(Blocksx.silicaDrill, () -> {
                     node(Blocksx.crasher, () -> {
@@ -121,7 +115,7 @@ public class ModTechTree {
                         });
                     });
 
-                    nodeI.get(Itemsx.virusM, () -> {
+                    nodeProduce(Itemsx.virusM, () -> {
                         node(Blocksx.virusMWall, Seq.with(new Objectives.Research(Blocksx.silicaWall)) , () -> {
                             node(Blocksx.virusMWallLarge);
                         });
@@ -147,28 +141,27 @@ public class ModTechTree {
                     node(Blocksx.meteriaBooster);
                 });
 
-                nodeI.get(Items.coal, () -> {
+                nodeProduce(Items.coal, () -> {
                     node(Blocksx.coalMeteriaGenerator, () -> {
                     });
                 });
 
-                nodeI.get(Liquids.emethen, () -> {
+                nodeProduce(Liquids.emethen, () -> {
                     node(Blocksx.emethenMeteriaGenerator, Seq.with(new Objectives.Research(Blocksx.coalMeteriaGenerator)), () -> {
 
                     });
-
                 });
 
                 node(Blocksx.crusher, () -> {
-                    nodeI.get(Itemsx.virusMSand, () -> {
+                    nodeProduce(Itemsx.virusMSand, () -> {
 
                     });
 
-                    nodeI.get(Itemsx.silicaSand, () -> {
+                    nodeProduce(Itemsx.silicaSand, () -> {
 
                     });
 
-                    nodeI.get(Itemsx.coalSand, () -> {
+                    nodeProduce(Itemsx.coalSand, () -> {
                         node(Unitsx.trident);
                     });
 

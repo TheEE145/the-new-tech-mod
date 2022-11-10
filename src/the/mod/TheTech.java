@@ -6,6 +6,8 @@ import arc.graphics.*;
 import arc.graphics.g2d.Draw;
 import arc.graphics.g2d.TextureRegion;
 
+import arc.scene.ui.ScrollPane;
+import arc.scene.ui.layout.Cell;
 import arc.scene.ui.layout.Table;
 import arc.struct.Seq;
 import arc.util.*;
@@ -276,8 +278,8 @@ public class TheTech extends Mod {
         Unitsx.load();
         Blocksx.load();
 
-        ModTechTree.load();
         Redcon.load();
+        ModTechTree.load();
 
         Lasers.load();
     }
