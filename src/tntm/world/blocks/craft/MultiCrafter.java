@@ -28,6 +28,7 @@ import tntm.content.TntmStats;
 import tntm.ui.TntmUI;
 import tntm.world.blocks.consumes.ConsumeLiquidDynamic;
 import tntm.world.blocks.craft.meta.CraftPlan;
+import tntm.world.blocks.meteria.meta.MeteriaReceiverBuild;
 
 import java.util.Objects;
 
@@ -153,7 +154,10 @@ public class MultiCrafter extends TntmCrafter {
         removeBar("item");
     }
 
-    public class MultiCrafterBuild extends TntmCrafterBuild {
+    public class MultiCrafterBuild extends TntmCrafterBuild implements MeteriaReceiverBuild {
+        public float cTimer = craftTime;
+        public float meteria = 0;
+
         public float loc = craftTime;
         public int plan = -1;
 
@@ -212,7 +216,7 @@ public class MultiCrafter extends TntmCrafter {
                 craftEffect.at(x, y);
             }
 
-            loc = craftTime;
+            loc = cTimer;
         }
 
         @Override
@@ -254,6 +258,8 @@ public class MultiCrafter extends TntmCrafter {
             ItemStack[] stack = with();
             LiquidStack[] lstack = LiquidStack.with();
             CraftPlan plan = plan();
+
+            cTimer = plan() == null ? craftTime : plan().craftTime == -1 ? craftTime : plan().craftTime;
 
             if(plan != null) {
                 if(plan.out instanceof Liquid) {
@@ -300,6 +306,9 @@ public class MultiCrafter extends TntmCrafter {
             totalProgress += warmup * Time.delta;
 
             dumpOutputs();
+            if(meteria > meteriaCapacity()) {
+                meteria = meteriaCapacity();
+            }
         }
 
         @Override
@@ -313,6 +322,26 @@ public class MultiCrafter extends TntmCrafter {
             } else {
                 table.table(Styles.black3, t -> t.add("@none").color(Color.lightGray));
             }
+        }
+
+        @Override
+        public float meteria() {
+            return meteria;
+        }
+
+        @Override
+        public float meteriaCapacity() {
+            return plan() == null ? 0 : plan().meteria * 2;
+        }
+
+        @Override
+        public void meteria(float meteria) {
+            this.meteria = meteria;
+        }
+
+        @Override
+        public boolean isMeteria() {
+            return plan() != null && plan().meteria > 0;
         }
     }
 }

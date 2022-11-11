@@ -5,4 +5,8 @@ public interface MeteriaReceiverBuild {
     float meteriaCapacity();
 
     void meteria(float meteria);
+
+    default boolean isMeteria() {
+        return true;
+    }
 }

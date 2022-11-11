@@ -78,7 +78,7 @@ public class TntmTech {
     public static void load() {
         loadBuffs();
 
-        TntmPlanets.redcon.techTree = nodeRoot(Core.bundle.get("planet.the-new-tech-mod-redcon.name"), TntmBlocks.terra, () -> {
+        TntmPlanets.redcon.techTree = nodeRoot(TntmPlanets.redcon.localizedName, TntmBlocks.terra, () -> {
             node(TntmItems.silica, () -> {
                 node(TntmBlocks.silicaDrill, () -> {
                     node(TntmBlocks.crasher, () -> {

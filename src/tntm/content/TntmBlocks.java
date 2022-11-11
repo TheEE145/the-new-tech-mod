@@ -565,10 +565,12 @@ public class TntmBlocks {
 
                     new CraftPlan(TntmItems.virusMSand, 2) {{
                         items = with(TntmItems.virusM, 1);
+                        craftTime = 120;
                     }},
 
                     new CraftPlan(TntmItems.coalSand, 2) {{
                         items = with(Items.coal, 1);
+                        craftTime = 30;
                     }}
             );
 

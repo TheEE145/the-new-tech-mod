@@ -7,14 +7,15 @@ import mindustry.game.Team;
 import mindustry.graphics.g3d.*;
 import mindustry.type.Planet;
 import tntm.world.planets.RedconPlanetGenerator;
+import tntm.world.planets.TntmPlanet;
 
 import static mindustry.Vars.content;
 
 public class TntmPlanets {
-    public static Planet redcon;
+    public static TntmPlanet redcon;
 
     public static void load() {
-        redcon = new Planet("redcon", Planets.sun, 1f, 3){{
+        redcon = new TntmPlanet("redcon", Planets.sun, 1f, 3){{
             generator = new RedconPlanetGenerator();
             meshLoader = () -> new HexMesh(this, 6);
             cloudMeshLoader = () -> new MultiMesh(
