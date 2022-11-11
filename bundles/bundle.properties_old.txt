@@ -1,0 +1,143 @@
+#ui
+content.error.name = Research buffs
+bar.progress = Progress
+beta.title = mod is beta
+beta.cont.title = mod has beta version
+beta.cont.text = mod can have [red]error[] or [cyan]not ended content[] because this beta version. I warned you
+research.all = Research hack
+research.all.warn = Warning
+research.all.text = If you unlock all tech tree (Y), you can`t cancel this execution.
+bd.confirm = Do you sure?
+bd.confirm.y = [green]Yes[]
+bd.confirm.n = [red]No[]
+minigun.heat = heat
+minigun.cool = cooling
+meteria.name = meteria
+meteria.links = links
+meteria.nolinks = no links
+meteria.boost = boost
+shield.progress = barrier reloading
+shield.health = barrier health
+planet.the-new-tech-mod-redcon.name = Redcon
+team.blue = The feds
+start = Start
+
+#turrets
+block.the-new-tech-mod-ares.name = Ares
+block.the-new-tech-mod-ares.description = Minigun that can help on start of wave
+block.the-new-tech-mod-silica-turret.name = Silica turret
+
+#energy
+block.the-new-tech-mod-meteria-node.name = Meteria node
+block.the-new-tech-mod-meteria-node.description = Connects all meteria blocks to one net
+block.the-new-tech-mod-large-meteria-node.name = Large meteria node
+block.the-new-tech-mod-large-meteria-node.description = Bigger version of meteria node
+block.the-new-tech-mod-meteria-booster.name = Meteria booster
+block.the-new-tech-mod-meteria-booster.description = If connected to the net. root will be storage more meteria
+block.the-new-tech-mod-fuel-meteria-generator.name = Meteria coal generator
+block.the-new-tech-mod-fuel-meteria-generator.description = generate meteria using coal
+block.the-new-tech-mod-meteria-source.name = Meteria source
+block.the-new-tech-mod-sandbox-meteria-node.name = Sandbox meteria node
+block.the-new-tech-mod-emethen-meteria-generator.name = Emethen generator
+
+#statuses
+status.the-new-tech-mod-sonic-pulse.name = Sonic pulse
+status.the-new-tech-mod-neurotoxin.name = Neurotoxin
+status.the-new-tech-mod-stunned.name = Stunned
+status.the-new-tech-mod-virus-1stage.name = M-bacteria (1 stage)
+status.the-new-tech-mod-virus-2stage.name = M-bacteria (2 stage)
+status.the-new-tech-mod-virus-3stage.name = M-bacteria (3 stage)
+
+#cores
+block.the-new-tech-mod-core-terra.name = Core terra
+block.the-new-tech-mod-core-terra.description = First core of this planet
+
+#walls
+block.the-new-tech-mod-silica-wall.name = Silica wall
+block.the-new-tech-mod-silica-wall.description = First wall on planet. Can`t be burned
+block.the-new-tech-mod-silica-wall-large.name = Large silica wall
+block.the-new-tech-mod-m-virus-wall.name = M-bacteria wall
+block.the-new-tech-mod-m-virus-wall-large.name = Large M-bacteria wall
+
+#items / liquids
+item.the-new-tech-mod-silica-crystal.name = Silica
+item.the-new-tech-mod-silica-crystal.description = Base planet material
+item.the-new-tech-mod-silica-crystal-sand.name = Silica sand
+item.the-new-tech-mod-silica-crystal-sand.description = Silica but in sand form
+item.the-new-tech-mod-m-virus.name = M-bacteria
+item.the-new-tech-mod-m-virus.description = 2000 years ago, unknown virus fallen on planet, no one know what this virus when this virus get name M-bacteria
+item.the-new-tech-mod-m-virus-sand.name = M-bacteria sand
+item.the-new-tech-mod-m-virus-sand.description = M-bacteria but sand version
+item.the-new-tech-mod-coal-sand.name = Coal sand
+item.the-new-tech-mod-coal-sand.description = Coal but sand
+liquid.the-new-tech-mod-emethen.name = Emethen
+
+#crafters
+block.the-new-tech-mod-crusher.name = Crusher
+
+#distribution
+block.the-new-tech-mod-silica-conveyor.name = Silica conveyor
+block.the-new-tech-mod-silica-router.name = Silica router
+block.the-new-tech-mod-silica-bridge-conveyor.name = Silica bridge
+
+#drills
+block.the-new-tech-mod-silica-drill.name = Silica drill
+block.the-new-tech-mod-updated-drill.name = Updated drill
+block.the-new-tech-mod-meteria-drill.name = Meteria drill
+block.the-new-tech-mod-crystal-crasher.name = Crystal crasher
+
+#lasers
+block.the-new-tech-mod-laser.name = Laser
+block.the-new-tech-mod-long-laser.name = Long laser
+block.the-new-tech-mod-mirror.name = Mirror (90g)
+block.the-new-tech-mod-mirror-135.name = Mirror (135g)
+block.the-new-tech-mod-mirror-0.name = Laser longer module
+block.the-new-tech-mod-mirror-all.name = Any angle mirror
+
+#stats
+category.meteria = Meteria
+stat.requirements = Requirements table
+stat.meteria-capacity = Meteria capacity
+stat.meteria-produce = Meteria produce
+stat.meteria-consume = Meteria consume
+stat.meteria-boost = Meteria boost
+
+#units
+unit.the-new-tech-mod-hellx.name = hellx
+unit.the-new-tech-mod-trident.name = Trident
+unit.the-new-tech-mod-javelin.name = Javelin
+unit.the-new-tech-mod-delta.name = Delta
+unit.the-new-tech-mod-bbi.name = Bbi
+unit.the-new-tech-mod-bb72.name = Bb72
+unit.the-new-tech-mod-dx5.name = Dx5
+
+#units/block
+block.the-new-tech-mod-baseFactory.name = Base factory
+
+#buffs
+error.the-new-tech-mod-drill-speed.name = Drill speed 1
+error.the-new-tech-mod-drill-speed2.name = Drill speed 2
+error.the-new-tech-mod-drill-speed3.name = Drill speed 3
+error.the-new-tech-mod-capacity-booster.name = Meteria boost 1
+error.the-new-tech-mod-capacity-booster2.name = Meteria boost 2
+error.the-new-tech-mod-capacity-booster3.name = Meteria boost 3
+
+#other
+block.the-new-tech-mod-liquid-unloader.name = Liquid unloader
+block.the-new-tech-mod-all-source.name = ItemLiquidMeteriaEnergySource void
+block.the-new-tech-mod-sonic-pulsar.name = Sonic Pulsar
+block.the-new-tech-mod-processor-booster.name = Processor booster
+block.the-new-tech-mod-dps-block.name = DPS block
+block.the-new-tech-mod-unbrekable-wall.name = Sandbox wall
+
+#enviroment
+block.the-new-tech-mod-virus-m-crystal.name = M bacteria crystal
+block.the-new-tech-mod-silica-crystal-2.name = Silica crystal
+block.the-new-tech-mod-crystals.name = Crystals
+block.the-new-tech-mod-emethen-floor.name = Emethen
+block.the-new-tech-mod-m-virus = M bacteria
+block.the-new-tech-mod-orange-ice = Orange ice
+block.the-new-tech-mod-orange-ice-wall = Orange ice wall
+block.the-new-tech-mod-mantium.name = Mantium
+block.the-new-tech-mod-mantium-wall.name = Mantium wall
+block.the-new-tech-mod-m-virus-wall-static.name = M bacteria wall
