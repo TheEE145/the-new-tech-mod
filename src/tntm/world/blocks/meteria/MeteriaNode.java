@@ -172,7 +172,7 @@ public class MeteriaNode extends RadiusBlock {
                     return true;
                 }
 
-                return build instanceof MeteriaReceiverBuild || build instanceof MeteriaGiverBuild;
+                return (build instanceof MeteriaReceiverBuild b && b.isMeteria()) || build instanceof MeteriaGiverBuild;
             })) {
                 cache.add(e);
             }

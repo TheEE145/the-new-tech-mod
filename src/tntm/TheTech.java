@@ -17,6 +17,7 @@ import mindustry.ui.Styles;
 import mindustry.world.Block;
 import mindustry.world.consumers.*;
 import mindustry.world.meta.Stat;
+import tntm.asset.TntmAssets;
 import tntm.content.*;
 import tntm.utils.TntmTimer;
 import tntm.world.blocks.craft.*;
@@ -149,6 +150,7 @@ public class TheTech extends Mod {
                 }
             }
 
+            TntmAssets.load();
             TntmTimer.load();
         });
     }
