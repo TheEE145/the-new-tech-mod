@@ -484,6 +484,8 @@ public class TntmBlocks {
 
                         splashDamage = 1800;
                         splashDamageRadius = 80;
+
+                        hitEffect = despawnEffect = TntmFx.largeExplosion;
                     }},
 
                     clasterNuke, new BlockBulletType(clasterNuke) {{
@@ -505,6 +507,8 @@ public class TntmBlocks {
 
                             startScale /= 2;
                             maxScale /= 2;
+
+                            hitEffect = despawnEffect = TntmFx.largeExplosion;
                         }};
                     }}
             );
