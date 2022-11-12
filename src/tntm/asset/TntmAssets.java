@@ -13,6 +13,7 @@ public class TntmAssets {
         TntmDraw.pix    = mod("pix");
         TntmDraw.arrowx = mod("arrowx");
         TntmDraw.air    = mod("air");
+        TntmDraw.plus   = mod("plus");
     }
 
     public static TextureRegion get(String id) {

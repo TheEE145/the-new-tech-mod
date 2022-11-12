@@ -323,6 +323,41 @@ public class TntmUnits {
                     }};
                 }}
             );
+
+            researchRequirements(ItemStack.with(
+                    TntmItems.magmaAlloy, 30,
+                    TntmItems.silica, 10,
+                    TntmItems.coalSand, 20,
+                    TntmItems.virusM, 70
+            ));
+        }});
+
+        tau = add(new TntmUnitType("tau") {{
+            ground = true;
+            health = 900;
+            speed = 4;
+
+            weapons.add(
+                    new TntmWeapon("air") {{
+                        reload = 7;
+
+                        bullet = new LightningBulletType() {{
+                            damage = 20;
+                            lightning = 10;
+                            backMove = collidesAir = true;
+                            lightningLength = 12;
+                            status = StatusEffects.electrified;
+                            lightningColor = Pal.heal;
+                        }};
+                    }}
+            );
+
+            researchRequirements(ItemStack.with(
+                    TntmItems.magmaAlloy, 50,
+                    TntmItems.silica, 30,
+                    TntmItems.coalSand, 40,
+                    TntmItems.virusM, 90
+            ));
         }});
     }
 }

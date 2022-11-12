@@ -143,7 +143,6 @@ public class TheTech extends Mod {
             });
 
             Team.blue.name = bundle.get("team.blue");
-
             for(TntmBuff buff : TntmBuff.buffs) {
                 if(buff.unlocked()) {
                     buff.activate();

@@ -1,24 +1,22 @@
 package tntm.graphics;
 
+import tntm.utils.ticker.BasicTicker;
+
 public class TntmDrawData {
-    private static boolean beamBigger = true;
-    public static float beamStroke = 0f;
+    public static BasicTicker alphaTicker = new BasicTicker() {{
+        min = 0;
+        max = 1;
+        cur = 0.05f;
+    }};
+
+    public static BasicTicker beamTicker = new BasicTicker() {{
+        min = 0;
+        max = 2;
+        cur = 0.05f;
+    }};
 
     public static void renderer() {
-        if(beamBigger) {
-            beamStroke += 0.05f;
-
-            if(beamStroke >= 2f) {
-                beamStroke = 2f;
-                beamBigger = false;
-            }
-        } else {
-            beamStroke -= 0.05f;
-
-            if(beamStroke <= 0f) {
-                beamStroke = 0f;
-                beamBigger = true;
-            }
-        }
+        beamTicker.tick();
+        alphaTicker.tick();
     }
 }

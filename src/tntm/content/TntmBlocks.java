@@ -1,6 +1,7 @@
 package tntm.content;
 
 import arc.graphics.*;
+import arc.struct.ObjectMap;
 import arc.struct.Seq;
 import mindustry.content.*;
 import mindustry.entities.bullet.*;
@@ -19,6 +20,7 @@ import tntm.utils.TntmBullets;
 import tntm.graphics.TntmPal;
 import tntm.utils.TntmTimer;
 
+import tntm.world.blocks.ItemButBlock;
 import tntm.world.blocks.RadiusBlock;
 import tntm.world.blocks.craft.MultiCrafter;
 import tntm.world.blocks.craft.meta.CraftPlan;
@@ -33,6 +35,7 @@ import tntm.world.blocks.lasers.LaserBlock;
 import tntm.world.blocks.lasers.LaserMirror;
 import tntm.world.blocks.lasers.LaserMultiMirror;
 import tntm.world.blocks.liquids.LiquidUnloader;
+import tntm.world.blocks.liquids.TntmConduit;
 import tntm.world.blocks.liquids.TntmPump;
 import tntm.world.blocks.logic.ProcessorSpeedUpBlock;
 import tntm.world.blocks.meteria.*;
@@ -42,9 +45,11 @@ import tntm.world.blocks.production.MeteriaDrill;
 import tntm.world.blocks.production.TntmDrill;
 import tntm.world.blocks.storage.TntmCore;
 import tntm.world.blocks.turrets.Minigun;
+import tntm.world.blocks.turrets.PayloadTurret;
 import tntm.world.blocks.turrets.TntmItemTurret;
 import tntm.world.blocks.units.TntmFactory;
 import tntm.world.blocks.walls.*;
+import tntm.world.bullets.BlockBulletType;
 
 import static mindustry.type.ItemStack.with;
 
@@ -53,10 +58,15 @@ public class TntmBlocks {
 
     //defence
     public static TntmBlock silicaWall, largeSilicaWall, virusMWall, virusMWallLarge;
+    public static JoinWall magmaWall;
     public static UnbreakableWall unbreakableWall;
     public static DPSBlock dpsBlock;
     public static TntmItemTurret silicaTurret, scretch, amot;
+    public static PayloadTurret route, rapita;
     public static Minigun ares;
+
+    //ammo
+    public static ItemButBlock basicBomb, clasterBomb, basicNuke, clasterNuke;
 
     //environment
     public static TntmFloor virusMFloor, mantium, orangeIce, emethen, crystals;
@@ -82,6 +92,7 @@ public class TntmBlocks {
     //liquids
     public static TntmPump basicPump;
     public static LiquidUnloader liquidUnloader;
+    public static TntmConduit eminiumConduit;
 
     //crafters
     public static MeteriaPlant magmaFabric;
@@ -104,7 +115,7 @@ public class TntmBlocks {
     public static AllSource allSource;
 
     //units
-    public static TntmFactory baseFactory;
+    public static TntmFactory baseFactory, updatedFactory;
 
     public static <T extends Block> T add(T type) {
         all.add(type);
@@ -113,6 +124,23 @@ public class TntmBlocks {
     }
 
     public static void load() {
+        //ammo
+        basicBomb = add(new ItemButBlock("basicBomb") {{
+            size = 2;
+        }});
+
+        clasterBomb = add(new ItemButBlock("clasterBomb") {{
+            size = 2;
+        }});
+
+        basicNuke = add(new ItemButBlock("basicNuke") {{
+            size = 3;
+        }});
+
+        clasterNuke = add(new ItemButBlock("clasterNuke") {{
+            size = 3;
+        }});
+
         //turrets
         ares = add(new Minigun("ares") {{
             requirements(Category.turret, with(Items.copper, 1));
@@ -395,6 +423,96 @@ public class TntmBlocks {
             ));
         }});
 
+        route = add(new PayloadTurret("route") {{
+            shootEffect = Fx.shootTitan;
+            smokeEffect = Fx.shootSmokeTitan;
+
+            dynamicBullet = true;
+            health = 1356;
+            range = 648;
+            reload = 120;
+
+            ammo(
+                    basicBomb, new BlockBulletType(basicBomb) {{
+                        lifetime = TntmTimer.second8;
+                        speed = 2;
+
+                        splashDamage = 900;
+                        splashDamageRadius = 40;
+                    }},
+
+                    clasterBomb, new BlockBulletType(clasterBomb) {{
+                        lifetime = TntmTimer.second8;
+                        speed = 2;
+
+                        hitEffect = despawnEffect = Fx.none;
+
+                        splashDamageRadius = 40;
+                        fragBullets = 15;
+
+                        fragOffset = 40;
+                        fragBullet = new BlockBulletType(clasterBomb) {{
+                            lifetime = TntmTimer.second8 / 2;
+                            speed = 3;
+
+                            splashDamage = 700;
+                            splashDamageRadius = 20;
+
+                            startScale /= 2;
+                            maxScale /= 2;
+                        }};
+                    }}
+            );
+
+            size = 3;
+            requirements(Category.turret, with());
+        }});
+
+        rapita = add(new PayloadTurret("rapita") {{
+            shootEffect = Fx.shootTitan;
+            smokeEffect = Fx.shootSmokeTitan;
+
+            dynamicBullet = true;
+            health = 2656;
+            range = 648 * 2;
+            reload = 240;
+
+            ammo(
+                    basicNuke, new BlockBulletType(basicNuke) {{
+                        lifetime = TntmTimer.second8 * 2;
+                        speed = 2;
+
+                        splashDamage = 1800;
+                        splashDamageRadius = 80;
+                    }},
+
+                    clasterNuke, new BlockBulletType(clasterNuke) {{
+                        lifetime = TntmTimer.second8 * 2;
+                        speed = 2;
+
+                        hitEffect = despawnEffect = Fx.none;
+
+                        splashDamageRadius = 80;
+                        fragBullets = 15;
+
+                        fragOffset = 80;
+                        fragBullet = new BlockBulletType(clasterNuke) {{
+                            lifetime = TntmTimer.second8;
+                            speed = 3;
+
+                            splashDamage = 1400;
+                            splashDamageRadius = 40;
+
+                            startScale /= 2;
+                            maxScale /= 2;
+                        }};
+                    }}
+            );
+
+            size = 5;
+            requirements(Category.turret, with());
+        }});
+
 
                 //meteria nodes
         meteriaNode = add(new MeteriaNode("meteria-node") {{
@@ -553,6 +671,12 @@ public class TntmBlocks {
             pumpAmount = 6f / 60f;
         }});
 
+        eminiumConduit = add(new TntmConduit("eminium-conduit") {{
+            requirements(Category.liquid, with());
+            showLiquids = false;
+            health = 45;
+        }});
+
         //crafters
         crusher = add(new MultiCrafter("crusher") {{
             health = 300;
@@ -645,6 +769,17 @@ public class TntmBlocks {
 
             requirements(Category.defense, with(
                     TntmItems.virusM, 24
+            ));
+        }});
+
+        magmaWall = add(new JoinWall("magma-wall") {{
+            healthMove = true;
+            health = 2000;
+            size = 1;
+            canBurn = false;
+
+            requirements(Category.defense, with(
+                    TntmItems.magmaAlloy, 6
             ));
         }});
 
@@ -908,5 +1043,21 @@ public class TntmBlocks {
                     TntmItems.virusMSand, 10
             ));
         }});
+
+        updatedFactory = add(new TntmFactory("updatedFactory") {{
+            size = 2;
+
+            plans.add(
+                    new UnitPlan(TntmUnits.delta, TntmTimer.second8, TntmUnits.delta.researchRequirements()),
+                    new UnitPlan(TntmUnits.tau, TntmTimer.second8 * 2, TntmUnits.tau.researchRequirements())
+            );
+
+            requirements(Category.units, with(
+                    TntmItems.silica, 150,
+                    TntmItems.virusM, 130,
+                    TntmItems.magmaAlloy, 100
+            ));
+        }});
+
     }
 }

@@ -4,10 +4,18 @@ import arc.func.Cons;
 import arc.graphics.Color;
 import arc.graphics.g2d.TextureRegion;
 import arc.scene.ui.layout.Table;
+import arc.struct.ObjectMap;
+import arc.struct.Seq;
 import mindustry.ctype.UnlockableContent;
+import mindustry.entities.bullet.BulletType;
+import mindustry.type.AmmoType;
 import mindustry.type.ItemStack;
 import mindustry.type.LiquidStack;
+import mindustry.type.UnitType;
 import mindustry.ui.dialogs.BaseDialog;
+import mindustry.world.Block;
+import mindustry.world.meta.StatValue;
+import mindustry.world.meta.StatValues;
 import tntm.graphics.TntmDraw;
 
 public class TntmUI {

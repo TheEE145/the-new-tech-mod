@@ -133,6 +133,12 @@ public class TntmTech {
                                 node(TntmBlocks.magmaFabric, () -> {
                                     nodeProduce(TntmItems.magmaAlloy, () -> {
                                         node(TntmUnits.javelin);
+                                        node(TntmBlocks.magmaWall);
+                                    });
+
+                                    node(TntmBlocks.updatedFactory, () -> {
+                                        node(TntmUnits.delta);
+                                        node(TntmUnits.tau);
                                     });
                                 });
                             });

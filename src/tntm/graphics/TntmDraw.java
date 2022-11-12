@@ -13,7 +13,7 @@ import mindustry.ui.Fonts;
 public class TntmDraw {
     public static final GlyphLayout layout = Pools.obtain(GlyphLayout.class, GlyphLayout::new);
     public static final float SCREEN_BOUNDS = 4592.235f;
-    public static TextureRegion circle, sun, pix, arrowx, air;
+    public static TextureRegion circle, sun, pix, arrowx, air, plus;
 
     public static void radius(float x, float y, float radius, float stroke, Color outlineColor, Color color, float alpha) {
         /*
@@ -90,7 +90,7 @@ public class TntmDraw {
     }
 
     public static void beam(float x, float y, float x1, float y1, Color color, float alpha) {
-        beam(x, y, x1, y1, 4 + TntmDrawData.beamStroke, color, alpha);
+        beam(x, y, x1, y1, 4 + TntmDrawData.beamTicker.val, color, alpha);
     }
 
     public static void beam(float x, float y, float x1, float y1, Color color) {
@@ -181,5 +181,17 @@ public class TntmDraw {
         Lines.stroke(stroke);
         Draw.color(color);
         Lines.line(x, y, x2, y2);
+    }
+
+    public static void drawTarget(float x, float y, float radius, Color color) {
+        Draw.color(Color.red);
+        Draw.alpha(TntmDrawData.alphaTicker.val);
+        Fill.arc(x, y, radius, 1f);
+
+        Draw.color(Color.black);
+        Draw.rect(TntmDraw.plus, x, y, 18, 18, 45);
+
+        Draw.color(color);
+        Draw.rect(TntmDraw.plus, x, y, 14, 14, 45);
     }
 }
