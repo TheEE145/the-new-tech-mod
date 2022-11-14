@@ -15,6 +15,7 @@ import mindustry.world.Block;
 import mindustry.world.draw.*;
 import mindustry.world.meta.BuildVisibility;
 import tntm.TheTech;
+import tntm.brutality.Corpse;
 import tntm.graphics.drawer.PlanDrawer;
 import tntm.utils.TntmBullets;
 import tntm.graphics.TntmPal;
@@ -55,6 +56,7 @@ import static mindustry.type.ItemStack.with;
 
 public class TntmBlocks {
     public static final Seq<Block> all = new Seq<>();
+    public static Corpse corpse;
 
     //defence
     public static TntmBlock silicaWall, largeSilicaWall, virusMWall, virusMWallLarge;
@@ -124,6 +126,8 @@ public class TntmBlocks {
     }
 
     public static void load() {
+        corpse = new Corpse("YRL39_X5");
+
         //ammo
         basicBomb = add(new ItemButBlock("basicBomb") {{
             size = 2;

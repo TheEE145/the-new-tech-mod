@@ -20,7 +20,7 @@ import static arc.math.Mathf.rand;
 
 public class ExplosionFx extends Effect {
     public ExplosionFx(float lifetime, float scale) {
-        super(lifetime, 80f, b -> {
+        super(lifetime, scale, b -> {
             color(Color.gray);
             //TODO awful borders with linear filtering here
             alpha(0.9f);

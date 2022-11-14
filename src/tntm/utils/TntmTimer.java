@@ -1,6 +1,7 @@
 package tntm.utils;
 
 import arc.util.Timer;
+import tntm.brutality.Brutality;
 import tntm.content.TntmUnits;
 import tntm.graphics.TntmDrawData;
 import tntm.world.units.TntmUnitType;
@@ -8,7 +9,7 @@ import tntm.world.units.TntmUnitType;
 public class TntmTimer {
     public static final float
             second = 60f,
-            second8 = 480f;
+            second8 = second * 8;
 
     public static float convert(float seconds) {
         return seconds * 60;

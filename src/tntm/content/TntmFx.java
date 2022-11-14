@@ -3,6 +3,7 @@ package tntm.content;
 import arc.graphics.Color;
 import mindustry.entities.Effect;
 import mindustry.entities.effect.*;
+import tntm.brutality.BloodFx;
 import tntm.graphics.TntmPal;
 import tntm.world.effects.*;
 
@@ -13,6 +14,7 @@ public class TntmFx {
     public static WaveEffect virusMEffect;
     public static SparkEffect bulletCollision;
     public static ExplosionFx explosion, largeExplosion;
+    public static BloodFx damage, noWeapon, death;
 
     public static void load() {
         meteriaExplode = new ExplosionEffect() {{
@@ -179,5 +181,9 @@ public class TntmFx {
 
         explosion = new ExplosionFx(30f, 80);
         largeExplosion = new ExplosionFx(60f, 160);
+
+        damage = new BloodFx(40f, 40);
+        noWeapon = new BloodFx(20f, 10);
+        death = new BloodFx(70f, 80);
     }
 }

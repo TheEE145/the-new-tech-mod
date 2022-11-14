@@ -6,7 +6,9 @@ import arc.graphics.Color;
 import arc.graphics.g2d.*;
 import arc.math.Angles;
 import arc.util.Align;
+import arc.util.Log;
 import arc.util.pooling.Pools;
+import mindustry.entities.Effect;
 import mindustry.graphics.*;
 import mindustry.ui.Fonts;
 
